@@ -9,8 +9,6 @@ github.com/nfnt/resize
 github.com/skip2/go-qrcode
 github.com/skip2/go-qrcode/bitset
 github.com/skip2/go-qrcode/reedsolomon
-# github.com/soekchl/myUtils v1.1.0
-## explicit; go 1.14
 # golang.org/x/crypto v0.3.0
 ## explicit; go 1.17
 golang.org/x/crypto/bcrypt
