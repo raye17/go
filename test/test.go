@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"os"
+)
+
 func containsDuplicate(nums []int) bool {
 	container := make(map[int]int)
 	for _, value := range nums {
@@ -14,5 +19,9 @@ func containsDuplicate(nums []int) bool {
 }
 
 func main() {
-
+	s, err := os.Getwd()
+	if err != nil {
+		fmt.Println("")
+	}
+	fmt.Println(s)
 }
