@@ -3,8 +3,8 @@ module test
 go 1.19
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-ini/ini v1.67.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
@@ -28,7 +28,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
-	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
