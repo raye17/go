@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
 func containsDuplicate(nums []int) bool {
 	container := make(map[int]int)
@@ -19,9 +16,16 @@ func containsDuplicate(nums []int) bool {
 }
 
 func main() {
-	s, err := os.Getwd()
-	if err != nil {
-		fmt.Println("")
+	a := 3
+	b := 6
+	for i := 1; i < 10; i++ {
+		if a == i {
+			continue
+		}
+
+		if b == i {
+			break
+		}
+		fmt.Println(i)
 	}
-	fmt.Println(s)
 }
