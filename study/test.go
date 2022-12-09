@@ -16,16 +16,19 @@ func containsDuplicate(nums []int) bool {
 }
 
 func main() {
-	var test = map[int]byte{
-		1: '{',
-		2: '[',
-	}
-	if test[3] == 0 {
-		fmt.Println("exit")
-	} else {
-		fmt.Println("not exist")
-	}
-	value, ok := test[3]
-	fmt.Println(value, ok)
+	nums := []int{1, 2, 3, 4, 5, 6, 7}
+	rotate(nums, 3)
+	fmt.Println(nums)
 
+}
+func rotate(nums []int, k int) {
+	length := len(nums)
+	temp := 0
+	for i := 0; i < k; i++ {
+		temp = nums[length-1]
+		for j := length - 1; j > 0; j-- {
+			nums[j] = nums[j-1]
+		}
+		nums[0] = temp
+	}
 }

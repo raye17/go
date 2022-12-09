@@ -48,6 +48,7 @@ func InitDB() *gorm.DB {
 	db.AutoMigrate(&model.User{})
 	DB = db
 	return DB
+
 }
 
 // GetDB 数据库信息获取
