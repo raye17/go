@@ -16,8 +16,16 @@ func containsDuplicate(nums []int) bool {
 }
 
 func main() {
-	a := 8
-
-	fmt.Println(a % 2)
+	var test = map[int]byte{
+		1: '{',
+		2: '[',
+	}
+	if test[3] == 0 {
+		fmt.Println("exit")
+	} else {
+		fmt.Println("not exist")
+	}
+	value, ok := test[3]
+	fmt.Println(value, ok)
 
 }

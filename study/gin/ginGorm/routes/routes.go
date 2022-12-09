@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"test/gin/ginGorm/controller"
+	"study/gin/ginGorm/controller"
 )
 
 func SetRouter() *gin.Engine {

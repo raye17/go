@@ -2,7 +2,7 @@ package hash
 
 import (
 	"golang.org/x/crypto/bcrypt"
-	"test/Bcrypt/bcrypt01/errorcheck"
+	"study/Bcrypt/bcrypt01/errorcheck"
 )
 
 func PasswordHash(pwd string) (string, error) {

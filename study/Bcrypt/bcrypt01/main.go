@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"test/Bcrypt/bcrypt01/hash"
+	"study/Bcrypt/bcrypt01/hash"
 )
 
 func main() {

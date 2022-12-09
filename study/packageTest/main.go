@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	calc "test/packageTest/pack"
+	calc "study/packageTest/pack"
 )
 
 func main() {
