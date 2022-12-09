@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="392e066d-f4a3-4585-95fb-1c4fca9e8091" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/Leetcode/Array/maxSubArray/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Leetcode/sumArray/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/Array/sumArray/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/myBlog/rayeBlog/common/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/myBlog/rayeBlog/common/database.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/blackChain/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/blackChain/go.mod" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,9 +49,11 @@
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
     "WebServerToolWindowFactoryState": "false",
+    "configurable..is.expanded": "false",
+    "configurable.GoLibrariesConfigurable.is.expanded": "true",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "D:/go-work/inspur/rancher",
-    "settings.editor.selected.configurable": "configurable.group.tools",
+    "last_opened_file_path": "D:/go-work/go_test",
+    "settings.editor.selected.configurable": "go.vgo",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
