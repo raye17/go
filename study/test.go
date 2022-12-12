@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 func containsDuplicate(nums []int) bool {
 	container := make(map[int]int)
@@ -16,10 +19,18 @@ func containsDuplicate(nums []int) bool {
 }
 
 func main() {
-	nums := []int{1, 2, 3, 4, 5, 6, 7}
-	rotate(nums, 3)
-	fmt.Println(nums)
+	var chan01 = make(chan int)
+	var chan02 = make(chan int)
+	fmt.Println(reflect.ValueOf(chan01))
+	go func() {
+		x := <-chan02
+		fmt.Println("x:", x)
+	}()
+	chan02 <- 3
 
+	fmt.Println(chan01)
+	//chan02 <- 4
+	fmt.Println(reflect.ValueOf(chan02))
 }
 func rotate(nums []int, k int) {
 	length := len(nums)
