@@ -1,8 +1,8 @@
 package service
 
 import (
-	"study/gin/ginGorm/dao"
-	"study/gin/ginGorm/entity"
+	"study/package/gin/ginGorm/dao"
+	"study/package/gin/ginGorm/entity"
 )
 
 // CreateUser  新建 user信息

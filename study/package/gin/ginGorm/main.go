@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"study/gin/ginGorm/dao"
-	"study/gin/ginGorm/entity"
-	"study/gin/ginGorm/routes"
+	"study/package/gin/ginGorm/dao"
+	"study/package/gin/ginGorm/entity"
+	"study/package/gin/ginGorm/routes"
 )
 
 func main() {

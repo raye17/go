@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"study/gin/ginGorm/entity"
-	"study/gin/ginGorm/service"
+	"study/package/gin/ginGorm/entity"
+	"study/package/gin/ginGorm/service"
 )
 
 // CreateUser 创建User
