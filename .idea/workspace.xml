@@ -5,40 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="392e066d-f4a3-4585-95fb-1c4fca9e8091" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/study/package/http/http01/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/study/package/http/http02/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/study/package/http/tcp_demo/client/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/study/package/http/tcp_demo/server/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/study/package/math/rand/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/circle/circleTest01/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/circle/circleTest01/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/file/file01/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/file/file02/file01/file.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/file/file02/test01.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/file/file03/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/file/file03/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/flag/flag01/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/flag/flag02/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/func/defer/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/func/defer/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/func/func01/func1/func1.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/func/func01/func1/func1.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/func/func01/func2/func2.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/func/func01/func2/func2.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/func/func02/func01.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/func/func02/func01.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/func/func02/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/func/func02/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/func/method/method01/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/func/method/method01/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/config/db.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/controller/userController.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/dao/mysql.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/entity/user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/routes/routes.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/gin/ginGorm/service/userService.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/http/http01/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/http/http02/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/http/tcp_demo/client/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/http/tcp_demo/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/point/point01/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/point/point01/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/point/point02/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/basics/point/point02/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/rand/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Leetcode/Array/sumArray/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Leetcode/Array/sumArray/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/blackChain/blackChain.exe" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/blackChain/blackChain.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/blackChain/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/blackChain/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/myBlog/rayeBlog/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/myBlog/rayeBlog/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/json/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/json/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +21,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Go Application" />
         <option value="Go File" />
+        <option value="Go Application" />
       </list>
     </option>
   </component>
@@ -74,7 +47,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
+    "DefaultGoTemplateProperty": "Go Application",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
@@ -86,7 +59,8 @@
     "configurable..is.expanded": "false",
     "configurable.GoLibrariesConfigurable.is.expanded": "true",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "D:/go-work/go_test/study/package/math",
+    "last_opened_file_path": "D:/go-work/go_test/RayeProject/myBlog",
+    "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "editing.templates",
     "vue.rearranger.settings.migration": "true"
   },
@@ -99,11 +73,26 @@
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\go-work\go_test\study\package" />
-      <recent name="D:\go-work\go_test\study\package\math" />
       <recent name="D:\go-work\go_test\study\basics" />
+      <recent name="D:\go-work\go_test\study\dataType" />
+      <recent name="D:\go-work\go_test\study\package\math" />
       <recent name="D:\go-work\go_test\RayeProject" />
-      <recent name="D:\go-work\go_test\Leetcode\Array" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="go_test" />
+      <working_directory value="$PROJECT_DIR$/Leetcode" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/Leetcode/linkList/editlist/main.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go 构建.go build main.go" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">

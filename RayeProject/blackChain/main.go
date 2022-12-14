@@ -36,7 +36,11 @@ type ProofOfWork struct {
 func main() {
 	bc := NewBlockchain()
 	bc.AddBlock("send 1 BTC to raye")
+	bc.AddBlock("send 2 BTC to raye")
+	bc.AddBlock("send 3 BTC to raye")
 	bc.AddBlock("send 4 BTC to raye")
+	bc.AddBlock("send 5 BTC to raye")
+	bc.AddBlock("send 6 BTC to raye")
 	for _, block := range bc.blocks {
 		fmt.Printf("Prev.hash: %x\n", block.PrevBlockHash)
 		fmt.Printf("Data: %s\n", block.Data)
@@ -47,14 +51,6 @@ func main() {
 		fmt.Println()
 	}
 }
-
-// SetHash 计算哈希
-//func (b *Block) SetHash() {
-//	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10))
-//	headers := bytes.Join([][]byte{b.PrevBlockHash, b.Data, timestamp}, []byte{})
-//	hash := sha256.Sum256(headers)
-//	b.Hash = hash[:]
-//}
 
 // NewBlock 生成新的块
 func NewBlock(data string, prevBlockHash []byte) *Block {
@@ -125,9 +121,10 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		hash = sha256.Sum256(data)
 		hashInt.SetBytes(hash[:])
 		if hashInt.Cmp(pow.target) == -1 {
-			fmt.Printf("\r%x", hash)
+			fmt.Printf("\r成功挖矿! %x", hash)
 			break
 		} else {
+			fmt.Printf("\r正在挖矿中...%x", hash)
 			nonce++
 		}
 	}
@@ -143,21 +140,3 @@ func (pow *ProofOfWork) Validate() bool {
 	isValid := hashInt.Cmp(pow.target) == -1
 	return isValid
 }
-
-//func isBlockValid(newBlock, oldBlock Block) bool {
-//	if oldBlock.Index+1 != newBlock.Index {
-//		return false
-//	}
-//	if oldBlock.Hash != newBlock.PrevHash {
-//		return false
-//	}
-//	if calculateHash(newBlock) != newBlock.Hash {
-//		return false
-//	}
-//	return true
-//}
-//func replaceChain(newBlocks []Block) {
-//	if len(newBlocks) > len(Blockchain) {
-//		Blockchain = newBlocks
-//	}
-//}

@@ -8,7 +8,7 @@ import (
 type Student struct {
 	Name   string
 	Id     int
-	Age    int
+	Age    interface{}
 	Gender string
 }
 type StudentInfo struct {
