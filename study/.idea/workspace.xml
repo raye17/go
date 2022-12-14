@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45b7c10f-5562-46f3-8d04-6be09a904bcc" name="变更" comment="edit">
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Leetcode/Array/sumArray/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../Leetcode/Array/sumArray/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RayeProject/blackChain/blackChain.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../RayeProject/blackChain/blackChain.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RayeProject/blackChain/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../RayeProject/blackChain/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RayeProject/myBlog/rayeBlog/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../RayeProject/myBlog/rayeBlog/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RayeProject/myBlog/rayeBlog/rayeBlog.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../RayeProject/myBlog/rayeBlog/rayeBlog.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RayeProject/myBlog/.idea/myBlog.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../RayeProject/myBlog/.idea/myBlog.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,8 +56,11 @@
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "import_schema_mapping": "<schema-mapping>\n  <databases>\n    <list>\n      <schema-mapping-item>\n        <source-data-source-id>b50a93ac-97dd-43b4-898a-18b8de2d5e05</source-data-source-id>\n        <source-path>schema/&quot;go_test&quot;</source-path>\n        <target-data-source-id>b50a93ac-97dd-43b4-898a-18b8de2d5e05</target-data-source-id>\n        <target-path>schema/&quot;go_test&quot;</target-path>\n      </schema-mapping-item>\n    </list>\n  </databases>\n</schema-mapping>",
-    "last_opened_file_path": "D:/go-work/go_test/study",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "last_opened_file_path": "D:/go-work/go_test",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.file-colors",
+    "settings.editor.splitter.proportion": "0.18450561",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
