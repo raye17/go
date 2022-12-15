@@ -6,9 +6,9 @@ import (
 )
 
 var url = []string{
-	"http://www.baidu.com",
-	"http://www.google.com",
-	"http://www.taobao.com",
+	"https://www.baidu.com",
+	"https://www.google.com",
+	"https://www.taobao.com",
 }
 
 func main() {
