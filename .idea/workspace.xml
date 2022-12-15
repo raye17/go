@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="392e066d-f4a3-4585-95fb-1c4fca9e8091" name="变更" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/caae8ace-4572-43d8-8bf3-288142885bdd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/caae8ace-4572-43d8-8bf3-288142885bdd.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/myBlog/.idea/myBlog.iml" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/myBlog/.idea/myBlog.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/.idea/test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/study/.idea/test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/study/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,11 +56,11 @@
     "configurable..is.expanded": "false",
     "configurable.GoLibrariesConfigurable.is.expanded": "true",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "D:/go-work/inspur",
+    "last_opened_file_path": "D:/go-work/inspur/login-wyz",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.file-colors",
+    "settings.editor.selected.configurable": "terminal",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {

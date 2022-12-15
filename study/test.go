@@ -15,8 +15,16 @@ func containsDuplicate(nums []int) bool {
 }
 
 func main() {
-	c := '3'
-	fmt.Println(c - '1')
+	for i := 1; i < 15; i++ {
+		if i%2 == 0 {
+			fmt.Println("偶数")
+			continue
+		}
+		if i == 9 {
+			break
+		}
+		fmt.Println("i:", i)
+	}
 }
 func rotate(nums []int, k int) {
 	length := len(nums)
