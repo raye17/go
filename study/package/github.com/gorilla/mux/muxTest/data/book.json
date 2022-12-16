@@ -1,0 +1,31 @@
+[
+  {
+    "id": "001",
+    "name": "Go 程序设计语言",
+    "authors": [
+      "Alan A",
+      "Brain"
+    ],
+    "press": "机械工业出版",
+    "published_at": "2017.1"
+  },
+  {"id": "002",
+    "name": "C 程序设计语言",
+    "authors": [
+      "C lala",
+      "Brain"
+    ],
+    "press": "工业出版",
+    "published_at": "2015.1"
+  },
+  {
+    "id": "003",
+    "name": "Java",
+    "authors": [
+      "javaAuthor",
+      "Brain"
+    ],
+    "press": "机械工业出版",
+    "published_at": "2014.1"
+  }
+]

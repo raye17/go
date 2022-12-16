@@ -7,6 +7,7 @@ import (
 )
 
 // tcp server demo
+// 处理函数
 func process(conn net.Conn) {
 	defer conn.Close() //处理完之后关闭连接
 	//针对当前的连接做数据的发送和接收操作

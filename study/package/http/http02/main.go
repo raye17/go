@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	resp, err := http.Get("https://www.baidu.com/")
+	resp, err := http.Get("https://www.liwenzhou=.com/")
 	if err != nil {
 		fmt.Printf("get failed,err:%v\n", err)
 		return

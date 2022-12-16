@@ -14,8 +14,22 @@ func main() {
 	if err != nil {
 		fmt.Printf("dial failed err:%v\n", err)
 		return
+	} else {
+		fmt.Println("success dial server!")
 	}
 	//利用该连接进行数据接收和发送
+	for i := 0; i < 10; i++ {
+		msg := `hello,raye.how are you?`
+		conn.Write([]byte(msg))
+		//从服务端接收回复的消息
+		var buf [1024]byte
+		n, err := conn.Read(buf[:])
+		if err != nil {
+			fmt.Printf("read failed,err:%v\n", err)
+			return
+		}
+		fmt.Println("收到服务端回复: ", string(buf[:n]))
+	}
 	input := bufio.NewReader(os.Stdin)
 	for {
 		s, _ := input.ReadString('\n')
@@ -38,4 +52,5 @@ func main() {
 		}
 		fmt.Println("收到服务端回复: ", string(buf[:n]))
 	}
+
 }
