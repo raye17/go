@@ -2,31 +2,37 @@ package main
 
 import "fmt"
 
-//结构体的继承
+// 结构体的继承
 
-type Animal struct {
-	name string
+type Animal interface {
+	Name() string
+	Speak() string
+	Play()
 }
-
-func (a Animal) move() {
-	fmt.Println(a.name, "会动~")
-}
-
 type Dog struct {
-	Feet    int
-	*Animal //匿名嵌套，结构体指针
+	Gender string
+	name   string
 }
 
-func (d *Dog) Bark() {
-	fmt.Println(d.name, "会汪汪汪~")
+func (d *Dog) Name() string {
+	return d.name
+}
+func (d *Dog) Play() {
+	fmt.Println(d.Speak())
+}
+
+func (d *Dog) Speak() string {
+	return fmt.Sprintf("%v and my gender is %v", d.name, d.Gender)
+}
+func Play(a Animal) {
+	a.Play()
 }
 func main() {
 	d1 := &Dog{
-		Feet: 4,
-		Animal: &Animal{
-			name: "大黄",
-		},
+		name:   "大黄",
+		Gender: "Male",
 	}
-	d1.move()
-	d1.Bark()
+	fmt.Println(d1.Name())
+	fmt.Println(d1.Speak())
+	Play(d1)
 }
