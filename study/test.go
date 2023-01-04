@@ -1,9 +1,6 @@
 package main
 
-import (
-	"flag"
-	"fmt"
-)
+import "fmt"
 
 func containsDuplicate(nums []int) bool {
 	container := make(map[int]int)
@@ -16,21 +13,15 @@ func containsDuplicate(nums []int) bool {
 	}
 	return false
 }
-
+func hello(num ...int) {
+	num[0] = 199
+}
 func main() {
-	msg := "raye hello lcx helper"
-	s := "hello,孙肖扬"
-	for k, v := range s {
-		fmt.Printf("k: %v,v: %c\n", k, v)
-	}
-	n := len(msg)
-	fmt.Println(n)
-	var length = int32(n)
-	fmt.Println(length)
-	fmt.Println("***********")
-	flag.Parse()
-	args := flag.Args()
-	fmt.Println(args)
+	i := []int{1, 2, 3}
+	hello(i...)
+	fmt.Println(i)
+	a := 'a'
+	fmt.Println(int(a))
 }
 func rotate(nums []int, k int) {
 	length := len(nums)
