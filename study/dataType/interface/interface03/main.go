@@ -8,9 +8,10 @@ func main() {
 	studentInfo["name"] = "raye"
 	studentInfo["age"] = 18
 	studentInfo["married"] = false
-	fmt.Printf("%v", studentInfo)
-	//gin框架的gin.H{}
-	fmt.Println()
+	s1 := studentInfo["name"]
+	v, ok := s1.(int)
+	fmt.Println(v, ok)
+	fmt.Printf("%v\n", studentInfo)
 	s := fmt.Sprintf("字符串%s", "string")
 	fmt.Println(s)
 }

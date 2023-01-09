@@ -1,26 +1,43 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
-// 结构体初始化
-
-type Person struct {
-	name  string
-	age   int
-	score map[string]*Person
+type student struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
-func EmptyPerson() *Person {
-	return &Person{
-		name:  "nil",
-		age:   0,
-		score: map[string]*Person{},
-	}
+func demo(ce []student) {
+	ce[1].Age = 999
 }
 func main() {
-	p := Person{}
-	p1 := EmptyPerson()
-	fmt.Println("name:", p.name, "age:", p.age, p.score)
-	fmt.Println(*p1)
-	fmt.Println("name:", p1.name, "age:", p1.age, p1.score)
+	m := make(map[string]*student)
+	stus := []student{
+		{1, "raye", 22},
+		{2, "sxy", 21},
+		{3, "lcx", 23},
+	}
+	data, _ := json.Marshal(stus)
+	fmt.Println(string(data))
+	for _, stu := range stus {
+		value := stu
+		m[stu.Name] = &value
+	}
+	for k, v := range m {
+		fmt.Println(k, "=>", v.Name, v.Age)
+	}
+	p := make(map[int]student)
+	p[1] = student{
+		Id:   017,
+		Name: "001",
+		Age:  100,
+	}
+	p[2] = student{99, "002", 199}
+	fmt.Println(p)
+	delete(p, 2)
+	fmt.Println(p)
 }

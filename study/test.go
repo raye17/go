@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
 func containsDuplicate(nums []int) bool {
 	container := make(map[int]int)
@@ -16,12 +19,24 @@ func containsDuplicate(nums []int) bool {
 func hello(num ...int) {
 	num[0] = 199
 }
+
+type direction int
+
+const (
+	North direction = iota
+	east
+	south
+	west
+)
+
+func (d direction) String() string {
+	return [...]string{"North", "east", "south", "west"}[d]
+}
+
+type name io.Reader
+
 func main() {
-	i := []int{1, 2, 3}
-	hello(i...)
-	fmt.Println(i)
-	a := 'a'
-	fmt.Println(int(a))
+	fmt.Println(south)
 }
 func rotate(nums []int, k int) {
 	length := len(nums)
