@@ -1,0 +1,17 @@
+apiVersion: cnos.inspur.com/v1
+kind: User
+metadata:
+  labels:
+    app.kubernetes.io/name: user
+    app.kubernetes.io/instance: user-sample
+    app.kubernetes.io/part-of: crdtest
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: crdtest
+  name: user-sample
+spec:
+  # TODO(user): Add fields here
+  username: sss
+  password: "123445656"
+  enabled: true
+  namespace: default
+

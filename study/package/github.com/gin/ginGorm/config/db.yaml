@@ -1,0 +1,5 @@
+url: 127.0.0.1
+userName: root
+password: raye12345
+dbname: go_test
+port: 3306

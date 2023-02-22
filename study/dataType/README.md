@@ -1,0 +1,12 @@
+# dataType
+## int
+## string
+## byte
+## slice
+## struct
+## interface
+## map
+## channel
+## iota
+## point
+## func

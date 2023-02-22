@@ -1,0 +1,23 @@
+package cmd
+
+import (
+	"fmt"
+	"github.com/spf13/cobra"
+	"os"
+)
+
+var cloneCmd = &cobra.Command{
+	Use:   "clone url [url]",
+	Short: "clone short",
+	Run: func(cmd *cobra.Command, args []string) {
+		output, err := ExecuteCommand("git", "clone", args...)
+		if err != nil {
+			Error(cmd, args, err)
+		}
+		fmt.Fprintf(os.Stdout, output)
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(cloneCmd)
+}
