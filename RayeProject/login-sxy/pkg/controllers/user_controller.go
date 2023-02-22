@@ -475,6 +475,10 @@ func (u *UserController) createRole(user *apisUerV1.User) (*rbacV1.Role, error) 
 	}
 	role, err := u.kubeClientSet.RbacV1().Roles(user.Spec.Namespace).Create(context.TODO(), userRole, metav1.CreateOptions{})
 	if err != nil {
+		if apierrors.IsAlreadyExists(err) {
+			glog.Infof("role %s,is exists", role.Name)
+			return role, nil
+		}
 		glog.Errorf("failed to create role %v", err)
 		return nil, err
 	}
@@ -505,6 +509,7 @@ func (u *UserController) deleteRole(user *apisUerV1.User) error {
 func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.User) error {
 	roleBinding := &rbacV1.RoleBinding{
 		ObjectMeta: metav1.ObjectMeta{
+			Name: user.Spec.Username,
 			Labels: map[string]string{
 				"cnosUser": "login-user",
 			},
