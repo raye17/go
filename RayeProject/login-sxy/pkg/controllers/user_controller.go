@@ -464,7 +464,7 @@ func (u *UserController) createRole(user *apisUerV1.User) (*rbacV1.Role, error) 
 			Name:      user.Spec.Username,
 			Namespace: user.Spec.Namespace,
 			Labels: map[string]string{
-				"cnosUser": "login-user",
+				"group": "cnos.inspur.com",
 			},
 		},
 		Rules: []rbacV1.PolicyRule{{
@@ -507,11 +507,16 @@ func (u *UserController) deleteRole(user *apisUerV1.User) error {
 	return nil
 }
 func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.User) error {
+	_, err := u.kubeClientSet.RbacV1().Roles(user.Spec.Namespace).Get(context.TODO(), role.Name, metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to get role %s:%v", role.Name, err)
+	}
+	fmt.Println(role.Name)
 	roleBinding := &rbacV1.RoleBinding{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: user.Spec.Username,
 			Labels: map[string]string{
-				"cnosUser": "login-user",
+				"group": "cnos.inspur.com",
 			},
 		},
 		Subjects: []rbacV1.Subject{{
@@ -525,7 +530,7 @@ func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.Us
 			Name:     role.Name,
 		},
 	}
-	_, err := u.kubeClientSet.RbacV1().RoleBindings(user.Spec.Namespace).Create(context.TODO(), roleBinding, metav1.CreateOptions{})
+	_, err = u.kubeClientSet.RbacV1().RoleBindings(user.Spec.Namespace).Create(context.TODO(), roleBinding, metav1.CreateOptions{})
 	if err != nil {
 		glog.Errorf("failed to create RoleBinding %v", err)
 		return err
