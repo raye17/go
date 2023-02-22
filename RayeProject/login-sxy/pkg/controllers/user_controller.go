@@ -251,7 +251,7 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 		glog.Errorf("update user error%v", err)
 		return
 	}
-	u.patchUserStatus(newUser)
+	//u.patchUserStatus(newUser)
 }
 func (u *UserController) Run(stopCh <-chan struct{}) error {
 	glog.Infof("user controller is starting...")
@@ -382,10 +382,10 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 		}
 		user.Status.Type = NormalUser
 	}
-	err = u.patchUserStatus(user)
-	if err != nil {
-		return err
-	}
+	//err = u.patchUserStatus(user)
+	//if err != nil {
+	//	return err
+	//}
 	return nil
 }
 func (u *UserController) createCertificate(user *apisUerV1.User) error {
@@ -429,7 +429,7 @@ func (u *UserController) createCertificate(user *apisUerV1.User) error {
 		return crtCmdErr
 	}
 	user.Status.AuthFile[UserCrtFile] = crt
-	u.patchUserStatus(user)
+	//u.patchUserStatus(user)
 	if !util.CheckFileExists(key) || !util.CheckFileExists(csr) || !util.CheckFileExists(crt) {
 		return errors.New("key or csr or crt file not exists")
 	}
@@ -444,8 +444,8 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 	if !util.CheckFileExists(crt) {
 		return errors.New("user's crt  file not exists")
 	}
-	crtPath := fmt.Sprintf("--client-certificate=%s", UserCrtFile)
-	keyPath := fmt.Sprintf("--client-key=%s", UserKeyFile)
+	crtPath := fmt.Sprintf("--client-certificate=%s", crt)
+	keyPath := fmt.Sprintf("--client-key=%s", key)
 	cmd := exec.Command("kubectl", "config", "set-credentials", user.Spec.Username, crtPath, keyPath, "--embed-certs=true")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
