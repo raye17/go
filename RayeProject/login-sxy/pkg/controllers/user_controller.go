@@ -178,6 +178,7 @@ func (u *UserController) addUser(obj interface{}) {
 		glog.Errorf("create user failed,error:%v", err)
 		return
 	}
+	glog.Infof("create user success!")
 }
 func (u *UserController) updateUser(oldObj, newObj interface{}) {
 	oldUser, newUser := oldObj.(*apisUerV1.User), newObj.(*apisUerV1.User)
@@ -231,7 +232,7 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 					return
 				}
 			}
-			err = u.createRoleBinding(role, newUser)
+			_, err = u.createRoleBinding(role, newUser)
 			if err != nil {
 				glog.Errorf("in updateUser create role err:%v", err)
 				return
@@ -321,10 +322,12 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 		glog.Errorf("create Certificate error:%v", err)
 		return err
 	}
+	glog.Infof("create ca success")
 	//TODO create k8sUser(√)
 	if err = u.createK8sUser(user); err != nil {
 		glog.Errorf("create k8sUser error:%v", err)
 	}
+	glog.Infof("create k8suser success!")
 	//TODO create namespace(√)
 	_, err = u.kubeClientSet.CoreV1().Namespaces().Get(context.TODO(), user.Spec.Namespace, metav1.GetOptions{})
 	if err != nil {
@@ -343,6 +346,7 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 			return err
 		}
 	}
+	glog.Infof("create ns success!")
 	//TODO role and rolebinding
 	if user.Spec.AdminRole == true {
 		_, err := u.kubeClientSet.RbacV1().ClusterRoleBindings().Get(context.TODO(), ClusterRole, metav1.GetOptions{})
@@ -371,11 +375,13 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 		if err != nil {
 			return err
 		}
+		glog.Infof("create role %s success", role.Name)
 		if user.Spec.Enabled == true {
-			err = u.createRoleBinding(role, user)
+			roleBinding, err := u.createRoleBinding(role, user)
 			if err != nil {
 				return err
 			}
+			glog.Infof("create rolebinding %s success", roleBinding.Name)
 			user.Status.Status = corev1.ConditionTrue
 		} else {
 			user.Status.Status = corev1.ConditionFalse
@@ -395,6 +401,7 @@ func (u *UserController) createCertificate(user *apisUerV1.User) error {
 		glog.Errorf("create Certificate directory error:%v", err)
 		return err
 	}
+	glog.Infof("create directory success!")
 	//create key
 	key := filepath.Join(dir, user.Spec.Username+".key")
 	//openssl genrsa -out user.key 2048
@@ -405,6 +412,7 @@ func (u *UserController) createCertificate(user *apisUerV1.User) error {
 		return keyCmdErr
 	}
 	user.Status.AuthFile[UserKeyFile] = key
+	glog.Infof("create user %s key success", user.Spec.Username)
 	//create csr
 	csr := filepath.Join(dir, user.Spec.Username+".csr")
 	cn := fmt.Sprintf("/CN=%s", user.Spec.Username)
@@ -416,6 +424,7 @@ func (u *UserController) createCertificate(user *apisUerV1.User) error {
 		return csrCmdErr
 	}
 	user.Status.AuthFile[UserCsrFile] = csr
+	glog.Infof("create user %s csr success", user.Spec.Username)
 	//create crt
 	if !util.CheckFileExists(CACRT) || !util.CheckFileExists(CAKEY) {
 		return errors.New("k8s ca or key file is not exists")
@@ -429,6 +438,8 @@ func (u *UserController) createCertificate(user *apisUerV1.User) error {
 		return crtCmdErr
 	}
 	user.Status.AuthFile[UserCrtFile] = crt
+	glog.Infof("create user %s crt success", user.Spec.Username)
+
 	//u.patchUserStatus(user)
 	if !util.CheckFileExists(key) || !util.CheckFileExists(csr) || !util.CheckFileExists(crt) {
 		return errors.New("key or csr or crt file not exists")
@@ -494,6 +505,7 @@ func (u *UserController) updateRole(oldUser, newUser *apisUerV1.User) (*rbacV1.R
 	if err != nil {
 		return nil, err
 	}
+	glog.Infof("update role success")
 	return role, nil
 }
 func (u *UserController) deleteRole(user *apisUerV1.User) error {
@@ -504,14 +516,14 @@ func (u *UserController) deleteRole(user *apisUerV1.User) error {
 	if err != nil {
 		return err
 	}
+	glog.Infof("delete role success")
 	return nil
 }
-func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.User) error {
+func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.User) (*rbacV1.RoleBinding, error) {
 	_, err := u.kubeClientSet.RbacV1().Roles(user.Spec.Namespace).Get(context.TODO(), role.Name, metav1.GetOptions{})
 	if err != nil {
-		return fmt.Errorf("failed to get role %s:%v", role.Name, err)
+		return nil, fmt.Errorf("failed to get role %s:%v", role.Name, err)
 	}
-	fmt.Println(role.Name)
 	roleBinding := &rbacV1.RoleBinding{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      user.Spec.Username,
@@ -531,12 +543,17 @@ func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.Us
 			Name:     role.Name,
 		},
 	}
-	_, err = u.kubeClientSet.RbacV1().RoleBindings(user.Spec.Namespace).Create(context.TODO(), roleBinding, metav1.CreateOptions{})
+	userRoleBinding, err := u.kubeClientSet.RbacV1().RoleBindings(user.Spec.Namespace).Create(context.TODO(), roleBinding, metav1.CreateOptions{})
 	if err != nil {
+		if apierrors.IsAlreadyExists(err) {
+			glog.Infof("rolebinding %s is already exists", roleBinding.Name)
+			return nil, err
+		}
 		glog.Errorf("failed to create RoleBinding %v", err)
-		return err
+		return nil, err
 	}
-	return nil
+	fmt.Println("create rolebinding :", roleBinding.Name, "success!")
+	return userRoleBinding, nil
 }
 func (u *UserController) updateRoleBinding(oldUser, newUser *apisUerV1.User, oldRole, newRole *rbacV1.Role) error {
 	roleBinding, err := u.kubeClientSet.RbacV1().RoleBindings(oldUser.Spec.Namespace).Get(context.TODO(), oldUser.Spec.Username, metav1.GetOptions{})
@@ -551,7 +568,7 @@ func (u *UserController) updateRoleBinding(oldUser, newUser *apisUerV1.User, old
 		if err != nil {
 			return fmt.Errorf("failed to delete RoleBinding for user %s:%v", oldUser.Spec.Username, err)
 		}
-		err = u.createRoleBinding(newRole, oldUser)
+		_, err = u.createRoleBinding(newRole, oldUser)
 		if err != nil {
 			return fmt.Errorf("failed to create RoleBinding for user %s:%v", newUser.Spec.Username, err)
 		}
@@ -562,6 +579,7 @@ func (u *UserController) updateRoleBinding(oldUser, newUser *apisUerV1.User, old
 			return fmt.Errorf("failed to update roleBinding for user %s:%v", oldUser.Spec.Username, err)
 		}
 	}
+	glog.Infof("update rolebinding success")
 	return nil
 }
 func (u *UserController) deleteRoleBinding(user *apisUerV1.User) error {
@@ -578,6 +596,7 @@ func (u *UserController) deleteRoleBinding(user *apisUerV1.User) error {
 	if err != nil {
 		return errors.New(fmt.Sprintf("failed to delete RoleBinding %s:%v", roleBinding, err))
 	}
+	glog.Infof("delete rolebinding success")
 	return nil
 }
 func (u *UserController) createClusterRoleBinding(user *apisUerV1.User) error {
