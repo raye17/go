@@ -1,11 +1,11 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"os"
-	"path/filepath"
 )
 
 type user struct {
@@ -34,13 +34,30 @@ func main() {
 	//s2 := []string{"raye,hello"}
 	//l := CompareSlice(s1, s2)
 	//fmt.Println(l)
-	dir := filepath.Join("./test0002", "test0001")
-	fmt.Println(dir)
-	err := os.MkdirAll(dir, 0777)
-	if err != nil {
-		fmt.Println("mkdir failed", err)
-	}
-
+	//dir := filepath.Join("./test0002", "test0001")
+	//fmt.Println(dir)
+	//err := os.MkdirAll(dir, 0777)
+	//if err != nil {
+	//	fmt.Println("mkdir failed", err)
+	//}
+	pwd := []byte("123445656")
+	user := "sss"
+	hashPwd, _ := bcrypt.GenerateFromPassword(pwd, bcrypt.DefaultCost)
+	dst := make([]byte, base64.StdEncoding.EncodedLen(len(hashPwd)))
+	dstuser := make([]byte, base64.StdEncoding.EncodedLen(len([]byte(user))))
+	base64.StdEncoding.Encode(dst, hashPwd)
+	base64.StdEncoding.Encode(dstuser, []byte(user))
+	fmt.Println(string(dstuser))
+	fmt.Println(string(dst))
+	pp, _ := base64.StdEncoding.DecodeString(string(dst))
+	fmt.Println(string(pp))
+	//err := bcrypt.CompareHashAndPassword(pp, pwd)
+	//if err != nil {
+	//	fmt.Println("err")
+	//	return
+	//} else {
+	//	fmt.Println("ok")
+	//}
 }
 func info(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{

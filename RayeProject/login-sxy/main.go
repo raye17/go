@@ -120,40 +120,48 @@ limitations under the License.
 package main
 
 import (
+	"fmt"
 	clientset "git.inspur.com/szsciit/cnos/adapter/generated/cnos/clientset/versioned"
 	informers "git.inspur.com/szsciit/cnos/adapter/generated/cnos/informers/externalversions"
 	"git.inspur.com/szsciit/cnos/adapter/pkg/controllers"
 	"git.inspur.com/szsciit/cnos/adapter/pkg/signals"
 	"github.com/golang/glog"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/util/homedir"
 	"time"
 
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-//
-//var (
-//	masterURL  string
-//	kubeconfig string
-//)
+var (
+	//	masterURL  string
+	kubeconfig string
+)
 
 func main() {
 	//flag.Parse()
 	//处理信号量
 	stopCh := signals.SetupSignalHandler()
 	//处理入参
-
-	config, err := clientcmd.BuildConfigFromFlags("", "./pkg/config/config")
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = fmt.Sprintf("%s/.kube/config", home)
+	} else {
+		kubeconfig = ""
+	}
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
 		glog.Fatalf("Error building kubeconfig: %s", err.Error())
+		return
 	}
 	kubeClientSet, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		glog.Errorf("building kubeClientSet failed,error:%v", err)
+		return
 	}
 	userClientSet, err := clientset.NewForConfig(config)
 	if err != nil {
 		glog.Errorf("building userClientSet failed,error:%v", err)
+		return
 	}
 	userFactory := informers.NewSharedInformerFactory(userClientSet, time.Second*30)
 	userController := controllers.NewUserController(kubeClientSet, userClientSet, userFactory)

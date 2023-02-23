@@ -3,7 +3,9 @@ module git.inspur.com/szsciit/cnos/adapter
 go 1.19
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/gorilla/mux v1.8.0
 	golang.org/x/crypto v0.1.0
 	k8s.io/api v0.26.0
 	k8s.io/apimachinery v0.26.0
