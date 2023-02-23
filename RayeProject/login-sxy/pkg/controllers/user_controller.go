@@ -514,7 +514,8 @@ func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.Us
 	fmt.Println(role.Name)
 	roleBinding := &rbacV1.RoleBinding{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: user.Spec.Username,
+			Name:      user.Spec.Username,
+			Namespace: user.Spec.Namespace,
 			Labels: map[string]string{
 				"group": "cnos.inspur.com",
 			},
