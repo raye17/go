@@ -1,0 +1,13 @@
+[mysql]
+db = 'mysql'
+ip = '127.0.0.1'
+password = 'raye001'
+port = 3306
+user = 'root'
+
+[server]
+name = 'mux'
+
+[user]
+age = 21
+name = 'Raye'
