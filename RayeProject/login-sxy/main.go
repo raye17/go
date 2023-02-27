@@ -124,6 +124,8 @@ import (
 	clientset "git.inspur.com/szsciit/cnos/adapter/generated/cnos/clientset/versioned"
 	informers "git.inspur.com/szsciit/cnos/adapter/generated/cnos/informers/externalversions"
 	"git.inspur.com/szsciit/cnos/adapter/pkg/controllers"
+	"git.inspur.com/szsciit/cnos/adapter/pkg/login"
+	"git.inspur.com/szsciit/cnos/adapter/pkg/router"
 	"git.inspur.com/szsciit/cnos/adapter/pkg/signals"
 	"github.com/golang/glog"
 	"k8s.io/client-go/kubernetes"
@@ -163,11 +165,13 @@ func main() {
 		glog.Errorf("building userClientSet failed,error:%v", err)
 		return
 	}
+	login.SetKubeClientSet(kubeClientSet)
 	userFactory := informers.NewSharedInformerFactory(userClientSet, time.Second*30)
 	userController := controllers.NewUserController(kubeClientSet, userClientSet, userFactory)
 	if err = userController.Run(stopCh); err != nil {
 		glog.Fatalf("Error running controller: %s", err.Error())
 	}
+	router.Router()
 }
 
 //func init() {

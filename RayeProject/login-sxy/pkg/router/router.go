@@ -9,7 +9,7 @@ import (
 
 func Router() {
 	r := mux.NewRouter()
-	r.HandleFunc("/apis/cnos.inspur.com/v1/user/login", login.LoginHandler).Methods("POST")
+	r.HandleFunc("/apis/cnos/v1/user/{login}", login.LoginHandler).Methods("POST")
 	if err := http.ListenAndServe(":8099", r); err != nil {
 		log.Fatalln(err)
 	}

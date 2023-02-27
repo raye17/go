@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	clientset "git.inspur.com/szsciit/cnos/adapter/generated/cnos/clientset/versioned"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/golang/glog"
 	"golang.org/x/crypto/bcrypt"
@@ -16,15 +17,29 @@ import (
 	"time"
 )
 
+const jwtSecret = "login-demo"
+
+var kubeClientSet kubernetes.Interface
+
 type Authentication struct {
 	kubeClientSet kubernetes.Interface
-	jwtSecret     []byte
+	userClientSet clientset.Interface
 }
 
-// AuthenticateUser accept a user's credentials and returns a token if vaild
-func (auth *Authentication) AuthenticateUser(username string, password string) (string, error) {
+func NewAuthentication(kubeClientSet kubernetes.Interface, userClientSet clientset.Interface) *Authentication {
+	return &Authentication{
+		kubeClientSet: kubeClientSet,
+		userClientSet: userClientSet,
+	}
+}
+func SetKubeClientSet(clientSet kubernetes.Interface) {
+	kubeClientSet = clientSet
+}
+
+// AuthenticateUser accept a user's credentials and returns a token if valid
+func AuthenticateUser(username string, password string) (string, error) {
 	//fetch the user object by name
-	userSecret, err := auth.kubeClientSet.CoreV1().Secrets("default").Get(context.TODO(), username,
+	userSecret, err := kubeClientSet.CoreV1().Secrets("default").Get(context.TODO(), username,
 		metav1.GetOptions{})
 	if err != nil {
 		if apierrors.IsNotFound(err) {
@@ -42,7 +57,7 @@ func (auth *Authentication) AuthenticateUser(username string, password string) (
 		return "", fmt.Errorf("invaild password for user %s:%v", username, err)
 	}
 	//Generate and return a token for the authenticated user
-	token, err := generateToken(username, auth.jwtSecret)
+	token, err := generateToken(username)
 	if err != nil {
 		return "", fmt.Errorf("failed  generate token for user %s:%v", username, err)
 	}
@@ -50,7 +65,7 @@ func (auth *Authentication) AuthenticateUser(username string, password string) (
 }
 
 // Middleware to verify user token before allowing access to protected resources
-func authMiddleware(next http.Handler, jwtSecret []byte) http.Handler {
+func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
@@ -66,7 +81,7 @@ func authMiddleware(next http.Handler, jwtSecret []byte) http.Handler {
 			return
 		}
 		token := splitToken[1]
-		username, err := verifyToken(token, jwtSecret)
+		username, err := verifyToken(token)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Unauthorized"))
@@ -78,7 +93,7 @@ func authMiddleware(next http.Handler, jwtSecret []byte) http.Handler {
 	})
 }
 
-func generateToken(username string, jwtSecret []byte) (string, error) {
+func generateToken(username string) (string, error) {
 	expirationTime := time.Now().Add(time.Hour * 24)
 	claims := &jwt.StandardClaims{
 		Subject:   username,
@@ -92,7 +107,7 @@ func generateToken(username string, jwtSecret []byte) (string, error) {
 	}
 	return signedToken, nil
 }
-func verifyToken(signedToken string, jwtSecret []byte) (string, error) {
+func verifyToken(signedToken string) (string, error) {
 	token, err := jwt.Parse(signedToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid token")
