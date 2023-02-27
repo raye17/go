@@ -187,6 +187,13 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 		glog.Errorf("user's username or AdminRole or namespace can not modify!")
 		return
 	}
+	if oldUser != newUser {
+		_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
+		if err != nil {
+			glog.Errorf("update user error:%v", err)
+			return
+		}
+	}
 	if newUser.Spec.AdminRole == true {
 		if oldUser.Spec.Enabled == true && newUser.Spec.Enabled == false {
 			err := u.deleteClusterRoleBinding(newUser)
@@ -247,11 +254,7 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 			}
 		}
 	}
-	_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
-	if err != nil {
-		glog.Errorf("update user error%v", err)
-		return
-	}
+
 	//u.patchUserStatus(newUser)
 }
 func (u *UserController) Run(stopCh <-chan struct{}) error {

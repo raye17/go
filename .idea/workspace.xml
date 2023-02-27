@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3c1f18a-4367-49cb-b351-67d5cfbf2059" name="变更" comment="">
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/router/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/router/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/clientGo/conf/config" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/clientGo/conf/config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/clientGo/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/clientGo/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/controllers/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/controllers/user_controller.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +49,7 @@
     "last_opened_file_path": "D:/go-work/inspur",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "settings.editor.selected.configurable": "configurable.group.tools",
+    "settings.editor.selected.configurable": "com.goide.configuration.GoProjectSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
