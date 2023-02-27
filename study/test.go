@@ -33,9 +33,16 @@ func main() {
 	//	panic(err)
 	//}
 	//fmt.Println(viper.Get("Kind"))
+	var name string
 	m := mux.NewRouter()
 	m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		name = r.PostFormValue("name")
+		fmt.Println(name)
 		fmt.Fprintf(w, "welcome")
 	})
-	http.ListenAndServe(":8888", m)
+	go func() {
+		http.ListenAndServe(":8888", m)
+	}()
+	fmt.Println("listening on 8888:...")
+	select {}
 }
