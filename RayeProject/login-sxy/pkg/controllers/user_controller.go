@@ -286,10 +286,10 @@ func (u *UserController) generateUserSecret(user *apisUerV1.User) error {
 	}
 
 	// create or update the secret
-	_, err = u.kubeClientSet.CoreV1().Secrets(user.Namespace).Create(context.Background(), secret, metav1.CreateOptions{})
+	_, err = u.kubeClientSet.CoreV1().Secrets(user.Spec.Namespace).Create(context.Background(), secret, metav1.CreateOptions{})
 	if err != nil {
 		if apierrors.IsAlreadyExists(err) {
-			_, err = u.kubeClientSet.CoreV1().Secrets(user.Namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
+			_, err = u.kubeClientSet.CoreV1().Secrets(user.Spec.Namespace).Update(context.Background(), secret, metav1.UpdateOptions{})
 			fmt.Println("update secret success!")
 		} else if err != nil {
 			return fmt.Errorf("failed to create/update secret for user %s/%s: %v", user.Namespace, user.Name, err)
@@ -297,7 +297,7 @@ func (u *UserController) generateUserSecret(user *apisUerV1.User) error {
 	} else {
 		fmt.Println("create secret success!")
 	}
-	Secret, err := u.kubeClientSet.CoreV1().Secrets(user.Namespace).Get(context.Background(), secret.Name, metav1.GetOptions{})
+	Secret, err := u.kubeClientSet.CoreV1().Secrets(user.Spec.Namespace).Get(context.Background(), secret.Name, metav1.GetOptions{})
 	user.Spec.SecretName = Secret.Name
 	return nil
 }
