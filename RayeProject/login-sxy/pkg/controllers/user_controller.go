@@ -288,6 +288,11 @@ func (u *UserController) deleteUser(obj interface{}) {
 		}
 		glog.Infof("delete role rolebinding for user success!")
 	}
+	if err := u.deleteK8sUser(user); err != nil {
+		glog.Errorf("delete user config failed:%v", err)
+	} else {
+		glog.Infof("delete user config success!")
+	}
 	glog.Infof("user %s is deleted", user.Name)
 }
 func (u *UserController) Run(stopCh <-chan struct{}) error {
@@ -505,6 +510,7 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 		glog.Errorf("failed to get k8s name:", err)
 	}
 	clusterName := fmt.Sprintf(string(configPut[5:]))
+	fmt.Println("clusterName:", clusterName)
 	cluster := fmt.Sprintf("--cluster=%s", clusterName)
 	users := fmt.Sprintf("--user=%s", user.Spec.Username)
 	userCmd := exec.Command("kubectl", "config", "set-context", user.Spec.Username, cluster, users)
@@ -513,6 +519,24 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 		glog.Errorf("failed to set context for user ,error:%v", err)
 	}
 	glog.Infof("create k8sUser success,and output is %s", string(output))
+	return nil
+}
+func (u *UserController) deleteK8sUser(user *apisUerV1.User) error {
+	k8sContext := exec.Command("kubectl", "config", "delete-context", user.Spec.Username)
+	_, err := k8sContext.CombinedOutput()
+	if err != nil {
+		glog.Errorf("delete config-context failed:%v", err)
+		return err
+	}
+	glog.Infof("delete config-context:%s success!", user.Spec.Username)
+	k8sUser := exec.Command("kubectl", "config", "delete-user", user.Spec.Username)
+	if _, err := k8sUser.CombinedOutput(); err != nil {
+		glog.Errorf("delete config-user failed:%v", err)
+		return err
+	} else {
+		glog.Infof("delete config-user:%s success!", user.Spec.Username)
+	}
+	glog.Infof("delete user config success!")
 	return nil
 }
 func (u *UserController) createRole(user *apisUerV1.User) (*rbacV1.Role, error) {
