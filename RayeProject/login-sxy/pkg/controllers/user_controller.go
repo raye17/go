@@ -191,6 +191,11 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 	fmt.Println("new password", newUser.Spec.Password)
 	//TODO 更新失败？
 	if oldUser != newUser {
+		newUss, errs := u.userClientSet.CnosV1().Users().Get(context.TODO(), newUser.Name, metav1.GetOptions{})
+		if errs != nil {
+			glog.Errorf("failed to get user", errs)
+		}
+		fmt.Println(newUss.Name, newUss.Spec.Username)
 		_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
 		if err != nil {
 			if apierrors.IsNotFound(err) {
