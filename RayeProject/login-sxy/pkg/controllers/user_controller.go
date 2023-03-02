@@ -514,7 +514,7 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 	cluster := fmt.Sprintf("--cluster=%s", clusterName)
 	users := fmt.Sprintf("--user=%s", user.Spec.Username)
 	userCmd := exec.Command("kubectl", "config", "set-context", user.Spec.Username, cluster, users)
-	_, err = userCmd.CombinedOutput()
+	output, err = userCmd.CombinedOutput()
 	if err != nil {
 		glog.Errorf("failed to set context for user ,error:%v", err)
 	}
