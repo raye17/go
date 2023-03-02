@@ -142,10 +142,7 @@ func NewUserController(kubeClientSet kubernetes.Interface, userClientSet clients
 	_, err := informer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc:    controller.addUser,
 		UpdateFunc: controller.updateUser,
-		DeleteFunc: func(obj interface{}) {
-			user := obj.(*apisUerV1.User)
-			glog.Infof("user %s is deleted", user.Name)
-		},
+		DeleteFunc: controller.deleteUser,
 	})
 	if err != nil {
 		return nil
@@ -190,23 +187,17 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 	fmt.Println("old password:", oldUser.Spec.Password)
 	fmt.Println("new password", newUser.Spec.Password)
 	//TODO 更新失败？
-	if oldUser != newUser {
-		newUss, errs := u.userClientSet.CnosV1().Users().Get(context.TODO(), newUser.Name, metav1.GetOptions{})
-		if errs != nil {
-			glog.Errorf("failed to get user", errs)
-		}
-		fmt.Println(newUss.Name, newUss.Spec.Username)
-		_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				fmt.Println("is not found")
-				return
-			}
-			glog.Errorf("update user error:%v", err)
-			return
-		}
-	}
-	fmt.Println(oldUser.Spec.Username, "||||", newUser.Spec.Namespace)
+	//if oldUser != newUser {
+	//	_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
+	//	if err != nil {
+	//		if apierrors.IsNotFound(err) {
+	//			fmt.Println("is not found")
+	//			return
+	//		}
+	//		glog.Errorf("update user error:%v", err)
+	//		return
+	//	}
+	//}
 	if newUser.Spec.AdminRole == true {
 		if oldUser.Spec.Enabled == true && newUser.Spec.Enabled == false {
 			err := u.deleteClusterRoleBinding(newUser)
@@ -269,6 +260,37 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 	}
 
 	//u.patchUserStatus(newUser)
+}
+func (u *UserController) deleteUser(obj interface{}) {
+	user := obj.(*apisUerV1.User)
+	err := u.kubeClientSet.CoreV1().Secrets(user.Spec.Namespace).Delete(context.TODO(), user.Spec.Username, metav1.DeleteOptions{})
+	if err != nil {
+		glog.Errorf("failed to delete secret for user", err)
+		return
+	} else {
+		glog.Infof("delete secret for user success")
+	}
+	if user.Spec.AdminRole {
+		err := u.deleteClusterRoleBinding(user)
+		if err != nil {
+			glog.Errorf("failed to delete clusterRolebinding for user", err)
+			return
+		}
+		glog.Infof("delete clusterRolebinding for user success!")
+	} else {
+		err := u.deleteRole(user)
+		if err != nil {
+			glog.Errorf("failed to delete role for user:", err)
+			return
+		}
+		err = u.deleteRoleBinding(user)
+		if err != nil {
+			glog.Errorf("failed to delete rolebinding for user:", err)
+			return
+		}
+		glog.Infof("delete role rolebinding for user success!")
+	}
+	glog.Infof("user %s is deleted", user.Name)
 }
 func (u *UserController) Run(stopCh <-chan struct{}) error {
 	glog.Infof("user controller is starting...")
@@ -668,6 +690,7 @@ func (u *UserController) deleteClusterRoleBinding(user *apisUerV1.User) error {
 	}
 	return nil
 }
+
 func (u *UserController) patchUserStatus(user *apisUerV1.User) error {
 	bytess, err := user.Status.Bytes()
 	if err != nil {
