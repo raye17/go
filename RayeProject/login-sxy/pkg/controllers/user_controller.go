@@ -536,16 +536,17 @@ func (u *UserController) createRole(user *apisUerV1.User) (*rbacV1.Role, error) 
 			Verbs:     verbs,
 		}},
 	}
+createRole:
 	role, err := u.kubeClientSet.RbacV1().Roles(user.Spec.Namespace).Create(context.TODO(), userRole, metav1.CreateOptions{})
 	if err != nil {
 		if apierrors.IsAlreadyExists(err) {
 			glog.Infof("role %s is exists,is deleting this role and create  new role", userRole.Name)
-			newRole, err := u.kubeClientSet.RbacV1().Roles(user.Spec.Namespace).Create(context.TODO(), userRole, metav1.CreateOptions{})
+			err := u.kubeClientSet.RbacV1().Roles(user.Spec.Namespace).Delete(context.TODO(), userRole.Name, metav1.DeleteOptions{})
 			if err != nil {
-				glog.Errorf("failed to create role for user:", err)
+				glog.Errorf("failed to delete  role for user:", err)
 				return nil, err
 			}
-			return newRole, nil
+			goto createRole
 		}
 		glog.Errorf("failed to create role %v", err)
 		return nil, err

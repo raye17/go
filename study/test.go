@@ -2,11 +2,15 @@ package main
 
 import (
 	"fmt"
-	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 func main() {
-	a := resource.MustParse("2.5m")
-	fmt.Println(a)
-	fmt.Printf("%#v", a)
+	fmt.Println("start...")
+	i := 1
+add:
+	if i < 5 {
+		i++
+		fmt.Println(i)
+		goto add
+	}
 }
