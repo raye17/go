@@ -513,6 +513,7 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 	fmt.Println("clusterName:", clusterName)
 	cluster := fmt.Sprintf("--cluster=%s", clusterName)
 	users := fmt.Sprintf("--user=%s", user.Spec.Username)
+	fmt.Println("cluster:", cluster)
 	userCmd := exec.Command("kubectl", "config", "set-context", user.Spec.Username, cluster, users)
 	output, err = userCmd.CombinedOutput()
 	if err != nil {
