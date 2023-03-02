@@ -184,8 +184,8 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 		glog.Errorf("user's username or AdminRole or namespace can not modify!")
 		return
 	}
-	fmt.Println("old password:", oldUser.Spec.Password)
-	fmt.Println("new password", newUser.Spec.Password)
+	fmt.Println("old password:", oldUser.Spec.Username)
+	fmt.Println("new password", newUser.Spec.Username)
 	//TODO 更新失败？
 	//if oldUser != newUser {
 	//	_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
@@ -361,12 +361,12 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 		return err
 	}
 	glog.Infof("create ca success")
-	//TODO create k8sUser(√)
+	// create k8sUser(√)
 	if err = u.createK8sUser(user); err != nil {
 		glog.Errorf("create k8sUser error:%v", err)
 	}
 	glog.Infof("create k8sUser success!")
-	//TODO create namespace(√)
+	// create namespace(√)
 	_, err = u.kubeClientSet.CoreV1().Namespaces().Get(context.TODO(), user.Spec.Namespace, metav1.GetOptions{})
 	if err != nil {
 		if apierrors.IsNotFound(err) {
