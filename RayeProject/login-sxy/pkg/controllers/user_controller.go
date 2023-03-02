@@ -189,6 +189,7 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 	}
 	fmt.Println("old password:", oldUser.Spec.Password)
 	fmt.Println("new password", newUser.Spec.Password)
+	//TODO 更新失败？
 	if oldUser != newUser {
 		_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
 		if err != nil {
@@ -200,6 +201,7 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 			return
 		}
 	}
+	fmt.Println(oldUser.Spec.Username, "||||", newUser.Spec.Namespace)
 	if newUser.Spec.AdminRole == true {
 		if oldUser.Spec.Enabled == true && newUser.Spec.Enabled == false {
 			err := u.deleteClusterRoleBinding(newUser)
