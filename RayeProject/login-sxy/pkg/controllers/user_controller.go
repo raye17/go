@@ -618,10 +618,13 @@ func (u *UserController) deleteRoleBinding(user *apisUerV1.User) error {
 }
 func (u *UserController) createClusterRoleBinding(user *apisUerV1.User) error {
 	clusterRoleBinding := &rbacV1.ClusterRoleBinding{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: user.Spec.Username,
+		},
 		Subjects: []rbacV1.Subject{{
 			Kind:     "User",
 			APIGroup: rbacV1.GroupName,
-			Name:     user.Name,
+			Name:     user.Spec.Username,
 		}},
 		RoleRef: rbacV1.RoleRef{
 			APIGroup: rbacV1.GroupName,

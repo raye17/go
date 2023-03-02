@@ -120,6 +120,7 @@ limitations under the License.
 package main
 
 import (
+	"flag"
 	"fmt"
 	clientset "git.inspur.com/szsciit/cnos/adapter/generated/cnos/clientset/versioned"
 	informers "git.inspur.com/szsciit/cnos/adapter/generated/cnos/informers/externalversions"
@@ -141,7 +142,7 @@ var (
 )
 
 func main() {
-	//flag.Parse()
+	flag.Parse()
 	//处理信号量
 	stopCh := signals.SetupSignalHandler()
 	//处理入参
