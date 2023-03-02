@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a3c1f18a-4367-49cb-b351-67d5cfbf2059" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/RayeProject/clientGo/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/clientGo/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/controllers/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/controllers/user_controller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/auth.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" afterDir="false" />

@@ -187,9 +187,15 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 		glog.Errorf("user's username or AdminRole or namespace can not modify!")
 		return
 	}
+	fmt.Println("old password:", oldUser.Spec.Password)
+	fmt.Println("new password", newUser.Spec.Password)
 	if oldUser != newUser {
 		_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
 		if err != nil {
+			if apierrors.IsNotFound(err) {
+				fmt.Println("is not found")
+				return
+			}
 			glog.Errorf("update user error:%v", err)
 			return
 		}
