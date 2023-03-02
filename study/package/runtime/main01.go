@@ -13,6 +13,7 @@ func main() {
 		}
 	}("world")
 	for i := 0; i < 2; i++ {
+		fmt.Println("num:", runtime.NumGoroutine())
 		runtime.Gosched()
 		fmt.Println("hello")
 	}

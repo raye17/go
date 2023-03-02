@@ -276,8 +276,8 @@ func (u *UserController) generateUserSecret(user *apisUerV1.User) error {
 	// create the secret object
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      user.Name,
-			Namespace: user.Namespace,
+			Name:      user.Spec.Username,
+			Namespace: user.Spec.Namespace,
 		},
 		StringData: map[string]string{
 			"userPassword": string(PasswordHash),
@@ -297,8 +297,8 @@ func (u *UserController) generateUserSecret(user *apisUerV1.User) error {
 	} else {
 		fmt.Println("create secret success!")
 	}
-	secretName, err := u.kubeClientSet.CoreV1().Secrets(user.Namespace).Get(context.Background(), secret.Name, metav1.GetOptions{})
-	user.Spec.SecretName = secretName.Name
+	Secret, err := u.kubeClientSet.CoreV1().Secrets(user.Namespace).Get(context.Background(), secret.Name, metav1.GetOptions{})
+	user.Spec.SecretName = Secret.Name
 	return nil
 }
 
@@ -311,7 +311,7 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 	case user.Spec.Namespace == "":
 		return errors.New("user.Spec.Namespace can not be nil")
 	}
-	password, err := util.GetPassword(context.TODO(), user.Spec.SecretName, u.kubeClientSet.CoreV1().Secrets(user.Spec.Namespace))
+	password, err := util.GetPassword(context.TODO(), user.Spec.SecretName, u.kubeClientSet.CoreV1().Secrets(user.Namespace))
 	if err != nil {
 		glog.Errorf("get user.spec.password failed ,error:%v", err)
 		return err
@@ -330,14 +330,14 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 	if err = u.createK8sUser(user); err != nil {
 		glog.Errorf("create k8sUser error:%v", err)
 	}
-	glog.Infof("create k8suser success!")
+	glog.Infof("create k8sUser success!")
 	//TODO create namespace(√)
 	_, err = u.kubeClientSet.CoreV1().Namespaces().Get(context.TODO(), user.Spec.Namespace, metav1.GetOptions{})
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			ns := &corev1.Namespace{
 				ObjectMeta: metav1.ObjectMeta{
-					Name: user.Namespace,
+					Name: user.Spec.Namespace,
 				},
 			}
 			_, err = u.kubeClientSet.CoreV1().Namespaces().Create(context.TODO(), ns, metav1.CreateOptions{})
@@ -432,6 +432,7 @@ func (u *UserController) createCertificate(user *apisUerV1.User) error {
 	if !util.CheckFileExists(CACRT) || !util.CheckFileExists(CAKEY) {
 		return errors.New("k8s ca or key file is not exists")
 	}
+	// openssl x509 -req -in user.csr -CA k8s.crt -CAkey k8s.key -CAcreateserial -out user.crt -days
 	crt := filepath.Join(dir, user.Spec.Username+".crt")
 	crtCmd := []string{"openssl", "x509", "-req", "-in", csr, "-CA",
 		CACRT, "-CAkey", CAKEY, "-CAcreateserial", "-out", crt, "-days", DAY}
@@ -464,6 +465,19 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("failed to create k8sUser : %v,output : %s", err, string(output))
+	}
+	configCmd := exec.Command("kubectl", "config", "get-clusters")
+	configPut, err := configCmd.CombinedOutput()
+	if err != nil {
+		glog.Errorf("failed to get k8s name:", err)
+	}
+	clusterName := fmt.Sprintf(string(configPut[5:]))
+	cluster := fmt.Sprintf("--cluster=%s", clusterName)
+	users := fmt.Sprintf("--user=%s", user.Spec.Username)
+	userCmd := exec.Command("kubectl", "config", "set-context", user.Spec.Username, cluster, users)
+	_, err = userCmd.CombinedOutput()
+	if err != nil {
+		glog.Errorf("failed to set context for user ,error:%v", err)
 	}
 	glog.Infof("create k8sUser success,and output is %s", string(output))
 	return nil
@@ -620,6 +634,7 @@ func (u *UserController) createClusterRoleBinding(user *apisUerV1.User) error {
 		glog.Errorf("failed to create clusterRoleBinding,error:%v", err)
 		return err
 	}
+	glog.Infof("create cluster rolebinding success!")
 	return nil
 }
 func (u *UserController) deleteClusterRoleBinding(user *apisUerV1.User) error {
@@ -656,7 +671,7 @@ func (u *UserController) roleExists(user *apisUerV1.User) error {
 		if apierrors.IsNotFound(err) {
 			return fmt.Errorf("user %s exists but user's role is not exists", user.Spec.Username)
 		}
-		return fmt.Errorf("error getting role for user %s:%v", user.Spec.Username, err)
+		return fmt.Errorf("error get role for user %s:%v", user.Spec.Username, err)
 	}
 	return nil
 }

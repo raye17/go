@@ -1,15 +1,24 @@
 package main
 
-import "k8sClient-go/informer"
+import (
+	"fmt"
+	"k8sClient-go/client"
+	"os/exec"
+)
 
 func main() {
 	//client.Rest()
-	//client.Clientset()
+	_ = client.Clientset()
 	//pod.Namespace = "default"
 	//pod.CreatePod()
 	//pod.ListPod()
 	//pod.WatchPod()
 	//deployment.CreateDeployment()
-	informer.CreatePodInformer()
+	//informer.CreatePodInformer()
 	//informer.CreateServiceInformer()
+	//secret.Secret()
+	config := exec.Command("kubectl", "config", "get-clusters")
+	output, _ := config.CombinedOutput()
+	s := fmt.Sprintf(string(output[5:]))
+	fmt.Println(s)
 }

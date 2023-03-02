@@ -1,13 +1,17 @@
 package login
 
 import (
+	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	"time"
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	action := r.URL.Query().Get("action")
-
+	vars := mux.Vars(r)
+	//action := r.URL.Query().Get("action")
+	action := vars["action"]
+	fmt.Println("action", action)
 	if action == "logout" {
 		logout(w, r, "access_token")
 		return
@@ -17,7 +21,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func (auth *Authentication) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
 func login(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
@@ -25,6 +28,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
+	fmt.Println("user:...", username)
 	if username == "" || password == "" {
 		http.Error(w, "missing request fields", http.StatusBadRequest)
 		return

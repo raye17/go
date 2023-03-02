@@ -168,10 +168,12 @@ func main() {
 	login.SetKubeClientSet(kubeClientSet)
 	userFactory := informers.NewSharedInformerFactory(userClientSet, time.Second*30)
 	userController := controllers.NewUserController(kubeClientSet, userClientSet, userFactory)
+	go func() {
+		router.Router()
+	}()
 	if err = userController.Run(stopCh); err != nil {
 		glog.Fatalf("Error running controller: %s", err.Error())
 	}
-	router.Router()
 }
 
 //func init() {

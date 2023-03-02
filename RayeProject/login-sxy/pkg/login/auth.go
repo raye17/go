@@ -2,7 +2,6 @@ package login
 
 import (
 	"context"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	clientset "git.inspur.com/szsciit/cnos/adapter/generated/cnos/clientset/versioned"
@@ -48,12 +47,12 @@ func AuthenticateUser(username string, password string) (string, error) {
 		return "", fmt.Errorf("failed to get user %s:%v", username, err)
 	}
 	glog.Infof("get user from secret success")
-	hashedPassword, err := base64.StdEncoding.DecodeString(string(userSecret.Data["userPassword"]))
-	if err != nil {
-		return "", fmt.Errorf("failed decoding user password for user %s:%v", username, err)
-	}
+	//hashedPassword, err := base64.StdEncoding.DecodeString(string(userSecret.Data["userPassword"]))
+	//if err != nil {
+	//	return "", fmt.Errorf("failed decoding user password for user %s:%v", username, err)
+	//}
 	//Verify the provided password against the stored hash
-	if err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password)); err != nil {
+	if err = bcrypt.CompareHashAndPassword(userSecret.Data["userPassword"], []byte(password)); err != nil {
 		return "", fmt.Errorf("invaild password for user %s:%v", username, err)
 	}
 	//Generate and return a token for the authenticated user
@@ -101,7 +100,7 @@ func generateToken(username string) (string, error) {
 		IssuedAt:  time.Now().Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(jwtSecret)
+	signedToken, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
 		return "", fmt.Errorf("failed generate JWTtoken:%v", err)
 	}
