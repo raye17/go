@@ -504,22 +504,24 @@ func (u *UserController) createK8sUser(user *apisUerV1.User) error {
 	if err != nil {
 		return fmt.Errorf("failed to create k8sUser : %v,output : %s", err, string(output))
 	}
-	configCmd := exec.Command("kubectl", "config", "get-clusters")
-	configPut, err := configCmd.CombinedOutput()
-	if err != nil {
-		glog.Errorf("failed to get k8s name:", err)
-	}
-	clusterName := fmt.Sprintf(string(configPut[5:]))
-	fmt.Println("clusterName:", clusterName)
+	//configCmd := exec.Command("kubectl", "config", "get-clusters")
+	//_, err = configCmd.CombinedOutput()
+	//if err != nil {
+	//	glog.Errorf("failed to get k8s name:", err)
+	//}
+	//clusterName := fmt.Sprintf(string(configPut[5:]))
+	//fmt.Println("clusterName:", clusterName)
+	//TODO 获取k8s config clusterName(?)
+	clusterName := "kubernetes"
 	cluster := fmt.Sprintf("--cluster=%s", clusterName)
 	users := fmt.Sprintf("--user=%s", user.Spec.Username)
-	fmt.Println("cluster:", cluster)
+	//fmt.Println("cluster:", cluster)
 	userCmd := exec.Command("kubectl", "config", "set-context", user.Spec.Username, cluster, users)
 	output, err = userCmd.CombinedOutput()
 	if err != nil {
 		glog.Errorf("failed to set context for user ,error:%v", err)
 	}
-	glog.Infof("create k8sUser success,and output is %s", string(output))
+	glog.Infof("create k8sUser success")
 	return nil
 }
 func (u *UserController) deleteK8sUser(user *apisUerV1.User) error {
