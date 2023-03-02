@@ -311,7 +311,7 @@ func (u *UserController) createUser(user *apisUerV1.User) error {
 	case user.Spec.Namespace == "":
 		return errors.New("user.Spec.Namespace can not be nil")
 	}
-	password, err := util.GetPassword(context.TODO(), user.Spec.SecretName, u.kubeClientSet.CoreV1().Secrets(user.Namespace))
+	password, err := util.GetPassword(context.TODO(), user.Spec.SecretName, u.kubeClientSet.CoreV1().Secrets(user.Spec.Namespace))
 	if err != nil {
 		glog.Errorf("get user.spec.password failed ,error:%v", err)
 		return err
