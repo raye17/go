@@ -694,7 +694,7 @@ func (u *UserController) deleteClusterRoleBinding(user *apisUerV1.User) error {
 			return errors.New(fmt.Sprintf("in deleteClusterRoleBinding get clusterrolebindings error %v", err))
 		}
 	}
-	err = u.kubeClientSet.RbacV1().ClusterRoleBindings().Delete(context.TODO(), user.Name, metav1.DeleteOptions{})
+	err = u.kubeClientSet.RbacV1().ClusterRoleBindings().Delete(context.TODO(), user.Spec.Username, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
