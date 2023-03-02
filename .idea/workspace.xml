@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a3c1f18a-4367-49cb-b351-67d5cfbf2059" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/controllers/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/controllers/user_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

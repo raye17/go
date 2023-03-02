@@ -184,8 +184,6 @@ func (u *UserController) updateUser(oldObj, newObj interface{}) {
 		glog.Errorf("user's username or AdminRole or namespace can not modify!")
 		return
 	}
-	fmt.Println("old password:", oldUser.Spec.Username)
-	fmt.Println("new password", newUser.Spec.Username)
 	//TODO 更新失败？
 	//if oldUser != newUser {
 	//	_, err := u.userClientSet.CnosV1().Users().Update(context.TODO(), newUser, metav1.UpdateOptions{})
@@ -604,8 +602,14 @@ func (u *UserController) createRoleBinding(role *rbacV1.Role, user *apisUerV1.Us
 	userRoleBinding, err := u.kubeClientSet.RbacV1().RoleBindings(user.Spec.Namespace).Create(context.TODO(), roleBinding, metav1.CreateOptions{})
 	if err != nil {
 		if apierrors.IsAlreadyExists(err) {
-			glog.Infof("rolebinding %s is already exists", roleBinding.Name)
-			return nil, err
+			glog.Infof("rolebinding %s is already exists,is deleting this rolebinding...", roleBinding.Name)
+			err := u.deleteRoleBinding(user)
+			RoleBinding, err := u.kubeClientSet.RbacV1().RoleBindings(user.Spec.Namespace).Create(context.TODO(), roleBinding, metav1.CreateOptions{})
+			if err != nil {
+				glog.Errorf("create rolebinding failed:%v", err)
+				return nil, err
+			}
+			return RoleBinding, nil
 		}
 		glog.Errorf("failed to create RoleBinding %v", err)
 		return nil, err
