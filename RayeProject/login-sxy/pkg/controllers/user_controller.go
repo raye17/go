@@ -676,7 +676,7 @@ func (u *UserController) createClusterRoleBinding(user *apisUerV1.User) error {
 	return nil
 }
 func (u *UserController) deleteClusterRoleBinding(user *apisUerV1.User) error {
-	_, err := u.kubeClientSet.RbacV1().ClusterRoleBindings().Get(context.TODO(), user.Name, metav1.GetOptions{})
+	_, err := u.kubeClientSet.RbacV1().ClusterRoleBindings().Get(context.TODO(), user.Spec.Username, metav1.GetOptions{})
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			return errors.New(fmt.Sprintf("user %s exists but user's clusterRoleBinding not exists %v", user.Spec.Username, err))
