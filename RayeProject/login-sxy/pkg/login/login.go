@@ -28,9 +28,9 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
-	fmt.Println("user:...", username)
+	fmt.Println("user:", username)
 	if username == "" || password == "" {
-		http.Error(w, "missing request fields", http.StatusBadRequest)
+		http.Error(w, "missing request fields,username or password is empty", http.StatusBadRequest)
 		return
 	}
 	token, err := AuthenticateUser(username, password)
@@ -47,6 +47,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &accessTokenCookie)
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("login success!"))
 }
 func logout(w http.ResponseWriter, r *http.Request, cookieName string) {
 	cookie, err := r.Cookie(cookieName)

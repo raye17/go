@@ -10,7 +10,10 @@ func main() {
 	e := echo.New()
 	e.GET("/swag/*", swagger.WrapHandler)
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "hello,world!")
+		return c.JSON(http.StatusOK, echo.Map{
+			"message": "根目录",
+			"data":    "hello",
+		})
 	})
 	e.Logger.Fatal(e.Start(":1323"))
 }

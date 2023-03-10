@@ -5,6 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3c1f18a-4367-49cb-b351-67d5cfbf2059" name="变更" comment="">
+      <change beforePath="$PROJECT_DIR$/RayeProject/clientGo/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/clientGo/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/router/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/router/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/package/github.com/echo/hello/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/package/github.com/echo/hello/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/package/strings/toLower.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -15,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Go Application" />
         <option value="Go File" />
+        <option value="Go Application" />
       </list>
     </option>
   </component>
@@ -24,11 +29,27 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="b8725132-9154-4619-a58f-1d74fab88399" />
+        <option name="url" value="https://github.com/raye17/go.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
   <component name="KubernetesApiPersistence">
     <option name="context" value="kubernetes-admin@kubernetes" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2MIbwyTlh6KKH2DP9PMB3LFUN1c" />
   <component name="ProjectLevelVcsManager">
@@ -41,7 +62,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
+    "DefaultGoTemplateProperty": "Go Application",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
@@ -54,7 +75,8 @@
     "last_opened_file_path": "D:/go-work/inspur",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "settings.editor.selected.configurable": "com.goide.configuration.GoProjectSettingsConfigurable",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -63,6 +85,12 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\go-work\github.com\raye17\go\DesignPattern\creationalpattern\singletonPattern\01\model" />
+      <recent name="D:\go-work\github.com\raye17\go\study\package\strings" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="go build scratch_1.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="go" />
@@ -84,6 +112,17 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
