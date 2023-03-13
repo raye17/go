@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3c1f18a-4367-49cb-b351-67d5cfbf2059" name="变更" comment="">
-      <change beforePath="$PROJECT_DIR$/RayeProject/clientGo/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/clientGo/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/login/login.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/router/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/RayeProject/login-sxy/pkg/router/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/package/github.com/echo/hello/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/package/github.com/echo/hello/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study/package/strings/toLower.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignPattern/creationalpattern/simpleFactory/simpleFactory01/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/DesignPattern/creationalpattern/factoryPattern/simpleFactory/simpleFactory01/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DesignPattern/creationalpattern/simpleFactory/simplefactory/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/DesignPattern/creationalpattern/factoryPattern/simpleFactory/simplefactory/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/study/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/package/os/01/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/package/os/env/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/package/os/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/package/os/file/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/package/os/test.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/study/package/os/test01.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/study/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/study/test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -72,7 +75,7 @@
     "WebServerToolWindowFactoryState": "false",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/go-work/inspur",
+    "last_opened_file_path": "D:/go-work/github.com/raye17/go-admin",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -87,11 +90,13 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\go-work\github.com\raye17\go\study\package\os\file" />
+      <recent name="D:\go-work\github.com\raye17\go\DesignPattern\creationalpattern\factoryPattern" />
       <recent name="D:\go-work\github.com\raye17\go\DesignPattern\creationalpattern\singletonPattern\01\model" />
       <recent name="D:\go-work\github.com\raye17\go\study\package\strings" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go 构建.go build study/package/github.com/uniplaces/carbon/01">
     <configuration name="go build scratch_1.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="go" />
       <working_directory value="$PROJECT_DIR$" />
@@ -103,8 +108,28 @@
       <filePath value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.go" />
       <method v="2" />
     </configuration>
+    <configuration name="go build study/package/github.com/uniplaces/carbon/01" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="go" />
+      <working_directory value="$PROJECT_DIR$/study" />
+      <kind value="PACKAGE" />
+      <package value="study/package/github.com/uniplaces/carbon/01" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/study/package/github.com/uniplaces/carbon/01/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build study/package/os/exec" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="go" />
+      <working_directory value="$PROJECT_DIR$/study" />
+      <kind value="PACKAGE" />
+      <package value="study/package/os/exec" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/study/package/os/exec/main.go" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go 构建.go build study/package/github.com/uniplaces/carbon/01" />
+        <item itemvalue="Go 构建.go build study/package/os/exec" />
         <item itemvalue="Go 构建.go build scratch_1.go" />
       </list>
     </recent_temporary>

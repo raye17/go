@@ -8,13 +8,14 @@ require (
 	github.com/go-ini/ini v1.67.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/golang/glog v1.0.0
 	github.com/gorilla/mux v1.8.0
 	github.com/labstack/echo/v4 v4.9.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+	github.com/pkg/errors v0.9.1
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/cobra v1.6.1
 	github.com/swaggo/echo-swagger v1.3.5
+	github.com/uniplaces/carbon v0.2.2
 	github.com/urfave/cli v1.22.10
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.4.4
