@@ -1,5 +1,6 @@
 package main
 
+// runtime.GOMAXPROCS 限制CPU数量
 import (
 	"fmt"
 	"runtime"

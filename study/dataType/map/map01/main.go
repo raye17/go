@@ -17,7 +17,7 @@ func main() {
 			fmt.Println(k, i, v)
 		}
 	}
-	//值为map的切片
+	//值为切片的map
 	fmt.Println("值为map的切片", "\n", "\n", "***")
 	var sliceMap = make(map[string][]string, 8)
 	_, ok := sliceMap["中国"]

@@ -1,5 +1,6 @@
 package main
 
+// 并发的简单例子
 import (
 	"fmt"
 	"time"

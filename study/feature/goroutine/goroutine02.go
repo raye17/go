@@ -1,5 +1,6 @@
 package main
 
+// 并发和channel
 import "fmt"
 
 func main() {

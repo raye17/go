@@ -1,5 +1,6 @@
 package main
 
+// sync.WaitGroup 使用
 import (
 	"fmt"
 	"sync"
