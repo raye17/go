@@ -18,6 +18,7 @@ func missingNumber(nums []int) int {
 	//	sum02 += v
 	//}
 	//return sum01 - sum02
+
 	//异或
 	result := 0
 	for k, v := range nums {
