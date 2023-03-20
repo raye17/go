@@ -90,6 +90,6 @@ func getSecret(name string, ns string) {
 	info.password = string(secret.Data["password"])
 	info.username = secret.StringData["username"]
 	info.UserPassword = string(secret.Data["userPassword"])
-	info.Age = secret.StringData["Age"]
+	info.Age = string(secret.Data["Age"])
 	fmt.Printf("%+v", info)
 }

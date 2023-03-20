@@ -2,6 +2,7 @@ package main
 
 import (
 	"k8sClient-go/client"
+	"k8sClient-go/secret"
 )
 
 func main() {
@@ -14,6 +15,6 @@ func main() {
 	//deployment.CreateDeployment()
 	//informer.CreatePodInformer()
 	//informer.CreateServiceInformer()
-	//secret.Secret()
+	secret.Secret()
 
 }

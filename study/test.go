@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 type i interface {
@@ -61,8 +62,12 @@ func main() {
 	//d1 := 4
 	////d2 := (d1 >> 1) & 3
 	//fmt.Println(d1 & 3)
-	s := []int{96, 90, 41, 82, 39, 74, 64, 50, 30}
-	maxScore(s, 8)
+	s1 := []string{"name", "raye", "sxy"}
+	s2 := []string{"sxy", "ray", "name"}
+	s01, s02 := sets.NewString(s1...), sets.NewString(s2...)
+	fmt.Println(s01)
+	fmt.Println(s02)
+	fmt.Println(s01.Equal(s02))
 }
 func maxScore(cardPoints []int, k int) int {
 	count, result, length := 0, 0, len(cardPoints)
