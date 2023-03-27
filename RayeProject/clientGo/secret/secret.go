@@ -12,8 +12,8 @@ import (
 
 type data struct {
 	name         string
-	password     string `json:"password"`
-	username     string `json:"username"`
+	Password     string `json:"password"`
+	Username     string `json:"Username"`
 	UserPassword string `json:"userPassword"`
 	Age          string
 }
@@ -21,8 +21,8 @@ type data struct {
 func Secret() {
 	data := data{
 		name:         "user001",
-		password:     "123456",
-		username:     "username001",
+		Password:     "123456",
+		Username:     "username001",
 		UserPassword: "123456",
 		Age:          "19",
 	}
@@ -42,10 +42,10 @@ func createSecret(name string, ns string, ctx context.Context, data data) (*v1.S
 		},
 		Data: map[string][]byte{
 			"name":     []byte(data.name),
-			"password": []byte(data.password),
+			"password": []byte(data.Password),
 		},
 		StringData: map[string]string{
-			"username":     data.username,
+			"Username":     data.Username,
 			"userPassword": data.UserPassword,
 			"Age":          data.Age,
 		},
@@ -85,11 +85,14 @@ func getSecret(name string, ns string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	var info data
-	info.name = string(secret.Data["name"])
-	info.password = string(secret.Data["password"])
-	info.username = secret.StringData["username"]
-	info.UserPassword = string(secret.Data["userPassword"])
-	info.Age = string(secret.Data["Age"])
-	fmt.Printf("%+v", info)
+	//var info data
+	for k, v := range secret.Data {
+		fmt.Println(k, ":", string(v))
+	}
+	//info.name = string(secret.Data["name"])
+	//info.Password = string(secret.Data["password"])
+	//info.Username = string(secret.Data["Username"])
+	//info.UserPassword = string(secret.Data["userPassword"])
+	//info.Age = string(secret.Data["Age"])
+	//fmt.Printf("%+v", info)
 }
