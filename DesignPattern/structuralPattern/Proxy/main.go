@@ -41,8 +41,8 @@ func (g GitBash) Clone(url string) bool {
 type Coder struct{}
 
 func (c Coder) GetCode(url string, i int) {
-	gitbash := GetGit(i)
-	if gitbash.Clone(url) {
+	gitBash := GetGit(i)
+	if gitBash.Clone(url) {
 		fmt.Println("success")
 	} else {
 		fmt.Println("failed")
