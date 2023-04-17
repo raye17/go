@@ -7,15 +7,15 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	appsresv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	"k8s.io/client-go/util/retry"
 	"k8s.io/klog/v2"
-	"k8sClient-go/client"
 	"os"
 )
 
-func CreateDeployment() {
-	deployClient := client.Clientset().AppsV1().Deployments("test")
+func CreateDeployment(client *kubernetes.Clientset) {
+	deployClient := client.AppsV1().Deployments("test")
 	createDeploy(deployClient)
 	prompt()
 	updateDeploy(deployClient)

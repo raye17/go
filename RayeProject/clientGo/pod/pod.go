@@ -5,14 +5,14 @@ import (
 	"fmt"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8sClient-go/client"
+	"k8s.io/client-go/kubernetes"
 	"log"
 	"time"
 )
 
 var Namespace string
 
-func CreatePod() {
+func CreatePod(client *kubernetes.Clientset) {
 	pod := corev1.Pod{
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "v1",
@@ -39,7 +39,7 @@ func CreatePod() {
 			},
 		},
 	}
-	_, err := client.Clientset().CoreV1().Pods(Namespace).Create(
+	_, err := client.CoreV1().Pods(Namespace).Create(
 		context.Background(),
 		&pod,
 		metav1.CreateOptions{})
@@ -49,8 +49,8 @@ func CreatePod() {
 	}
 	log.Println("create pod success!")
 }
-func ListPod() {
-	podList, err := client.Clientset().CoreV1().Pods(corev1.NamespaceAll).List(
+func ListPod(client *kubernetes.Clientset) {
+	podList, err := client.CoreV1().Pods(corev1.NamespaceAll).List(
 		context.Background(),
 		metav1.ListOptions{})
 	if err != nil {
@@ -62,8 +62,8 @@ func ListPod() {
 		fmt.Printf("namespace:%s\tpod name:%s\n", pod.Namespace, pod.Name)
 	}
 }
-func WatchPod() {
-	watch, err := client.Clientset().CoreV1().Pods(corev1.NamespaceDefault).Watch(context.Background(),
+func WatchPod(client *kubernetes.Clientset) {
+	watch, err := client.CoreV1().Pods(corev1.NamespaceDefault).Watch(context.Background(),
 		metav1.ListOptions{})
 	if err != nil {
 		log.Panicln("watch err:", err)

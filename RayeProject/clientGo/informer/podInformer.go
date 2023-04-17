@@ -4,13 +4,13 @@ import (
 	"fmt"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/informers"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
-	"k8sClient-go/client"
 	"time"
 )
 
-func CreatePodInformer() {
-	clientSet := client.Clientset()
+func CreatePodInformer(client *kubernetes.Clientset) {
+	clientSet := client
 	sharedInformerFactory := informers.NewSharedInformerFactory(clientSet, 0)
 	podInformer := sharedInformerFactory.Core().V1().Pods()
 	informer := podInformer.Informer()

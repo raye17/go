@@ -1,20 +1,20 @@
 package main
 
-import (
-	"k8sClient-go/client"
-	"k8sClient-go/secret"
-)
+import "k8sClient-go/pod"
 
+//	func init(){
+//		_=client.Clientset()
+//		_=client.Rest
+//	}
 func main() {
 	//client.Rest()
-	_ = client.Clientset()
 	//pod.Namespace = "default"
 	//pod.CreatePod()
-	//pod.ListPod()
+	pod.ListPod()
 	//pod.WatchPod()
 	//deployment.CreateDeployment()
 	//informer.CreatePodInformer()
 	//informer.CreateServiceInformer()
-	secret.Secret()
+	//secret.Secret()
 
 }
