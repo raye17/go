@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/raye17/tour/internal/timer"
+	"github.com/raye17/go/RayeProject/tour/internal/timer"
 	"github.com/spf13/cobra"
 	"log"
 	"strconv"

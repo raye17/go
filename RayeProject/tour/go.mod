@@ -1,4 +1,4 @@
-module github.com/raye17/tour
+module github.com/raye17/go/RayeProject/tour
 
 go 1.19
 

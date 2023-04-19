@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/raye17/tour/cmd"
+	"github.com/raye17/go/RayeProject/tour/cmd"
 	"log"
 )
 

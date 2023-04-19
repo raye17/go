@@ -25,7 +25,7 @@ func main() {
 	err = db.Ping()
 	check(err)
 	fmt.Println("Successfully connected to the database!")
-	rows, err := db.Query("SELECT * FROM userInfo")
+	rows, err := db.Query("SELECT * FROM userinfo")
 	check(err)
 	for rows.Next() {
 		var u user
