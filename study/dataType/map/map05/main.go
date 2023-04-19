@@ -1,11 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
+
+type m map[interface{}]interface{}
+type mm []m
 
 func main() {
-	m1 := make(map[string]string, 1)
-	m2 := make(map[int]int, 2)
-	m3 := map[string]int{"m3-01": 1, "m3-02": 2}
+	m1 := make(m)
+	m2 := make(m, 2)
+	m3 := m{"m3-01": 1, "m3-02": 2}
 	fmt.Println(m1, len(m1))
 	fmt.Println(m2, len(m2))
 	m1["001"] = "m1-01"
@@ -14,17 +19,20 @@ func main() {
 	m2[19] = 91
 	m2[18] = 81
 	m1["003"] = "m1-03"
-	fmt.Println(m1, len(m1))
-	prints(m1)
-	for k, v := range m2 {
-		fmt.Println(k, v)
-	}
-	for k, v := range m3 {
-		fmt.Println(k, v)
-	}
+	var mms mm
+	m4 := m{"inter01": "inter-01"}
+	m4["in02"] = 222
+	mms = append(mms, m4)
+	mms = append(mms, m1)
+	mms = append(mms, m2)
+	mms = append(mms, m3)
+	prints(mms)
 }
-func prints(m map[string]string) {
-	for k, v := range m {
-		fmt.Println(k, v)
+func prints(m mm) {
+	for _, v := range m {
+		fmt.Println("...", v)
+		for l, k := range v {
+			fmt.Println(l, k)
+		}
 	}
 }
