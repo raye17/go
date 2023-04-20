@@ -1,10 +1,24 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"net/url"
 	"strconv"
 )
+
+const name = "sxy"
+
+func main() {
+	name := name + "raye"
+	fmt.Println(name)
+	s := "https://github.com/raye17/go.git"
+	b := sha256.Sum256([]byte(s))
+	fmt.Println(b)
+	t := hex.EncodeToString(b[:])
+	fmt.Println(t)
+}
 
 type student struct {
 	name string
@@ -29,31 +43,6 @@ type charts []chart
 
 type chart struct {
 	url []string
-}
-
-func main() {
-	//var chart01 = chart{
-	//	url: []string{"http://local:1111/?abc=123&fgh=456", "http://local:2222/test"},
-	//}
-	//var chart002 = chart{
-	//	url: []string{"https://localhost:3333/test033/fg", "ch02"},
-	//}
-	//var chs = charts{chart01, chart002}
-	//entry = make(map[string]charts)
-	//entry["entry01"] = chs
-	//entry["entry02"] = charts{
-	//	chart{
-	//		url: []string{"entry-url01", "entry-url02"},
-	//	},
-	//	chart{
-	//		url: []string{"entry02-url001"},
-	//	},
-	//}
-	//u := url.URL{}
-	//t(&u, entry)
-	//fmt.Println("after t ...")
-	//fmt.Println(entry)
-	//fmt.Println(u)
 }
 
 func t(baseUrl *url.URL, index map[string]charts) error {

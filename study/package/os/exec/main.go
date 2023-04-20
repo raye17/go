@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 	"os/exec"
-	"study/util"
+	"study/util/errors"
 )
 
 func main() {
@@ -12,6 +12,6 @@ func main() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	e := cmd.Run()
-	util.Checkout("cmd run failed: ", e)
+	errors.Checkout("cmd run failed: ", e)
 
 }
