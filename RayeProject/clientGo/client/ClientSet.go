@@ -6,7 +6,7 @@ import (
 )
 
 func Clientset() *kubernetes.Clientset {
-	config, err := clientcmd.BuildConfigFromFlags("", "conf/config")
+	config, err := clientcmd.BuildConfigFromFlags("", "C:/Users/sunxiaoyang01/.kube/config")
 	if err != nil {
 		panic(err)
 	}

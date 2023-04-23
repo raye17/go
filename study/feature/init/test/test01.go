@@ -1,6 +1,8 @@
 package test
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func init() {
 	fmt.Println("test01")

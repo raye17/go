@@ -1,6 +1,8 @@
 package test
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var i = 4
 
@@ -14,4 +16,5 @@ func init() {
 	fmt.Println("init...")
 	fmt.Println(i)
 	fmt.Println(name)
+
 }

@@ -204,7 +204,6 @@ func (c *IngressController) createIngress(service *corev1.Service) error {
 	}
 	ingress.Name = service.Name
 	ingress.Namespace = service.Namespace
-
 	pathType := apinetv1.PathTypePrefix
 	icn := "nginx"
 	ingress.Spec = apinetv1.IngressSpec{

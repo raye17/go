@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -11,13 +9,23 @@ import (
 const name = "sxy"
 
 func main() {
-	name := name + "raye"
-	fmt.Println(name)
-	s := "https://github.com/raye17/go.git"
-	b := sha256.Sum256([]byte(s))
-	fmt.Println(b)
-	t := hex.EncodeToString(b[:])
-	fmt.Println(t)
+	//dir, _ := os.Getwd()
+	//fmt.Println("ll", dir)
+	//m := map[string]interface{}{
+	//	"map01": map[string]interface{}{
+	//		"mmap": "test",
+	//	},
+	//}
+	//fmt.Println(m)
+	//re := regexp.MustCompile("(raye){2}")
+	//fmt.Println(re)
+	//name := name + "raye"
+	//fmt.Println(name)
+	//s := "https://github.com/raye17/go.git"
+	//b := sha256.Sum256([]byte(s))
+	//fmt.Println(b)
+	//t := hex.EncodeToString(b[:])
+	//fmt.Println(t)
 }
 
 type student struct {
