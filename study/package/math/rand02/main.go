@@ -11,7 +11,7 @@ func main() {
 	var num = rand.Intn(100) + 1
 	for i := 1; ; i++ {
 		if NUM == num {
-			fmt.Printf("over,num is %d", num)
+			fmt.Printf("over,count is %d,num is %d", i, num)
 			break
 		} else {
 			if NUM > num {
