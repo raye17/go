@@ -1,18 +1,41 @@
 package main
 
-import (
-	"fmt"
-	"sync/atomic"
-)
+import "fmt"
 
-var opts int64 = 0
-
-func main() {
-	fmt.Printf("%v\n", &opts)
-	add(&opts, 3)
+type S interface {
+	get() string
+}
+type student struct {
+	name string
 }
 
-func add(addr *int64, delta int64) {
-	atomic.AddInt64(addr, delta)
-	fmt.Println("add opts:", *addr)
+func (s student) get() string {
+	return s.name
+}
+
+type students []student
+
+func (s students) get() string {
+	for _, v := range s {
+		v.get()
+	}
+	return ""
+}
+func NewStu() student {
+	return student{}
+}
+func main() {
+	var gLevel = new(int32)
+	fmt.Println(*gLevel)
+
+}
+func New(stus ...student) S {
+	switch len(stus) {
+	case 0:
+		return NewStu()
+	case 1:
+		return stus[0]
+	default:
+		return students(stus)
+	}
 }
