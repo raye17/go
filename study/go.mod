@@ -56,6 +56,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/onsi/gomega v1.23.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
+	github.com/raye17/go v0.0.0-20230425060300-e9ec60729b39 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/swaggo/files v1.0.0 // indirect
 	github.com/swaggo/swag v1.8.8 // indirect
