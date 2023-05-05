@@ -1,11 +1,12 @@
 package main
 
-import "log"
+import "fmt"
 
 func main() {
-	log.SetPrefix("pre-login:")
-	log.Println("login error!")
-	log.SetPrefix("pre-logout:")
-	log.Println("sss")
-	log.Printf("%s", log.Prefix())
+	m := make(map[string]int)
+	m["name"] = 11
+	m["love"] = 19
+	if v, ok := m["name"]; ok {
+		fmt.Println(v)
+	}
 }

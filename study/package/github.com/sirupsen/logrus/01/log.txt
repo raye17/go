@@ -1,0 +1,1 @@
+time="2023-05-05T11:48:58+08:00" level=info msg="this will only be sent to redis"
