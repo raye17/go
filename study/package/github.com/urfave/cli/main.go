@@ -2,40 +2,59 @@ package main
 
 import (
 	"fmt"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	"os"
+	"sort"
 )
 
-type Command struct {
-}
-
-func (c *Command) Test(cli *cli.Context) {
-	uid := cli.Int("uid")
-	username := cli.String("username")
-	fmt.Println(uid, username)
-}
 func main() {
-	app := cli.NewApp()
-	app.Name = "test"
-	app.Commands = []cli.Command{
-		{
-			Name:   "test",
-			Usage:  "test --uid=x --username=y",
-			Action: (&Command{}).Test,
-			Flags: []cli.Flag{
-				cli.IntFlag{
-					Name:  "uid",
-					Usage: "--uid",
+	app := cli.App{
+		Commands: []*cli.Command{
+			{
+				Name:     "ls-l",
+				Usage:    "列出目录",
+				Category: "directory",
+				Action: func(c *cli.Context) error {
+					fmt.Println("args[0]:", c.Args().Get(0))
+					return nil
 				},
-				cli.StringFlag{
-					Name:  "username",
-					Usage: "--username",
+			},
+			{
+				Name:     "mkdir-m",
+				Aliases:  []string{"m"},
+				Category: "directory",
+				Usage:    "创建文件夹",
+				Action: func(c *cli.Context) error {
+					fmt.Println("mkdir...")
+					return nil
+				},
+			},
+			{
+				Name:    "test",
+				Aliases: []string{"t"},
+				Usage:   "test for test",
+				Subcommands: []*cli.Command{
+					{
+						Name:  "sub-test01",
+						Usage: "show sub-test01",
+						Action: func(c *cli.Context) error {
+							fmt.Println("this is sub-test01")
+							return nil
+						},
+					},
+					{
+						Name: "sub-test02",
+						Action: func(c *cli.Context) error {
+							fmt.Println("this is sub-test02")
+							return nil
+						},
+					},
 				},
 			},
 		},
 	}
-	err := app.Run(os.Args)
-	if err != nil {
+	sort.Sort(cli.CommandsByName(app.Commands))
+	if err := app.Run(os.Args); err != nil {
 		fmt.Println("command error:", err.Error())
 	}
 }

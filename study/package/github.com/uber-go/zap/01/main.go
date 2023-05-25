@@ -9,7 +9,12 @@ func main() {
 	zap.S().Info("global SugaredLogger before")
 
 	logger := zap.NewExample()
-	defer logger.Sync()
+	defer func(logger *zap.Logger) {
+		err := logger.Sync()
+		if err != nil {
+
+		}
+	}(logger)
 
 	zap.ReplaceGlobals(logger)
 	zap.L().Info("global Logger after")
