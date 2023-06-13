@@ -15,48 +15,36 @@ func NewListNode(id int, name string) *ListNode {
 	return node
 }
 func main() {
-	var head *ListNode
-	head = &ListNode{0, "raye", nil}
-	tail := head
-	fmt.Println("head:", head, "*head:", *head, "&head:", &head)
-	fmt.Println(&tail)
-	var node = &ListNode{2, "test", nil}
-	tail.next = node
-	fmt.Println(head.next)
-	tail = node
-	if head.next == tail {
-		fmt.Println("1")
-	}
+	head := new(ListNode)
+	head.id = 0
+	head.name = "raye"
+	node01 := NewListNode(1, "node01")
+	head.next = node01
+	node02 := NewListNode(2, "node02")
+	node01.next = node02
+	node03 := NewListNode(3, "node03")
+	addNode(head, node03)
+	node04 := NewListNode(4, "node04")
+	node05 := NewListNode(5, "node05")
+	node06 := NewListNode(6, "node06")
+	addNodes(head, node04, node05, node06)
+	listNode(head)
 
-	//head = new(ListNode)
-	//head.id = 0
-	//head.name = "raye"
-	//tail := head
-	//for i := 1; i <= 3; i++ {
-	//	switch i {
-	//	case 1:
-	//		tail.next = &ListNode{
-	//			id:   1,
-	//			name: "test01",
-	//		}
-	//		tail = tail.next
-	//	case 2:
-	//		tail.next = &ListNode{
-	//			id:   2,
-	//			name: "test02",
-	//		}
-	//	case 3:
-	//		tail.next = &ListNode{
-	//			id:   3,
-	//			name: "test03",
-	//		}
-	//		tail = tail.next
-	//	}
-	//}
-	//fmt.Print(*head)
-	//for head.next != nil {
-	//
-	//	head = head.next
-	//	fmt.Print("->", *head)
-	//}
+}
+func listNode(head *ListNode) {
+	for head != nil {
+		fmt.Println(head.id, head.name)
+		head = head.next
+	}
+}
+func addNode(head, node *ListNode) {
+	for head.next != nil {
+		head = head.next
+	}
+	head.next = node
+}
+func addNodes(head *ListNode, node ...*ListNode) {
+	for _, v := range node {
+		addNode(head, v)
+	}
 }

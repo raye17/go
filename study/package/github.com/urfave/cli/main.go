@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"os"
+	"os/exec"
 	"sort"
 )
 
@@ -16,6 +17,13 @@ func main() {
 				Category: "directory",
 				Action: func(c *cli.Context) error {
 					fmt.Println("args[0]:", c.Args().Get(0))
+					cmd := exec.Command("ls")
+					cmd.Stdout = os.Stdout
+					err := cmd.Run()
+					if err != nil {
+						fmt.Println("err:")
+						return err
+					}
 					return nil
 				},
 			},
