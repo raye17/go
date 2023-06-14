@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/raye17/go/RayeProject/tour/internal/timer"
 	"github.com/spf13/cobra"
 	"log"
@@ -17,7 +18,7 @@ var (
 		Short: "时间格式处理",
 		Long:  "时间格式处理",
 		Run: func(cmd *cobra.Command, args []string) {
-
+			fmt.Println("time:", time.Now())
 		},
 	}
 	nowTimeCmd = &cobra.Command{
@@ -26,7 +27,7 @@ var (
 		Long:  "获取当前时间",
 		Run: func(cmd *cobra.Command, args []string) {
 			nowTime := timer.GetNowTime()
-			log.Printf("输出结果：%s, %d", nowTime.Format("2006-01-02 15:04:05"), nowTime.Unix())
+			fmt.Printf("输出结果：%s, %d", nowTime.Format("2006-01-02 15:04:05"), nowTime.Unix())
 		},
 	}
 	calculateTimeCmd = &cobra.Command{
