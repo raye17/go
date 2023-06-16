@@ -7,24 +7,24 @@ func HeapSort(arr []int) {
 		return
 	}
 	for i := 0; i < len(arr); i++ {
-		HeapInsert(arr, i)
+		heapInsert(arr, i)
 	}
 	heapSize := len(arr)
 	heapSize--
 	swap(arr, 0, heapSize)
 	for heapSize > 0 {
-		Heapify(arr, 0, heapSize)
+		heapify(arr, 0, heapSize)
 		heapSize--
 		swap(arr, 0, heapSize)
 	}
 }
-func HeapInsert(arr []int, index int) {
+func heapInsert(arr []int, index int) {
 	for arr[index] > arr[(index-1)/2] {
 		swap(arr, index, (index-1)/2)
 		index = (index - 1) / 2
 	}
 }
-func Heapify(arr []int, index, heapSize int) {
+func heapify(arr []int, index, heapSize int) {
 	left := index*2 + 1
 	for left < heapSize {
 		largest := 0
