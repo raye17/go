@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 type Data struct {
@@ -187,6 +188,8 @@ func addNodes(head *ListNode, node ...*ListNode) {
 		addNode(head, v)
 	}
 }
+
+// 回环
 func isPalindrome(head *ListNode) bool {
 	m := head
 	flag := true
@@ -214,8 +217,7 @@ func isPalindrome(head *ListNode) bool {
 			flag = false
 			break
 		}
-		n1 = n1.next
-		n2 = n2.next
+		n1, n2 = n1.next, n2.next
 	}
 	n1 = n3.next
 	n3.next = nil
@@ -230,5 +232,128 @@ func isPalindrome(head *ListNode) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+// question:给定两个单链表，判断两个链表是否相交，如果相交，返回第一个相交点
+func getIntersectNode(head1, head2 *ListNode) *ListNode {
+	if head1 == nil || head2 == nil {
+		return nil
+	}
+	loop1 := getLoopNode(head1)
+	loop2 := getLoopNode(head2)
+	if loop1 == nil && loop2 == nil {
+		return noLoop(head1, head2)
+	}
+	if loop1 != nil && loop2 != nil {
+		return bothLoop(head1, loop1, head2, loop2)
+	}
+	return nil
+}
+
+// 1. 找到链表第一个入环节点，如果无环，返回空
+func getLoopNode(head *ListNode) *ListNode {
+	if head == nil || head.next == nil || head.next.next == nil {
+		return nil
+	}
+	n1, n2 := head.next, head.next.next
+	//如果无环，返回空
+	for n1 != n2 {
+		if n2.next == nil || n2.next.next == nil {
+			return nil
+		}
+		n2 = n2.next.next
+		n1 = n1.next
+	}
+	//如果有环，n2从头再走一遍，n1,n2下一次相遇在入环节点
+	n2 = head
+	for n1 != n2 {
+		n1 = n1.next
+		n2 = n2.next
+	}
+	return n1
+}
+
+// 2. 如果两个链表都无环，返回第一个相交点，不相交返回空
+func noLoop(head1, head2 *ListNode) *ListNode {
+	if head1 == nil || head2 == nil {
+		return nil
+	}
+	cur1, cur2, n := head1, head2, 0
+	for cur1.next != nil {
+		n++
+		cur1 = cur1.next
+	}
+	for cur2.next != nil {
+		n--
+		cur2 = cur2.next
+	}
+	//遍历到尾结点，如果不相等，说明不想交
+	if cur1 != cur2 {
+		return nil
+	}
+	//此时两个链表相交,n为两个链表长度差，长链表先走n步
+	if n >= 0 {
+		cur1 = head1
+		cur2 = head2
+	} else {
+		cur1 = head2
+		cur2 = head1
+	}
+	n = int(math.Abs(float64(n)))
+	for n != 0 {
+		n--
+		cur1 = cur1.next
+	}
+	for cur1 != cur2 {
+		cur1 = cur1.next
+		cur2 = cur2.next
+	}
+	return cur1
+}
+
+// 3. 如果只有一个链表有环，必定不想交；当两个链表都有环时
+func bothLoop(head1, loop1, head2, loop2 *ListNode) *ListNode {
+	var (
+		cur1, cur2 *ListNode
+	)
+	//入环节点相同
+	if loop1 == loop2 {
+		cur1, cur2 = head1, head2
+		n := 0
+		for cur1 != loop1 {
+			n++
+			cur1 = cur1.next
+		}
+		for cur2 != loop2 {
+			n--
+			cur2 = cur2.next
+		}
+		if n >= 0 {
+			cur1 = head1
+			cur2 = head2
+		} else {
+			cur1 = head2
+			cur2 = head1
+		}
+		n = int(math.Abs(float64(n)))
+		for n != 0 {
+			n--
+			cur1 = cur1.next
+		}
+		for cur1 != cur2 {
+			cur1 = cur1.next
+			cur2 = cur2.next
+		}
+		return cur1
+	} else {
+		cur1 = loop1.next
+		for cur1 != loop1 {
+			if cur1 == loop2 {
+				return loop1
+			}
+			cur1 = cur1.next
+		}
+		return nil
 	}
 }

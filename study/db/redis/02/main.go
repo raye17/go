@@ -3,18 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
+	"study/db/redis/client"
 )
 
 var r *redis.Client
 
-func init() {
-	r = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		DB:   0,
-	})
-}
 func main() {
+	r = client.NewClientRedis()
 	keys, err := r.Keys(context.Background(), "*").Result()
 	if err != nil {
 		panic(err)

@@ -1,17 +1,11 @@
-package main
+package radixSort
 
 import (
-	"fmt"
 	"math"
 )
 
 // 基数排序
 
-func main() {
-	s := []int{23, 45, 29, 120, 122, 21, 48}
-	RadixSort(s, 0, len(s)-1, 3)
-	fmt.Println(s)
-}
 func RadixSort(arr []int, l, r, digit int) {
 	const radix = 10
 	bucket := make([]int, r-l+1)

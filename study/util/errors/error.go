@@ -4,6 +4,6 @@ import "fmt"
 
 func Checkout(s string, err error) {
 	if err != nil {
-		fmt.Println(s, err)
+		fmt.Println(s, ":", err)
 	}
 }
