@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 )
@@ -11,5 +12,11 @@ func main() {
 			fmt.Printf("args[%d]=%v\n", index, arg)
 		}
 	}
+	var p string
+	s := flag.String("ben", "node", "usage-ben")
+	flag.StringVar(&p, "pp", "v-pp", "usage-pp")
+	flag.Parse()
+	fmt.Println(*s)
+	fmt.Println(p)
 
 }

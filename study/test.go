@@ -5,14 +5,6 @@ import (
 )
 
 func main() {
-	//fmt.Println(test1())
-	//fmt.Println(test2())
-	//fmt.Println(test3())
-	//fmt.Println(test4())
-	//fmt.Println(test7())
-	s := make([]int, 3)
-	s = append(s, 1, 2, 3)
-	fmt.Println(s)
 
 }
 func test7() (i int) {
