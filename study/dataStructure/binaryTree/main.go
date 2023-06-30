@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // BinaryTree 二叉树结构
 type BinaryTree struct {
@@ -77,13 +80,15 @@ func main() {
 	//node02.right = node06
 	//node03.left = node07
 	//node03.right = node08
-	arr := []interface{}{nil, "001", "002", "node02", 3, 4, "a", "b", "c", "d"}
-	head := CreateTree(arr, 1)
+	//arr := []interface{}{nil, "001", "002", "node02", 3, 4, "a", "b", "c", "d"}
+	arr1 := []interface{}{nil, 5, 3, 7, 2, 4, 6, 8, 1}
+	head := CreateTree(arr1, 1)
 	//f(head)
 	//fmt.Println(set)
-	//preOrderUnRecur(head)
-	//posOrderUnRecur(head)
+	preOrderUnRecur(head)
+	posOrderUnRecur(head)
 	inOrderUnRecur(head)
+	fmt.Println(IsBST(head))
 }
 
 // 递归遍历
@@ -195,3 +200,23 @@ func posOrderUnRecur(head *BinaryTree) {
 }
 
 //二叉树的宽度遍历，队列
+
+// 搜索二叉树：左子树<根节点<右子树;中序遍历的结果应为非递减
+// 判断是否为搜索二叉树
+var preValue = math.MinInt
+
+func IsBST(node *BinaryTree) bool {
+	if node == nil {
+		return true
+	}
+	if !IsBST(node.left) {
+		return false
+	}
+	v := node.value.(int)
+	if v <= preValue {
+		return false
+	} else {
+		preValue = v
+	}
+	return IsBST(node.right)
+}
