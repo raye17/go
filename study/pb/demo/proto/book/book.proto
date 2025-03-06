@@ -1,0 +1,11 @@
+syntax="proto3";
+package book;
+option go_package="sxy/demo/pb/demo/proto/book";
+
+import "book/price.proto";
+import "author/author.proto";
+message Book {
+  string title = 1;
+  Price price = 2;
+  author.Info authorInfo = 3;
+}

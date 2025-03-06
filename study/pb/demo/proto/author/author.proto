@@ -1,0 +1,6 @@
+syntax="proto3";
+package author;
+option go_package="sxy/demo/pb/demo/proto/author";
+message Info{
+    string name = 1;
+}

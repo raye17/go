@@ -1,0 +1,35 @@
+# doc/file01.yaml
+
+person:
+  name: xiaoyang sun
+  age: 21
+  gender: male
+  email: sxy@example.com
+  phone: 123-456-7890
+  address:
+    street: 123 Main St
+    city: Anytown
+    state: CA
+    zip: 12345
+  education:
+    - degree: Bachelor of Science
+      major: Computer Science
+      school: University of NorthEast
+      year: 2018
+    - degree: Master of Science
+      major: Data Science
+      school: University of QingHua
+      year: 2020
+  experience: 
+    - company: Example Inc.
+      position: Software Engineer
+      start_year: 2021 
+      end_year: 2022 
+    - company: Another Example Inc.
+      position: Senior Software Engineer
+      start_year: 2022
+      end_year: 2024
+  skills:
+    - Programming Languages: Go, Python, Java
+    - Tools: Docker, Kubernetes, Git
+    - Databases: MySQL, PostgreSQL, MongoDB

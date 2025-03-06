@@ -3,6 +3,9 @@
 
 # IntelliJ project files
 .idea
+.vscode
+*.iws
+*.ipr
 *.idea
 *.iml
 out
