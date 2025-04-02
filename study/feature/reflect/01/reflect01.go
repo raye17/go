@@ -1,4 +1,4 @@
-package main
+package reflectss
 
 //reflect demo
 import (

@@ -2,10 +2,11 @@ package handler
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
-	"sxy/demo/gin/jwt"
+	"study/gin/jwt"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 用于存储验证码的map（实际项目中应该使用Redis）

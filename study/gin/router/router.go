@@ -1,9 +1,10 @@
 package router
 
 import (
+	"study/gin/handler"
+	"study/gin/middleware"
+
 	"github.com/gin-gonic/gin"
-	"sxy/demo/gin/handler"
-	"sxy/demo/gin/middleware"
 )
 
 func NewRouter() *gin.Engine {

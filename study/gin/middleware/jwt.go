@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 	"strings"
-	"sxy/demo/gin/jwt"
+	"study/gin/jwt"
 
 	"github.com/gin-gonic/gin"
 )

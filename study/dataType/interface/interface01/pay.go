@@ -20,7 +20,7 @@ func choosePay(p pay) {
 	//fmt.Println("choose ")
 	p.pay()
 }
-func main() {
+func Pay() {
 	vx1 := vx{}
 	choosePay(vx1)
 }

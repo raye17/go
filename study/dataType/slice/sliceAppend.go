@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func Slice01() {
 	s1 := make([]int, 5)
 	s2 := make([]int, 0)
 	fmt.Println(s1, s2)
