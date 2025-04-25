@@ -2,10 +2,22 @@ package main
 
 import (
 	"fmt"
+	"study/config"
+	"study/db"
 )
 
 func main() {
-
+	err := config.InitConfig()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(config.AppConfig)
+	err = db.InitDB()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 func test7() (i int) {
 	defer func() {
