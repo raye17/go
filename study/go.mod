@@ -1,11 +1,12 @@
 module study
 
-go 1.22.0
+go 1.23.0
 
-toolchain go1.22.8
+toolchain go1.23.8
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/dubbogo/gost v1.14.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-echarts/go-echarts v1.0.0
 	github.com/go-ini/ini v1.67.0
@@ -16,6 +17,7 @@ require (
 	github.com/labstack/echo/v4 v4.9.1
 	github.com/lukasjarosch/go-docx v0.5.0
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+	github.com/redis/go-redis v6.15.9+incompatible
 	github.com/rogierlommers/logrus-redis-hook v0.0.0-20210902125448-a9c74cf92631
 	github.com/rs/zerolog v1.29.1
 	github.com/sirupsen/logrus v1.9.3
@@ -30,7 +32,7 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.35.0
 	go.opentelemetry.io/otel/sdk v1.35.0
 	go.uber.org/zap v1.24.0
-	golang.org/x/crypto v0.33.0
+	golang.org/x/crypto v0.36.0
 	gorm.io/driver/mysql v1.4.4
 	gorm.io/gorm v1.25.1
 	gorm.io/plugin/opentelemetry v0.1.12
@@ -40,9 +42,13 @@ require (
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.1 // indirect
+	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
+	github.com/onsi/ginkgo v1.16.5 // indirect
+	github.com/onsi/gomega v1.37.0 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
@@ -101,10 +107,10 @@ require (
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
-	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
+	golang.org/x/net v0.37.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/tools v0.30.0 // indirect
 	google.golang.org/protobuf v1.36.5
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

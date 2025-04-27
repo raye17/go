@@ -1,0 +1,51 @@
+71f95e28-ed44-455c-a40e-526a532f2393
+cd494854-6415-4822-9dcc-1a8c344a6f4f	上传错误: 上传错误
+4a6fd155-306d-438d-b3b1-d800cb525b31	上传错误: 上传错误
+6d334a87-85e6-402b-9154-18799600e356	上传错误: 上传错误
+7a3f3411-cb5c-4cb4-8bed-b4f3eaa1673d	上传错误: 上传错误
+96714c20-f278-41ba-b670-347ac20c1016	上传错误: 上传错误
+9b81f69e-fb72-48d2-a6a6-fc0b61d010bd	上传错误: 上传错误
+ef16d5d1-3384-48a4-82c0-61e55a563942	上传错误: 上传错误
+//////////////
+28ef65f7-871a-4a7d-82b7-6f54c0aa0460	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0162200' for key 'artwork_copyright.PRIMARY'
+7a6fb186-5722-43fd-94b3-efc20fbf285a	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0175234' for key 'artwork_copyright.PRIMARY'
+a190ca60-2ed2-470b-906e-6608e24c4049	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0220650' for key 'artwork_copyright.PRIMARY'
+eedefd88-fe1c-4cc2-acaa-03183584c386	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0256054' for key 'artwork_copyright.PRIMARY'
+f3cfbc6b-e880-44f3-a389-6debc39ae8fa	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0180408' for key 'artwork_copyright.PRIMARY'
+b1c660a6-7822-4921-92dd-de630a91b9a8	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0211820' for key 'artwork_copyright.PRIMARY'
+28ef65f7-871a-4a7d-82b7-6f54c0aa0460	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0162200' for key 'artwork_copyright.PRIMARY'
+7a6fb186-5722-43fd-94b3-efc20fbf285a	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0175234' for key 'artwork_copyright.PRIMARY'
+f3cfbc6b-e880-44f3-a389-6debc39ae8fa	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0180408' for key 'artwork_copyright.PRIMARY'
+a190ca60-2ed2-470b-906e-6608e24c4049	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0220650' for key 'artwork_copyright.PRIMARY'
+b1c660a6-7822-4921-92dd-de630a91b9a8	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0211820' for key 'artwork_copyright.PRIMARY'
+0e82663d-e30f-4969-bacc-d82b23437af2	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0065787' for key 'artwork_copyright.PRIMARY'
+30d55a04-f669-46d9-8ee3-d3507256413b	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0104909' for key 'artwork_copyright.PRIMARY'
+86508966-8e5c-4ee9-b433-f5be6192d7b3	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0029706' for key 'artwork_copyright.PRIMARY'
+eac2963d-3886-4b0c-a627-27036d12d3c0	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0029490' for key 'artwork_copyright.PRIMARY'
+eedefd88-fe1c-4cc2-acaa-03183584c386	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2022Z11L0256054' for key 'artwork_copyright.PRIMARY'
+c7b8194c-c38c-4023-9a78-f3bad9a7ff55	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0197032' for key 'artwork_copyright.PRIMARY'
+320dde1d-88fa-4d40-b8e3-7d2a17025b3c	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0082014' for key 'artwork_copyright.PRIMARY'
+dc888ea2-ce3b-4b2e-b41b-ddcb3aa98111	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0099644' for key 'artwork_copyright.PRIMARY'
+d197a5f2-6fb1-4ebd-9734-d95f1d85c282	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0300166' for key 'artwork_copyright.PRIMARY'
+00a38b7f-5140-4f2c-86c6-a39bc8f9d079	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0299800' for key 'artwork_copyright.PRIMARY'
+1145d4e1-2a5a-4b3c-acbe-c6a1aa5e5a99	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0204577' for key 'artwork_copyright.PRIMARY'
+a3f65746-b80d-4ecd-9b37-79405d2f97be	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0239306' for key 'artwork_copyright.PRIMARY'
+7fc89c2b-c59c-4fb4-904a-9e45c6f4a636	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0239306' for key 'artwork_copyright.PRIMARY'
+7c34b80e-1ae9-417a-8dd9-78e09d8db479	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0285995' for key 'artwork_copyright.PRIMARY'
+1af19997-ef79-47c7-a449-b6456460d34c	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0204334' for key 'artwork_copyright.PRIMARY'
+91a5b66c-33b9-415e-9391-8d07cd0a4b8b	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0239576' for key 'artwork_copyright.PRIMARY'
+4ae13270-99cf-42bd-a34d-31b42a9b3c48	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0284537' for key 'artwork_copyright.PRIMARY'
+fd715dad-6a14-4615-aaac-13df033b0748	BAD_REQUEST: <nil>
+d1abac47-d0d1-40d8-8cad-8ffd22c34aac	BAD_REQUEST: <nil>
+0bc8da9b-9d10-476f-90ae-43aeb5681230	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0219313' for key 'artwork_copyright.PRIMARY'
+a21a9168-4ffa-4cb8-b1a5-1a716b332515	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0233894' for key 'artwork_copyright.PRIMARY'
+dcae0366-daee-473b-a58f-c326131ec4bc	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0217067' for key 'artwork_copyright.PRIMARY'
+6cb9cc9a-3910-4311-ad6a-d3a76732132b	BAD_REQUEST: <nil>
+0344dd70-62ad-4645-a86d-4a11685b5d94	BAD_REQUEST: <nil>
+600f2fb3-4fa2-4d60-bc13-3c5e831e915b	BAD_REQUEST: <nil>
+60006066-2db4-4562-90c3-da30caa544be	BAD_REQUEST: <nil>
+91a40242-7b04-4085-8ffa-571fe11c220a	BAD_REQUEST: <nil>
+ec2ae8b8-5c9a-4cbc-8e6f-27705eb5730c	BAD_REQUEST: <nil>
+aafab36d-3d9c-4c4f-bea8-caec255da739	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0300067' for key 'artwork_copyright.PRIMARY'
+bca45258-acc5-427b-8181-82d930303fb7	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2023Z11L0300067' for key 'artwork_copyright.PRIMARY'
+d0f0b97b-0704-483c-9e73-8bdcd7b359c7	创建ArtworkCopyright失败: Error 1062 (23000): Duplicate entry '2024Z11L0039726' for key 'artwork_copyright.PRIMARY'
