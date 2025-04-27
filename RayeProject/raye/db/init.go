@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"raye/demo/config"
+	"raye/demo/db/model"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,17 +30,25 @@ func InitDB() error {
 	}
 	DbTest01 = db1Conn
 	DBtest02 = db2Conn
+	// 自动迁移
+	if err := AutoMigrateForDbTest01(model.User{}); err != nil {
+		return err
+	}
 	return nil
 
 }
 
 // 初始化数据库表
-func AutoMigrate(models ...interface{}) error {
+func AutoMigrateForDbTest01(models ...interface{}) error {
 	if err := DbTest01.AutoMigrate(models...); err != nil {
-		return fmt.Errorf("自动迁移失败: %w", err)
+		return fmt.Errorf("DbTest01 自动迁移失败: %w", err)
 	}
+	return nil
+}
+
+func AutoMigrateForDBtest02(models ...interface{}) error {
 	if err := DBtest02.AutoMigrate(models...); err != nil {
-		return fmt.Errorf("自动迁移失败: %w", err)
+		return fmt.Errorf("DBtest02 自动迁移失败: %w", err)
 	}
 	return nil
 }
