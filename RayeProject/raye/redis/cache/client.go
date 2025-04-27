@@ -7,7 +7,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var ClientRedis *redis.Client
+var RedisClient *redis.Client
 
 func init() {
 	clientRedis := redis.NewClient(&redis.Options{
@@ -19,8 +19,8 @@ func init() {
 		logger.Errorf("connRedis err :%v", err)
 		panic(err)
 	}
-	ClientRedis = clientRedis
+	RedisClient = clientRedis
 }
 func NewClientRedis() *redis.Client {
-	return ClientRedis
+	return RedisClient
 }
