@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-
 	redis := cache.NewClientRedis()
 	fmt.Println(redis)
 }

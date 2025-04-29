@@ -1,4 +1,4 @@
-package path
+package main
 
 import (
 	"bytes"
@@ -7,8 +7,17 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
+	"runtime"
 )
 
+func main() {
+	paths, _ := filepath.Abs("file.go")
+	fmt.Println(paths)
+	num := runtime.NumCPU()
+	fmt.Println(num)
+	fmt.Println(filepath.Dir(filepath.Dir(paths)))
+}
 func sTest05() {
 	file, _ := os.Open("./ss.txt")
 	buff := new(bytes.Buffer)

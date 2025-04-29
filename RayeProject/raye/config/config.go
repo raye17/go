@@ -16,6 +16,9 @@ func InitConfig() error {
 	viper.SetConfigName("conf")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./conf")
+	viper.AddConfigPath("../conf")       // 上级目录下的conf
+	viper.AddConfigPath("../../conf")    // 上两级目录下的conf
+	viper.AddConfigPath("../../../conf") // 上三级目录下的conf
 	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("读取配置文件失败: %w", err)
 	}
@@ -39,6 +42,8 @@ type Config struct {
 		Password string `yaml:"password"`
 		Database int    `yaml:"database"`
 	}
+	SMTP     SMTPConfig
+	RabbitMQ RabbitMQConfig
 }
 type Mysql struct {
 	Host     string `yaml:"host"`
@@ -46,4 +51,15 @@ type Mysql struct {
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
 	Database string `yaml:"database"`
+}
+type SMTPConfig struct {
+	Host     string
+	Port     int
+	Username string
+	Password string
+	From     string
+}
+
+type RabbitMQConfig struct {
+	URL string
 }

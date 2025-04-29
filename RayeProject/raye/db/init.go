@@ -16,39 +16,27 @@ import (
 var DbTest01 *gorm.DB
 var DBtest02 *gorm.DB
 
-func InitDB() error {
+func InitDB() (err error) {
 	db1 := config.AppConfig.Mysql["test01"]
 	db2 := config.AppConfig.Mysql["test02"]
 	// 连接数据库
-	db1Conn, err := DbConnect(db1)
+	DbTest01, err = DbConnect(db1)
 	if err != nil {
 		return err
 	}
-	db2Conn, err := DbConnect(db2)
+	DBtest02, err = DbConnect(db2)
 	if err != nil {
 		return err
 	}
-	DbTest01 = db1Conn
-	DBtest02 = db2Conn
 	// 自动迁移
-	if err := AutoMigrateForDbTest01(model.User{}); err != nil {
+	if err := AutoMigrate(); err != nil {
 		return err
 	}
 	return nil
-
 }
-
-// 初始化数据库表
-func AutoMigrateForDbTest01(models ...interface{}) error {
-	if err := DbTest01.AutoMigrate(models...); err != nil {
+func AutoMigrate() error {
+	if err := DbTest01.AutoMigrate(model.User{}); err != nil {
 		return fmt.Errorf("DbTest01 自动迁移失败: %w", err)
-	}
-	return nil
-}
-
-func AutoMigrateForDBtest02(models ...interface{}) error {
-	if err := DBtest02.AutoMigrate(models...); err != nil {
-		return fmt.Errorf("DBtest02 自动迁移失败: %w", err)
 	}
 	return nil
 }
@@ -81,12 +69,16 @@ func DbConnect(cfg config.Mysql) (*gorm.DB, error) {
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
+		fmt.Println("连接数据库失败: ", err)
 		return nil, err
 	}
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(20)
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Second * 30)
+	if err := sqlDB.Ping(); err != nil {
+		return nil, err
+	}
 	return db, nil
 
 }
