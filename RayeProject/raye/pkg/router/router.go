@@ -1,8 +1,8 @@
 package router
 
 import (
+	"net/http"
 	"raye/demo/pkg/middleware"
-	"raye/demo/pkg/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,11 +16,18 @@ func NewRouter() {
 			"message": "Hello, World!",
 		})
 	})
-	r.POST("user/login", service.Login)
-	r.Use(middleware.JWTMiddleware())
-	r.POST("user/logout", service.Logout)
 	privateGroup := r.Group("")
+	privateGroup.Use(middleware.JWTMiddleware())
 	userRouter(privateGroup)
+	ImgRouter(privateGroup)
+	r.StaticFS("/static", http.Dir("./runtime"))
+	r.StaticFile("/favicon.ico", "./runtime/favicon.ico")
+	r.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status": 1,
+			"msg":    "不存在的路由",
+		})
+	})
 	// 启动服务器
 	r.Run(":8080")
 }

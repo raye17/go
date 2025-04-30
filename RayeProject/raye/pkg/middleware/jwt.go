@@ -21,23 +21,13 @@ const Authorization = "Authorization"
 // JWTMiddleware JWT token验证中间件
 func JWTMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		authHeader := ctx.GetHeader(Authorization)
-		fmt.Println(authHeader)
-		if authHeader == "" {
+		token := ctx.GetHeader(Authorization)
+		fmt.Println(token)
+		if token == "" {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "token is empty"})
 			return
 		}
-
-		// // 确保Authorization header格式正确并提取token
-		// splitToken := strings.Split(authHeader, "Bearer ")
-		// if len(splitToken) != 2 {
-		// 	fmt.Println("22222222")
-		// 	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		// 	return
-		// }
-
-		// token := splitToken[1]
-		username, err := verifyToken(authHeader)
+		username, err := verifyToken(token)
 		if err != nil {
 			fmt.Println("33333333", err)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
@@ -55,7 +45,7 @@ func JWTMiddleware() gin.HandlerFunc {
 			Id:     user.ID,
 			Age:    user.Age,
 			Gender: user.Gender,
-			Token:  authHeader,
+			Token:  token,
 		}
 
 		// 将认证的用户名添加到请求上下文
