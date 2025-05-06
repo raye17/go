@@ -1,0 +1,33 @@
+system:
+  mode: pro #正式 prod #测试 test #开发 dev
+#  config_source: configmap
+BccrYF:
+  access_key_id: "ACsK4CQqzj5rGSKf"
+  access_key_secret: "SJmH5eATWY26tJrVg8QyHaBGbLNCbj7y"
+  end_point: "openapi.antchain.antgroup.com"
+BccrYXT:
+  access_key_id: "ACSvp2GUdWUucS7r"
+  access_key_secret: "dQ8hFkLs2qnMNYRuvrtzDp6mtQB7uVwg"
+  end_point: "openapi.antchain.antgroup.com"
+#redis:
+#  db: ${oa-meeting.redis.db}
+#  addr: ${redis.addr}
+#  password:  ${redis.password}
+zapLog:
+  level: "info"
+  filename: "logs/chain-dci.log"
+  max_size: 5
+  max_age: 30
+  max_backups: 30
+snowflake:
+  node_num: 4
+  start_time: "2023-11-27"
+jaeger:
+  addr: "127.0.0.1:6831"
+  open: false
+#rabbitmq:
+#  user: ${rabbitmq.user}
+#  password: ${rabbitmq.password}
+#  host:  ${rabbitmq.host}
+#  port: ${rabbitmq.port}
+#  vhost: ${oa-meeting.rabbitmq.vhost}

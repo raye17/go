@@ -1,0 +1,98 @@
+kind: pipeline
+type: docker
+name: chain-dci【K8s-测试服】
+volumes:
+  - name: pkgdeps
+    host:
+      path: /mnt/storage/data/drone/define_cache/chain-dci
+  - name: docker
+    host:
+      path: /var/run/docker.sock
+  - name: docker-daemon
+    host:
+      path: /etc/docker/daemon.json
+steps:
+  - name: fetch submodules
+    image: testhub.szjixun.cn:9043/public/plugins/git
+    pull: if-not-exists
+    commands:
+      - git submodule update --init --force --recursive --remote
+  - name: build
+    image: testhub.szjixun.cn:9043/public/golang:1.20-alpine
+    pull: if-not-exists
+    network:
+      mode: bridge
+      options:
+        com.docker.network.bridge.host_binding_ipv4: "172.16.100.22"
+        com.docker.network.bridge.name: "dnmp_default"
+    environment:
+      GOPROXY: "https://goproxy.cn,direct"
+      GOPATH: /go
+      GOCACHE: /go/pkg/mod/cache
+    volumes:
+      - name: pkgdeps
+        path: /go/pkg
+    commands:
+      - cp DockerfileTest Dockerfile
+      - CGO_ENABLED=0 go build -ldflags "-s -w" -o chain-dci-server ./cmd
+  - name: publish
+    image: testhub.szjixun.cn:9043/public/plugins/docker
+    pull: if-not-exists
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+      - name: pkgdeps
+        path: /cache
+    settings:
+      purge: false
+      username:
+        from_secret: harbor22-name
+      password:
+        from_secret: harbor22-password
+      registry:
+        from_secret: harbor22-host
+      repo: testhub.szjixun.cn:9043/k8stest/chain-dci-server
+      tags:
+        - latest
+        - ${DRONE_BUILD_NUMBER}
+  - name: Deploy app
+    image: testhub.szjixun.cn:9043/public/drone-k8s:latest
+    settings:
+      debug: true
+      build_number: ${DRONE_BUILD_NUMBER}
+      kuboard_accessKey: p7by8secijpm.bipdt88e55c8me4szah2njpr5kie2yed
+      namespace: "chain-server"
+      deployment_name: "chain-dci-server"
+      dashboard: kuboard
+      build_repo:
+        from_secret: build_repo
+
+  - name: 钉钉通知
+    image: testhub.szjixun.cn:9043/public/drone-ding
+    settings:
+      token:
+        from_secret: ding-token
+      secret:
+        from_secret: ding-secret
+      type: markdown
+      message_color: true
+      message_pic: true
+      sha_link: true
+      db_log: true
+      db_type: mysql
+      db_name: notelog
+      db_host: "172.16.100.99"
+      db_port: 9007
+      db_username: artuser # 后期需要修改
+      db_password: "C250PflXIWv2SQm8" # 后期需要修改
+    when:
+      status: [ failure, success ]
+      branch: dev
+network:
+  subnet: 172.18.0.0/16
+trigger:
+  branch:
+    - dev
+  event:
+    - push
+    - custom

@@ -1,0 +1,358 @@
+syntax = "proto3";
+
+package dci;
+option go_package = "./dci";
+
+import "pb/descriptor.proto";
+import "pb/validator.proto";
+
+service Dci {
+  // 通用接口 用于文件上传
+  rpc GetUploadUrl(GetUploadUrlRequest) returns (GetUploadUrlResponse);
+
+  // dci user
+  rpc AddDciUser(AddDciUserRequest) returns (AddDciUserResponse);
+  rpc UpdateDciUser(UpdateDciUserRequest) returns (UpdateDciUserResponse);
+  rpc QueryDciUser(QueryDciUserRequest) returns (QueryDciUserResponse);
+
+  // dci work
+  rpc CreateDciPreregistration(CreateDciPreregistrationRequest) returns (CreateDciPreregistrationResponse);
+  rpc QueryDciPreregistration(QueryDciPreregistrationRequest) returns (QueryDciPreregistrationResponse);
+  rpc SubmitDciFeedback(SubmitDciFeedbackRequest) returns (SubmitDciFeedbackResponse);
+  rpc QueryDciFeedback(QueryDciFeedbackRequest) returns (QueryDciFeedbackResponse);
+//  rpc RetryDciPreregistration(RetryDciPreregistrationRequest) returns ();
+
+  // 数登
+  rpc CreateDciRegistration(CreateDciRegistrationRequest) returns (CreateDciRegistrationResponse); // 发起数登申请
+  rpc QueryDciRegistration(QueryDciRegistrationRequest) returns (QueryDciRegistrationResponse);   // 查询数登申请
+  rpc GetDciPayUrl(GetDciPayUrlRequest) returns (GetDciPayUrlResponse);                   // 数登支付链接获取
+  rpc QueryDciPay(QueryDciPayRequest) returns (QueryDciPayResponse);                     // 数登支付查询
+  rpc GetDciRegistrationcert(GetDciRegistrationcertRequest) returns (GetDciRegistrationcertResponse); // 获取数登证书下载
+  rpc RetryDciRegistration(RetryDciRegistrationRequest) returns (RetryDciRegistrationResponse);     // 补正申请
+  rpc CloseDciRegistration(CloseDciRegistrationRequest) returns (CloseDciRegistrationResponse);     // 数登停止申请
+}
+
+// 获取 文件上传的 oss链接
+message GetUploadUrlRequest {
+  string  authToken = 1 [json_name = "authToken"];
+  string  productInstanceId = 2 [json_name = "productInstanceId"];
+  string  fileName = 3 [json_name = "fileName",(validator.field) = {string_not_empty: true,human_error:"文件不能为空"}];   //  此处传递的是文件的额链接,文件名如果是中文需要
+  string  clientToken = 4 [json_name = "clientToken"];
+}
+
+message GetUploadUrlResponse {
+  string reqMsgId = 1 [json_name = "reqMsgId"];
+  string resultCode = 2 [json_name = "resultCode"];
+  string resultMsg = 3 [json_name = "resultMsg"];
+  string url = 4 [json_name = "url"];
+  string fileId = 5 [json_name = "fileId"];
+}
+
+// Dci user 注册
+message AddDciUserRequest {
+  string certName = 1 [json_name = "certName",(validator.field) = {string_not_empty: true,human_error:"证件名称不能为空"}];
+  string certificateNumber = 2 [json_name = "certificateNumber",(validator.field) = {string_not_empty: true,human_error:"证件号码不能为空"}];
+  string certificateType = 3 [json_name = "certificateType",(validator.field) = {string_not_empty: true,human_error:"证件类型不能为空"}];
+  string certificateFrontFileId = 4 [json_name = "certificateFrontFileId",(validator.field) = {string_not_empty: true,human_error:"证件正面文件路径不能为空"}];
+  string certificateBackFileId = 5 [json_name = "certificateBackFileId"];
+  string legalPersonCertName = 6 [json_name = "legalPersonCertName"];
+  string legalPersonCertType = 7 [json_name = "legalPersonCertType"];
+  string legalPersonCertNo = 8 [json_name = "legalPersonCertNo"];
+  string phone = 9 [json_name = "phone",(validator.field) = {string_not_empty: true,human_error:"手机号不能为空"}];
+  string areaType = 10 [json_name = "areaType",(validator.field) = {string_not_empty: true,human_error:"所属地区不能为空"}];
+  string clientToken = 11 [json_name = "clientToken"];
+}
+
+message AddDciUserResponse {
+  string dciUserId = 1 [json_name = "dciUserId"];
+  string dciUserStatus = 2 [json_name = "dciUserStatus"];
+  string resultCode = 3 [json_name = "resultCode"];
+  string resultMsg = 4 [json_name = "resultMsg"];
+  string reqMsgId = 5 [json_name = "reqMsgId"];
+}
+
+// Dci user 更新
+message  UpdateDciUserRequest {
+  string dciUserId = 1 [json_name = "dciUserId",(validator.field) = {string_not_empty: true,human_error:"dci用户ID不能为空"}];
+  string certFrontFileId = 2 [json_name = "certFrontFileId",(validator.field) = {string_not_empty: true,human_error:"证件正面文件路径不能为空"}];
+  string certBackFileId = 3 [json_name = "certBackFileId"];
+  string phone = 4 [json_name = "phone"];
+  string clientToken = 5 [json_name = "clientToken"];
+}
+
+message UpdateDciUserResponse {
+  string resultCode = 1 [json_name = "resultCode"];
+  string resultMsg = 2 [json_name = "resultMsg"];
+  string reqMsgId = 3 [json_name = "reqMsgId"];
+}
+
+// Dci user 查询
+message QueryDciUserRequest {
+  string certificateType = 1 [json_name = "certificateType",(validator.field) = {string_not_empty: true,human_error:"证件类型不能为空"}];
+  string certificateNumber = 2 [json_name = "certificateNumber",(validator.field) = {string_not_empty: true,human_error:"证件号码不能为空"}];
+  string phone = 3 [json_name = "phone",(validator.field) = {string_not_empty: true,human_error:"手机号不能为空"}];
+}
+
+message QueryDciUserResponse {
+  string dciUserId = 1 [json_name = "dciUserId"];
+  string dciUserStatus = 2 [json_name = "dciUserStatus"];
+  string name = 3 [json_name = "name"];
+  string certificateType = 4 [json_name = "certificateType"];
+  string certificateNumber = 5 [json_name = "certificateNumber"];
+  string address = 6 [json_name = "address"];
+  string certStartTime = 7 [json_name = "certStartTime"];
+  string certEndTime = 8 [json_name = "certEndTime"];
+  string legalPerson = 9 [json_name = "legalPerson"];
+  string resultCode = 10 [json_name = "resultCode"];
+  string resultMsg = 11 [json_name = "resultMsg"];
+  string reqMsgId = 12 [json_name = "reqMsgId"];
+}
+
+// Dci work 申领
+message CreateDciPreregistrationRequest {
+  string workName = 1 [json_name = "workName",(validator.field) = {string_not_empty: true,length_lt: 51,human_error:"作品名称不能为空"}];
+  string dciUserId = 2 [json_name = "dciUserId",(validator.field) = {string_not_empty: true,human_error:"DCI用户ID不能为空"}];
+  string workCategory = 3 [json_name = "workCategory",(validator.field) = {string_not_empty: true,human_error:"作品类型不能为空"}];
+  string workFileId = 4 [json_name = "workFileId",(validator.field) = {string_not_empty: true,human_error:"作品文件路径不能为空"}];
+  string fileType = 5 [json_name = "fileType",(validator.field) = {string_not_empty: true,human_error:"文件类型不能为空"}];
+  DciCreationInfo creationInfo = 6 [json_name = "creationInfo",(validator.field) = {string_not_empty: true,human_error:"创作信息不能为空"}];
+  DciPublicationInfo publicationInfo = 7 [json_name = "publicationInfo",(validator.field) = {string_not_empty: true,human_error:"发表信息不能为空"}];
+  string authorName = 8 [json_name = "authorName",(validator.field) = {string_not_empty: true,human_error:"作者姓名不能为空"}];
+  string authorSignature = 9 [json_name = "authorSignature",(validator.field) = {string_not_empty: true,human_error:"作者署名不能为空"}];
+  string originalStatement = 10 [json_name = "originalStatement"];
+  DciRightInfo rightInfo = 11 [json_name = "rightInfo",(validator.field) = {string_not_empty: true,human_error:"权利信息不能为空"}];
+  string preRegistrationTrueWill = 12 [json_name = "preRegistrationTrueWill",(validator.field) = {string_not_empty: true,human_error:"真实意愿表达信息不能为空"}];
+  repeated string copyrightOwnerIds = 13 [json_name = "copyrightOwnerIds",(validator.field) = {string_not_empty: true,human_error:"著作权人用户id列表不能为空"}];
+  string clientToken = 14 [json_name = "clientToken"];
+}
+
+message DciCreationInfo {
+  string creationNature = 1 [json_name = "creationNature",(validator.field) = {string_not_empty: true,human_error:"作品创作性质不能为空"}];
+  string creationCompletionDate = 2 [json_name = "creationCompletionDate",(validator.field) = {string_not_empty: true,human_error:"创作完成日期不能为空"}];
+  string creationCompletionCode = 3 [json_name = "creationCompletionCode",(validator.field) = {string_not_empty: true,human_error:"作品创作地点地区编码不能为空"}];
+}
+
+message DciPublicationInfo {
+  string publicationStatus = 1 [json_name = "publicationStatus",(validator.field) = {string_not_empty: true,human_error:"作品发表状态不能为空"}];
+  string firstPublicationDate = 2 [json_name = "firstPublicationDate",(validator.field) = {string_not_empty: true,human_error:"首次发表日期不能为空"}];
+  string firstPublicationCode = 3 [json_name = "firstPublicationCode",(validator.field) = {string_not_empty: true,human_error:"首次发表地点地区编码不能为空"}];
+}
+
+message DciRightInfo {
+  string rightScope = 1 [json_name = "rightScope",(validator.field) = {string_not_empty: true,human_error:"作品权利范围不能为空"}];
+  string rightObtainWay = 2 [json_name = "rightObtainWay",(validator.field) = {string_not_empty: true,human_error:"权利取得方式不能为空"}];
+  string ownershipWay = 3 [json_name = "ownershipWay",(validator.field) = {string_not_empty: true,human_error:"权利归属方式不能为空"}];
+}
+
+message CreateDciPreregistrationResponse {
+  string dciContentId = 1 [json_name = "dciContentId"];
+  string resultCode = 2 [json_name = "resultCode"];
+  string resultMsg = 3 [json_name = "resultMsg"];
+  string reqMsgId = 4 [json_name = "reqMsgId"];
+  string errorMsg = 5 [json_name = "errorMsg"];
+}
+
+// Dci work 查询申领信息
+message QueryDciPreregistrationRequest {
+  string dciContentId = 1 [json_name = "dciContentId",(validator.field) = {string_not_empty: true,human_error:"DCI内容ID不能为空"}];
+}
+
+message QueryDciPreregistrationResponse {
+  string status = 1 [json_name = "status"];
+  string fileHash = 2 [json_name = "fileHash"];
+  string fileHashTxHash = 3 [json_name = "fileHashTxHash"];
+  string fileHashBlockHeight = 4 [json_name = "fileHashBlockHeight"];
+  string dciCode = 5 [json_name = "dciCode"];
+  string dciCodeTxHash = 6 [json_name = "dciCodeTxHash"];
+  string dciCodeBlockHeight = 7 [json_name = "dciCodeBlockHeight"];
+  string dciCodeFileTxHash = 8 [json_name = "dciCodeFileTxHash"];
+  string dciCodeFileBlockHeight = 9 [json_name = "dciCodeFileBlockHeight"];
+  string preRegCertTxHash = 10 [json_name = "preRegCertTxHash"];
+  string preRegCertBlockHeight = 11 [json_name = "preRegCertBlockHeight"];
+  string dciCodeTsr = 12 [json_name = "dciCodeTsr"];
+  string dciCodeFileTsr = 13 [json_name = "dciCodeFileTsr"];
+  string preRegCertTsr = 14 [json_name = "preRegCertTsr"];
+  string preRegCertFileHash = 15 [json_name = "preRegCertFileHash"];
+  string preRegCertUrl = 16 [json_name = "preRegCertUrl"];
+  string applyObtainDate = 17 [json_name = "applyObtainDate"];
+  string dciCodeObtainDate = 18 [json_name = "dciCodeObtainDate"];
+  string errorReason = 19 [json_name = "errorReason"];
+  string errorReasonCn = 20 [json_name = "errorReasonCn"];
+  string resultCode = 21 [json_name = "resultCode"];
+  string resultMsg = 22 [json_name = "resultMsg"];
+  string reqMsgId = 23 [json_name = "reqMsgId"];
+}
+
+// Dci work 撤销
+
+
+// 数登  发起申请
+message  CreateDciRegistrationRequest {
+  string dciContentId = 1 [json_name = "dciContentId",(validator.field) = {string_not_empty: true,human_error:"DCI申领ID不能为空"}];
+  DciExplanationInfo explanationInfo = 2 [json_name = "explanationInfo",(validator.field) = {string_not_empty: true,human_error:"作品创作说明不能为空"}];
+  InvoiceInfo invoiceInfo = 3 [json_name = "invoiceInfo",(validator.field) = {string_not_empty: true,human_error:"发票信息不能为空"}];
+  AdditionalFileInfo additionalFileInfo = 4 [json_name = "additionalFileInfo"];
+  string clientToken = 5 [json_name = "clientToken"];
+}
+
+message DciExplanationInfo {
+  string creationPurpose = 1 [json_name = "creationPurpose",(validator.field) = {string_not_empty: true,length_lt: 51,human_error:"创作目的不能为空"}];
+  string creationProcess = 2 [json_name = "creationProcess",(validator.field) = {string_not_empty: true,length_lt: 86,human_error:"创作过程不能为空"}];
+  string originality = 3 [json_name = "originality",(validator.field) = {string_not_empty: true,length_lt:  141,human_error:"独创性说明不能为空"}];
+  string fontCopyright = 4 [json_name = "fontCopyright",(validator.field) = {string_not_empty: true,human_error:"字体声明不能为空"}];
+}
+
+message InvoiceInfo {
+  string invoiceType = 1 [json_name = "invoiceType",(validator.field) = {string_not_empty: true,human_error:"发票类型不能为空"}];
+  string invoiceHeader = 2 [json_name = "invoiceHeader",(validator.field) = {string_not_empty: true,human_error:"发票抬头不能为空"}];
+  string taxpayerNumber = 3 [json_name = "taxpayerNumber"];
+  string registeredAddress = 4 [json_name = "registeredAddress"];
+  string registeredTel = 5 [json_name = "registeredTel"];
+  string openAccountTel = 6 [json_name = "openAccountTel"];
+  string openAccountBank = 7 [json_name = "openAccountBank"];
+  string bankAccount = 8 [json_name = "bankAccount"];
+}
+
+message AdditionalFileInfo {
+  string contentSummaryFileId = 1 [json_name = "contentSummaryFileId"];
+  repeated string ownershipFileIds = 2 [json_name = "ownershipFileIds"];
+  string portraitAuthFileId = 3 [json_name = "portraitAuthFileId"];
+  string othersWorkAuthFileId = 4 [json_name = "othersWorkAuthFileId"];
+  repeated string otherFileIdList = 5 [json_name = "otherFileIdList"];
+}
+
+message CreateDciRegistrationResponse {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId"];
+  string resultCode = 2 [json_name = "resultCode"];
+  string resultMsg = 3 [json_name = "resultMsg"];
+  string reqMsgId = 4 [json_name = "reqMsgId"];
+  string errorMsg = 5 [json_name = "errorMsg"];
+}
+
+// 数登  查询申请
+message QueryDciRegistrationRequest {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId"];
+  string dciContentId = 2 [json_name = "dciContentId"];
+}
+
+message QueryDciRegistrationResponse {
+  string regNumber = 1 [json_name = "regNumber"];
+  string digitalRegisterId = 2 [json_name = "digitalRegisterId"];
+  string dciContentId = 3 [json_name = "dciContentId"];
+  string digitalRegisterStatus = 4 [json_name = "digitalRegisterStatus"];
+  string digitalRegisterApplyTime = 5 [json_name = "digitalRegisterApplyTime"];
+  string digitalRegisterCompletionTime = 6 [json_name = "digitalRegisterCompletionTime"];
+  int64 downloadTimesLeft = 7 [json_name = "downloadTimesLeft"];
+  repeated string invoiceUrlList = 8 [json_name = "invoiceUrlList"];
+  string failDetail = 9 [json_name = "failDetail"];
+  string amendType = 10 [json_name = "amendType"];
+  string applyFormUrl = 11 [json_name = "applyFormUrl"];
+  string flowNumber = 12 [json_name = "flowNumber"];
+  string resultCode = 13 [json_name = "resultCode"];
+  string resultMsg = 14 [json_name = "resultMsg"];
+  string reqMsgId = 15 [json_name = "reqMsgId"];
+}
+
+// 数登 数登支付链接获取
+message GetDciPayUrlRequest {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId",(validator.field) = {string_not_empty: true,human_error:"数登申请ID不能为空"}];
+  string clientToken = 2 [json_name = "clientToken"];
+}
+
+message GetDciPayUrlResponse {
+  string payUrl = 12 [json_name = "payUrl"];
+  string amount = 13 [json_name = "amount"];
+  string resultCode = 14 [json_name = "resultCode"];
+  string resultMsg = 15 [json_name = "resultMsg"];
+  string reqMsgId = 16 [json_name = "reqMsgId"];
+  string errorMsg = 17 [json_name = "errorMsg"];
+}
+
+// 数登 数登支付查询
+message QueryDciPayRequest {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId",(validator.field) = {string_not_empty: true,human_error:"数登申请ID不能为空"}];
+}
+
+message QueryDciPayResponse {
+  string payStatus = 12 [json_name = "payStatus"];
+  string resultCode = 13 [json_name = "resultCode"];
+  string resultMsg = 14 [json_name = "resultMsg"];
+  string reqMsgId = 15 [json_name = "reqMsgId"];
+}
+
+// 数登 获取数登证书下载
+message GetDciRegistrationcertRequest {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId",(validator.field) = {string_not_empty: true,human_error:"数登申请ID不能为空"}];
+  string clientToken = 2 [json_name = "clientToken"];
+}
+
+message GetDciRegistrationcertResponse {
+  string digitalRegisterStatus = 1 [json_name = "digitalRegisterStatus"];
+  string downloadUrl = 2 [json_name = "downloadUrl"];
+  int64 downloadTimesLeft = 3 [json_name = "downloadTimesLeft"];
+  string failDetail = 4 [json_name = "failDetail"];
+  string resultCode = 5 [json_name = "resultCode"];
+  string resultMsg = 6 [json_name = "resultMsg"];
+  string reqMsgId = 7 [json_name = "reqMsgId"];
+}
+
+// 数登 补正申请
+message RetryDciRegistrationRequest {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId",(validator.field) = {string_not_empty: true,human_error:"数登申请ID不能为空"}];
+  string dciContentId = 2 [json_name = "dciContentId"];
+  DciExplanationInfo explanationInfo = 3 [json_name = "explanationInfo"];
+  AdditionalFileInfo additionalFileInfo = 4 [json_name = "additionalFileInfo"];
+  string clientToken = 5 [json_name = "clientToken"];
+}
+
+message RetryDciRegistrationResponse {
+  string resultCode = 1 [json_name = "resultCode"];
+  string resultMsg = 2 [json_name = "resultMsg"];
+  string reqMsgId = 3 [json_name = "reqMsgId"];
+  string errorMsg = 4 [json_name = "errorMsg"];
+}
+
+// 数登 停止申请
+message  CloseDciRegistrationRequest {
+  string digitalRegisterId = 1 [json_name = "digitalRegisterId",(validator.field) = {string_not_empty: true,human_error:"数登申请ID不能为空"}];
+  string name = 2 [json_name = "name",(validator.field) = {string_not_empty: true,length_lt:  41,human_error:"退费人名称不能为空"}];
+  string mobileNo = 3 [json_name = "mobileNo",(validator.field) = {string_not_empty: true,human_error:"联系手机号不能为空"}];
+  string clientToken = 5 [json_name = "clientToken"];
+}
+
+
+message CloseDciRegistrationResponse {
+  string resultCode = 1 [json_name = "resultCode"];
+  string resultMsg = 2 [json_name = "resultMsg"];
+  string reqMsgId = 3 [json_name = "reqMsgId"];
+}
+
+message SubmitDciFeedbackRequest {
+  string serviceId = 1 [json_name = "serviceId",(validator.field) = {string_not_empty: true,human_error:"业务ID"}];
+  string contactName = 2 [json_name = "contactName",(validator.field) = {string_not_empty: true,human_error:"联系人"}];
+  string contactPhoneNumber = 3 [json_name = "contactPhoneNumber",(validator.field) = {string_not_empty: true,human_error:"联系电话"}];
+  string message = 4 [json_name = "message",(validator.field) = {string_not_empty: true,human_error:"申诉原因"}];
+  string clientToken = 5 [json_name = "clientToken"];
+  string feedbackType = 6 [json_name = "feedbackType",(validator.field) = {string_not_empty: true,human_error:"反馈类型"}];
+}
+
+message SubmitDciFeedbackResponse {
+  string resultCode = 1 [json_name = "resultCode"];
+  string resultMsg = 2 [json_name = "resultMsg"];
+  string reqMsgId = 3 [json_name = "reqMsgId"];
+  string id  = 4 [json_name = "id"];
+}
+
+message QueryDciFeedbackRequest {
+  string id = 1 [json_name = "id",(validator.field) = {string_not_empty: true,human_error:"申诉ID"}];
+}
+
+message QueryDciFeedbackResponse {
+  string resultCode = 1 [json_name = "resultCode"];
+  string resultMsg = 2 [json_name = "resultMsg"];
+  string reqMsgId = 3 [json_name = "reqMsgId"];
+  string id  = 4 [json_name = "id"];
+  string feedbackStatus = 5 [json_name = "feedbackStatus"];
+  string DciContentId  = 6 [json_name = "DciContentId"];
+  string msg  = 7 [json_name = "msg"];
+}
