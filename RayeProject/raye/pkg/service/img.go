@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"sync"
 
@@ -78,11 +77,11 @@ func UploadImg(c *gin.Context) {
 		return
 	}
 
-	// 处理分块上传
-	chunkNumberStr := c.DefaultQuery("chunkNumber", "1")
-	totalChunksStr := c.DefaultQuery("totalChunks", "1")
-	chunkNumber, _ := strconv.Atoi(chunkNumberStr)
-	totalChunks, _ := strconv.Atoi(totalChunksStr)
+	// 自动分块逻辑 - 每块5MB
+	chunkSize := int64(50 << 20) // 5MB
+	fileSize := file.Size
+	totalChunks := int(fileSize/chunkSize) + 1
+	chunkNumber := 1 // 默认第一块
 
 	// 创建保存目录
 	dir, _ := os.Getwd()
@@ -197,9 +196,21 @@ func GetUploadedFiles(c *gin.Context) {
 		ResponseMsg(c, e.Failed, "无此类型", nil, nil)
 	}
 
+	// 检查目录是否存在或为空
+	if _, err := os.Stat(destDir); os.IsNotExist(err) {
+		ResponseMsg(c, e.Success, "ok", nil, []map[string]interface{}{})
+		return
+	}
+
 	files, err := os.ReadDir(destDir)
 	if err != nil {
 		ResponseMsg(c, e.Failed, "读取目录失败: "+err.Error(), err, nil)
+		return
+	}
+
+	// 如果目录为空，返回空数组
+	if len(files) == 0 {
+		ResponseMsg(c, e.Success, "ok", nil, []map[string]interface{}{})
 		return
 	}
 
