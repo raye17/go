@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '::'
+    host: '0.0.0.0'  // 同时监听IPv4和IPv6
   }
 })
+
+

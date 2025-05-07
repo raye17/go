@@ -45,7 +45,7 @@ func UploadImg(c *gin.Context) {
 	// 从表单获取文件
 	file, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "获取文件失败: " + err.Error()})
+		ResponseMsg(c, e.Failed, err.Error(), err, nil)
 		return
 	}
 
@@ -74,7 +74,7 @@ func UploadImg(c *gin.Context) {
 		0: true,
 	}
 	if !allowedTypes[fileMeta.Type] {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "不支持的文件类型"})
+		ResponseMsg(c, e.Failed, "不支持的文件类型", nil, nil)
 		return
 	}
 
@@ -116,7 +116,7 @@ func UploadImg(c *gin.Context) {
 		// 保存分块文件
 		chunkPath := filepath.Join(tempDir, fmt.Sprintf("chunk_%d", chunkNumber))
 		if err := c.SaveUploadedFile(file, chunkPath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "保存分块文件失败: " + err.Error()})
+			ResponseMsg(c, e.Failed, "保存分块文件失败: ", err, nil)
 			return
 		}
 
@@ -129,7 +129,7 @@ func UploadImg(c *gin.Context) {
 				// 合并分块文件
 				outputFile, err := os.Create(destPath)
 				if err != nil {
-					c.JSON(http.StatusInternalServerError, gin.H{"error": "创建文件失败: " + err.Error()})
+					ResponseMsg(c, e.Failed, "创建文件失败: ", err, nil)
 					return
 				}
 				defer outputFile.Close()
@@ -138,14 +138,14 @@ func UploadImg(c *gin.Context) {
 					chunkPath := filepath.Join(tempDir, fmt.Sprintf("chunk_%d", i))
 					chunkFile, err := os.Open(chunkPath)
 					if err != nil {
-						c.JSON(http.StatusInternalServerError, gin.H{"error": "打开分块文件失败: " + err.Error()})
+						ResponseMsg(c, e.Failed, "打开分块文件失败: ", err, nil)
 						return
 					}
 					defer chunkFile.Close()
 
 					_, err = outputFile.ReadFrom(chunkFile)
 					if err != nil {
-						c.JSON(http.StatusInternalServerError, gin.H{"error": "合并分块文件失败: " + err.Error()})
+						ResponseMsg(c, e.Failed, "合并分块文件失败: ", err, nil)
 						return
 					}
 
@@ -162,7 +162,7 @@ func UploadImg(c *gin.Context) {
 	} else {
 		// 普通上传
 		if err := c.SaveUploadedFile(file, destPath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "保存文件失败: " + err.Error()})
+			ResponseMsg(c, e.Failed, "保存文件失败: "+err.Error(), err, nil)
 			return
 		}
 	}
