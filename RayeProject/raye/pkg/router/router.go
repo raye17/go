@@ -17,7 +17,6 @@ func NewRouter() {
 		})
 	})
 	privateGroup := r.Group("")
-	privateGroup.Use(middleware.JWTMiddleware())
 	userRouter(privateGroup)
 	ImgRouter(privateGroup)
 	r.StaticFS("/static", http.Dir("./runtime"))

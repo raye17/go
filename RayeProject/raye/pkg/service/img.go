@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -15,14 +16,29 @@ import (
 	"github.com/google/uuid"
 )
 
+type FileMeta struct {
+	Type int                   `json:"type"` // 1:图片 2:视频 3:文件 0:default
+	Mask string                `json:"mask"` // 备注(可选)
+	File *multipart.FileHeader `json:"-"`    // 上传的文件数据
+}
+
 func UploadImg(c *gin.Context) {
+	var fileMeta FileMeta
+	if err := c.ShouldBind(&fileMeta); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "解析文件信息失败: " + err.Error()})
+		return
+	}
+
 	// 限制上传文件大小
-	// 图片最大8MB，视频最大50MB
+	// 图片最大80MB，视频最大50MB
 	var maxSize int64
-	if c.Request.Header.Get("Content-Type") == "video/mp4" || c.Request.Header.Get("Content-Type") == "video/avi" || c.Request.Header.Get("Content-Type") == "video/mov" {
-		maxSize = 5 << 30
-	} else {
-		maxSize = 8 << 20
+	switch fileMeta.Type {
+	case 1: // 图片
+		maxSize = 10 << 20 // 10MB
+	case 2: // 视频
+		maxSize = 100 << 20 // 100MB
+	default: // 其他文件
+		maxSize = 20 << 20 // 20MB
 	}
 	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, maxSize)
 
@@ -33,28 +49,33 @@ func UploadImg(c *gin.Context) {
 		return
 	}
 
-	// 验证文件类型
-	allowedTypes := map[string]bool{
-		"image/jpeg": true,
-		"image/png":  true,
-		"image/gif":  true,
-		"video/mp4":  true,
-		"video/avi":  true,
-		"video/mov":  true,
-	}
-	if !allowedTypes[file.Header.Get("Content-Type")] {
-		// 处理分块上传时的文件类型验证
-		if strings.HasPrefix(file.Header.Get("Content-Type"), "multipart/form-data") {
-			// 分块上传时，文件类型可能被设置为multipart/form-data，这里假设所有分块都是同一类型，且与原始文件一致
-			contentType := strings.TrimPrefix(c.Request.Header.Get("Original-Content-Type"), "multipart/form-data; boundary=")
-			if !allowedTypes[contentType] {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "不支持的文件类型"})
-				return
-			}
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "不支持的文件类型"})
-			return
+	// 根据文件扩展名自动判断类型
+	ext := filepath.Ext(file.Filename)
+	fmt.Printf("上传文件: %s, 扩展名: %s\n", file.Filename, ext)
+
+	// 自动设置文件类型
+	if fileMeta.Type == 0 {
+		switch strings.ToLower(ext) {
+		case ".jpg", ".jpeg", ".png", ".gif":
+			fileMeta.Type = 1
+		case ".mp4", ".avi", ".mov", ".wmv":
+			fileMeta.Type = 2
+		default:
+			fileMeta.Type = 3
 		}
+		fmt.Printf("自动设置文件类型为: %d\n", fileMeta.Type)
+	}
+
+	// 验证文件类型
+	allowedTypes := map[int]bool{
+		1: true,
+		2: true,
+		3: true,
+		0: true,
+	}
+	if !allowedTypes[fileMeta.Type] {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "不支持的文件类型"})
+		return
 	}
 
 	// 处理分块上传
@@ -66,10 +87,15 @@ func UploadImg(c *gin.Context) {
 	// 创建保存目录
 	dir, _ := os.Getwd()
 	var destDir string
-	if strings.Contains(file.Header.Get("Content-Type"), "video/") {
-		destDir = filepath.Join(dir, "/runtime", "videos")
-	} else {
+	switch fileMeta.Type {
+	case 1:
 		destDir = filepath.Join(dir, "/runtime", "imgs")
+	case 2:
+		destDir = filepath.Join(dir, "/runtime", "videos")
+	case 3:
+		destDir = filepath.Join(dir, "/runtime", "files")
+	default:
+		destDir = filepath.Join(dir, "/runtime", "default")
 	}
 	if _, err := os.Stat(destDir); os.IsNotExist(err) {
 		os.MkdirAll(destDir, 0755)
@@ -145,7 +171,51 @@ func UploadImg(c *gin.Context) {
 	host := c.Request.Host
 	relativePath, _ := filepath.Rel(filepath.Join(dir, "runtime"), destPath)
 	imgUrl := fmt.Sprintf("http://%s/static/%s", host, filepath.ToSlash(relativePath))
-	ResponseMsg(c, e.Success, "ok", nil, map[string]string{
-		"url": imgUrl,
+	ResponseMsg(c, e.Success, "ok", nil, map[string]interface{}{
+		"url":  imgUrl,
+		"meta": fileMeta,
 	})
+}
+
+func GetUploadedFiles(c *gin.Context) {
+	var fileMeta FileMeta
+	if err := c.ShouldBind(&fileMeta); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "解析文件信息失败: " + err.Error()})
+		return
+	}
+	fmt.Println("list: ", fileMeta)
+	var destDir string
+	dir, _ := os.Getwd()
+	switch fileMeta.Type {
+	case 1:
+		destDir = filepath.Join(dir, "/runtime", "imgs")
+	case 2:
+		destDir = filepath.Join(dir, "/runtime", "videos")
+	case 3:
+		destDir = filepath.Join(dir, "/runtime", "files")
+	default:
+		ResponseMsg(c, e.Failed, "无此类型", nil, nil)
+	}
+
+	files, err := os.ReadDir(destDir)
+	if err != nil {
+		ResponseMsg(c, e.Failed, "读取目录失败: "+err.Error(), err, nil)
+		return
+	}
+
+	var fileUrls []map[string]interface{}
+	host := c.Request.Host
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+		filePath := filepath.Join(destDir, file.Name())
+		relativePath, _ := filepath.Rel(filepath.Join(dir, "runtime"), filePath)
+		fileUrl := fmt.Sprintf("http://%s/static/%s", host, filepath.ToSlash(relativePath))
+		fileUrls = append(fileUrls, map[string]interface{}{
+			"url": fileUrl,
+		})
+	}
+
+	ResponseMsg(c, e.Success, "ok", nil, fileUrls)
 }

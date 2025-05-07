@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
 	"raye/demo/db"
 	"raye/demo/db/model"
 	"raye/demo/pkg/cache"
@@ -24,19 +23,19 @@ func JWTMiddleware() gin.HandlerFunc {
 		token := ctx.GetHeader(Authorization)
 		fmt.Println(token)
 		if token == "" {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "token is empty"})
+			service.NotLoginRes(ctx, "token为空")
 			return
 		}
 		username, err := verifyToken(token)
 		if err != nil {
 			fmt.Println("33333333", err)
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			service.NotLoginRes(ctx, "token错误:"+token)
 			return
 		}
 		var user model.User
 		if err := db.DbTest01.Table("user").Where("name =?", username).First(&user).Error; err != nil {
 			if err.Error() == gorm.ErrRecordNotFound.Error() {
-				ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+				service.NotLoginRes(ctx, "user不存在")
 				return
 			}
 			return

@@ -11,12 +11,12 @@ import (
 var GrpcDciImpl = new(dci.DciClientImpl)
 
 func init() {
+	fmt.Println("init dubbogo service")
 	config.SetConsumerService(GrpcDciImpl) //dci
-
 	if err := config.Load(); err != nil {
 		panic(err)
 	}
 }
 func Ser() {
-	fmt.Println("sss")
+	fmt.Println("init service import")
 }

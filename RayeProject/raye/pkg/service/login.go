@@ -11,12 +11,18 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+)
+
+const (
+	loginCode = "sxy1017"
 )
 
 type login struct {
 	Username string
 	Password string
+	Code     string
 }
 type UserInfo struct {
 	Id uint
@@ -32,7 +38,6 @@ func Login(c *gin.Context) {
 		fmt.Println("bind json error: ", err)
 		ResponseMsg(c, e.Failed, err.Error(), err, nil)
 	}
-	fmt.Println("req:", req)
 	// 验证用户名和密码
 	if req.Username == "" || req.Password == "" {
 		fmt.Println("username or password is empty")
@@ -48,33 +53,44 @@ func Login(c *gin.Context) {
 				ResponseMsg(c, e.Failed, errs.Error(), errs, nil)
 				return
 			}
-			fmt.Println("u:", u)
 			user = u
 		} else {
 			fmt.Println("get password error: ", err)
 			ResponseMsg(c, e.Failed, err.Error(), err, nil)
 		}
 	}
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		fmt.Println("password error")
+		ResponseMsg(c, e.Failed, e.PasswordError, errors.New("password error"), nil)
+		return
+	}
 	// 生成JWT token
 	token, err := jwt.GenerateToken(user.ID, user.Name, int(7*24), e.JWTSecret)
 	if err != nil {
 		fmt.Println("generate token error: ", err)
 		ResponseMsg(c, e.Failed, err.Error(), err, nil)
+		return
 	}
 	// 将token存储到Redis
 	if err := cache.RedisClient.Set(c, fmt.Sprintf("user_token_%d", user.ID), token, time.Hour*24*7).Err(); err != nil {
 		fmt.Println("set token to redis error: ", err)
 		ResponseMsg(c, e.Failed, err.Error(), err, nil)
+		return
 	}
-
-	ResponseMsg(c, e.Success, e.SuccessMsg, nil, token)
+	fmt.Println("token:", token)
+	ResponseMsg(c, e.Success, e.LoginSuccess, nil, token)
 }
 func register(req UserInfo) (user *model.User, err error) {
-	// 验证用户名和密码
+	// 验证用户名、密码和code
 	if req.Username == "" || req.Password == "" {
-		fmt.Println("username or password is empty")
-		return nil, err
+		fmt.Println("username, password  is empty")
+		return nil, errors.New("username, password is empty")
 	}
+	// 验证code是否正确
+	// if req.Code != loginCode {
+	// 	fmt.Println("code error")
+	// 	return nil, errors.New("code error")
+	// }
 	// 验证用户名是否已经存在
 	if err = db.DbTest01.Table("user").Where("name =?", req.Username).First(&user).Error; err != nil {
 		if err.Error() != gorm.ErrRecordNotFound.Error() {
@@ -87,9 +103,14 @@ func register(req UserInfo) (user *model.User, err error) {
 		return
 	}
 	// 注册用户
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		fmt.Println("hash password error: ", err)
+		return nil, err
+	}
 	var createReq = model.User{
 		Name:     req.Username,
-		Password: req.Password,
+		Password: string(hashedPassword),
 		Age:      req.Age,
 		Gender:   req.Gender,
 	}
@@ -104,11 +125,13 @@ func GetUserInfo(c *gin.Context) {
 	if err := c.ShouldBindJSON(&req); err != nil {
 		fmt.Println("bind json error: ", err)
 		ResponseMsg(c, e.Failed, err.Error(), err, nil)
+		return
 	}
 	var user model.User
 	if err := db.DbTest01.First(&user, req).Error; err != nil {
 		fmt.Println("get user by id error: ", err)
 		ResponseMsg(c, e.Failed, err.Error(), err, nil)
+		return
 	}
 	ResponseMsg(c, e.Success, e.SuccessMsg, nil, user)
 }
