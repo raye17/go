@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"strings"
 	"sync"
 
+	"raye/demo/pkg/aliyun"
 	"raye/demo/pkg/utlis/e"
 
 	"github.com/gin-gonic/gin"
@@ -229,4 +231,83 @@ func GetUploadedFiles(c *gin.Context) {
 	}
 
 	ResponseMsg(c, e.Success, "ok", nil, fileUrls)
+}
+func PutObject(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		ResponseMsg(c, e.Failed, "解析文件信息失败: "+err.Error(), err, nil)
+		return
+	}
+	imgType := c.PostForm("type")
+	ext := filepath.Ext(file.Filename)
+	fileName := uuid.New().String() + ext
+	dir, _ := os.Getwd()
+	destPath := filepath.Join(dir, "runtime", "imgs", fileName)
+	if err = c.SaveUploadedFile(file, destPath); err != nil {
+		ResponseMsg(c, e.Failed, "保存文件失败: "+err.Error(), err, nil)
+		return
+	}
+	url, err := aliyun.PutOss(destPath, imgType, true)
+	if err != nil {
+		ResponseMsg(c, e.Failed, "上传失败: "+err.Error(), err, nil)
+		return
+	}
+	ResponseMsg(c, e.Success, "ok", nil, map[string]interface{}{
+		"url": url,
+	})
+}
+func PutObjectByBytes(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		ResponseMsg(c, e.Failed, "获取文件信息失败: "+err.Error(), err, nil)
+		return
+	}
+	fmt.Println(file.Filename)
+	f, err := file.Open()
+	if err != nil {
+		ResponseMsg(c, e.Failed, "文件打开失败: "+err.Error(), err, nil)
+		return
+	}
+	defer f.Close()
+
+	buf, err := io.ReadAll(f)
+	if err != nil {
+		ResponseMsg(c, e.Failed, "读取文件内容失败: "+err.Error(), err, nil)
+		return
+	}
+
+	imgType := c.PostForm("type")
+	ext := filepath.Ext(file.Filename)
+	fileName := uuid.New().String() + ext
+
+	url, err := aliyun.PutOssFromBytes(fileName, buf, imgType)
+	if err != nil {
+		ResponseMsg(c, e.Failed, "上传失败: "+err.Error(), err, nil)
+		return
+	}
+	ResponseMsg(c, e.Success, "ok", nil, map[string]interface{}{
+		"url": url,
+	})
+}
+func ListObjects(c *gin.Context) {
+	var req struct {
+		Name string `form:"name"`
+	}
+	if err := c.ShouldBind(&req); err != nil {
+		ResponseMsg(c, e.Failed, "解析请求失败: "+err.Error(), err, nil)
+		return
+	}
+	fmt.Println("list: ", req)
+	url, err := aliyun.ListObjects(req.Name)
+	if err != nil {
+		ResponseMsg(c, e.Failed, "获取失败: "+err.Error(), err, nil)
+		return
+	}
+	var data []map[string]interface{}
+	for _, v := range url {
+		data = append(data, map[string]interface{}{
+			"url": v,
+		})
+	}
+	ResponseMsg(c, e.Success, "ok", nil, data)
 }

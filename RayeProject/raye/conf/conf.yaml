@@ -30,3 +30,10 @@ smtp:
 
 rabbitmq:
   url: amqp://guest:guest@localhost:5672
+
+oss:
+  accessKeyId: ""
+  accessKeySecret: ""
+  endpoint: "oss-cn-hangzhou.aliyuncs.com"
+  bucket: "raye"
+  region: "cn-hangzhou"

@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/viper"
 )
@@ -10,12 +9,10 @@ import (
 var AppConfig Config
 
 func InitConfig() error {
-	if wd, err := os.Getwd(); err == nil {
-		fmt.Println("当前工作目录:", wd)
-	}
+
 	viper.SetConfigName("conf")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./conf")
+	viper.AddConfigPath("./conf/local")
 	viper.AddConfigPath("../conf")       // 上级目录下的conf
 	viper.AddConfigPath("../../conf")    // 上两级目录下的conf
 	viper.AddConfigPath("../../../conf") // 上三级目录下的conf
@@ -44,6 +41,7 @@ type Config struct {
 	}
 	SMTP     SMTPConfig
 	RabbitMQ RabbitMQConfig
+	Oss      OssConfig
 }
 type Mysql struct {
 	Host     string `yaml:"host"`
@@ -62,4 +60,11 @@ type SMTPConfig struct {
 
 type RabbitMQConfig struct {
 	URL string
+}
+type OssConfig struct {
+	Endpoint        string
+	AccessKeyId     string
+	AccessKeySecret string
+	Bucket          string
+	Region          string
 }
