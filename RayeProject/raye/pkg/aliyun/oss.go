@@ -20,8 +20,8 @@ func NewOss() {
 	cfg := oss.LoadDefaultConfig().
 		WithCredentialsProvider(credentials.NewStaticCredentialsProvider(config.AppConfig.Oss.AccessKeyId, config.AppConfig.Oss.AccessKeySecret)).
 		WithRegion(config.AppConfig.Oss.Region)
-	client := oss.NewClient(cfg)
-	OssClient = client
+	OssClient = oss.NewClient(cfg)
+
 }
 func PutOss(filePath string, mediaType string, needRemove bool) (string, error) {
 	file, err := os.Open(filePath)
@@ -64,7 +64,7 @@ func PutOss(filePath string, mediaType string, needRemove bool) (string, error) 
 		return "", err
 	}
 	// 构造图片访问 URL
-	imageURL := fmt.Sprintf("https://%s.%s/%s", config.AppConfig.Oss.Bucket, config.AppConfig.Oss.Endpoint, objectName)
+	imageURL := fmt.Sprintf("https://%s.%s/%s", config.AppConfig.Oss.Bucket, config.AppConfig.Oss.EndPoint, objectName)
 	return imageURL, nil
 }
 
@@ -85,20 +85,32 @@ func PutOssFromBytes(filePath string, content []byte, mediaType string) (string,
 	case ".gif":
 		contentType = "image/gif"
 	}
+	// putRequest := &oss.PutObjectAclRequest{
+	// 	Bucket: oss.Ptr("raye"),     // 存储空间名称
+	// 	Key:    oss.Ptr(objectName), // 对象名称
+	// 	Acl:    oss.ObjectACLPublicRead,
+	// }
+
+	// // 执行设置对象ACL的操作
+	// _, err := OssClient.PutObjectAcl(context.TODO(), putRequest)
+	// if err != nil {
+	// 	log.Printf("failed to put object acl %v", err)
+	// 	return "", err
+	// }
 	request := &oss.PutObjectRequest{
 		Bucket:      oss.Ptr(config.AppConfig.Oss.Bucket),
 		Key:         oss.Ptr(objectName),
 		Body:        bytes.NewReader(content),
 		ContentType: oss.Ptr(contentType),
+		//Acl:         oss.ObjectACLPublicReadWrite,
 	}
 	_, err := OssClient.PutObject(context.Background(), request)
 	if err != nil {
 		log.Println("上传失败")
-		fmt.Println(config.AppConfig.Oss.Bucket)
 		return "", err
 	}
 	// 构造图片访问 URL
-	imageURL := fmt.Sprintf("https://%s.%s/%s", config.AppConfig.Oss.Bucket, config.AppConfig.Oss.Endpoint, objectName)
+	imageURL := fmt.Sprintf("https://%s.%s/%s", config.AppConfig.Oss.Bucket, config.AppConfig.Oss.EndPoint, objectName)
 	return imageURL, nil
 }
 func ListObjects(name string) ([]string, error) {
@@ -121,7 +133,7 @@ func ListObjects(name string) ([]string, error) {
 		}
 		for _, obj := range page.Contents {
 			// 拼接完整URL
-			url := fmt.Sprintf("https://%s.%s/%s", config.AppConfig.Oss.Bucket, config.AppConfig.Oss.Endpoint, *obj.Key)
+			url := fmt.Sprintf("https://%s.%s/%s", config.AppConfig.Oss.Bucket, config.AppConfig.Oss.EndPoint, *obj.Key)
 			files = append(files, url)
 		}
 	}

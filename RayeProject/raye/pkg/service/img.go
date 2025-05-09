@@ -303,6 +303,7 @@ func ListObjects(c *gin.Context) {
 		ResponseMsg(c, e.Failed, "获取失败: "+err.Error(), err, nil)
 		return
 	}
+
 	var data []map[string]interface{}
 	for _, v := range url {
 		data = append(data, map[string]interface{}{

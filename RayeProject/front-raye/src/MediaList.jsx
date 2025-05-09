@@ -62,3 +62,4 @@ export default function MediaList({ mediaUrls, mediaType, layout, onMediaSelect 
     </div>
   );
 }
+

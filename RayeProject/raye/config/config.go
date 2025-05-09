@@ -62,7 +62,7 @@ type RabbitMQConfig struct {
 	URL string
 }
 type OssConfig struct {
-	Endpoint        string
+	EndPoint        string
 	AccessKeyId     string
 	AccessKeySecret string
 	Bucket          string

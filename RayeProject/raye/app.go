@@ -1,15 +1,12 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"raye/demo/config"
 	"raye/demo/db"
 	"raye/demo/pkg/aliyun"
-	"raye/demo/pkg/cache"
 	"raye/demo/pkg/mq"
 	"raye/demo/pkg/router"
-	"time"
 )
 
 func main() {
@@ -24,13 +21,13 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	redis := cache.RedisClient
-	s, err := redis.Set(context.Background(), "sss", "my name is lalla", time.Hour*24).Result()
-	if err != nil {
-		fmt.Println("key sss set failed, err:", err)
-		return
-	}
-	fmt.Println("s: ", s)
+	// redis := cache.RedisClient
+	// s, err := redis.Set(context.Background(), "sss", "my name is lalla", time.Hour*24).Result()
+	// if err != nil {
+	// 	fmt.Println("key sss set failed, err:", err)
+	// 	return
+	// }
+	//fmt.Println("s: ", s)
 	aliyun.NewOss()
 	go mq.Listening()
 	router.NewRouter()
