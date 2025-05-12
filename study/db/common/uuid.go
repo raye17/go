@@ -7,7 +7,6 @@ func NewUuid() (string, error) {
 	uuid, err := uuid.NewV4()
 	if err != nil {
 		return "", err
-
 	}
 	return uuid.String(), nil
 }
