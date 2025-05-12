@@ -33,11 +33,9 @@ rabbitmq:
 
 oss:
   accessKeyId: "LTAI5t91UEUxW8SsuDZcpzUv"
-  accessKeySecret: "gKzleP5M0rZkUOGZ56"
+  accessKeySecret: "gKzleP5M0rZkUOGZ56:IJMGuHj4alup"
   endpoint: "oss-cn-hangzhou.aliyuncs.com"
   bucket: "raye"
   region: "cn-hangzhou"
 
   Secret1: ""
-  Secret2: ""
-  Secret3: "IJMGuHj4alup"
