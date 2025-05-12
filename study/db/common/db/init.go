@@ -28,8 +28,7 @@ func DbInit(dbName string) (*gorm.DB, error) {
 		return nil, err
 	}
 	fmt.Println("Successfully connected to the database!")
-	err = db.AutoMigrate()
-	if err != nil {
+	if err = db.AutoMigrate(); err != nil {
 		fmt.Println("Failed to migrate:", err)
 		return nil, err
 	}
