@@ -37,5 +37,3 @@ oss:
   endpoint: "oss-cn-hangzhou.aliyuncs.com"
   bucket: "raye"
   region: "cn-hangzhou"
-
-  Secret1: ""
