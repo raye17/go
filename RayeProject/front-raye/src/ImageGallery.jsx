@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BASE_URL } from './config';
 import MediaList from './MediaList';
+import Cube3D from './Cube3D';
 
 const MEDIA_TYPE = {
   IMAGE: 1,
@@ -84,6 +85,7 @@ export default function MediaGallery() {
   const { mediaUrls, setMediaUrls, mediaType, setMediaType, fetchMediaList, fetchOssMediaList } = useMediaLoader();
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [expanded, setExpanded] = useState(true);
+  const [layout, setLayout] = useState('card'); // 新增布局切换状态
 
   return (
     <div className="media-gallery-container" style={{marginLeft: '200px'}}>
@@ -163,9 +165,14 @@ export default function MediaGallery() {
       </div>
       <div style={{display: 'flex', alignItems: 'center', gap: '12px', margin: '10px 0 0 10px'}}>
         <span style={{fontWeight: 500}}>布局切换：</span>
-        <button className={'layout-btn'}>卡片</button>
+        <button className={'layout-btn'} style={{background: layout==='card' ? '#1890ff' : '#f0f2f5', color: layout==='card' ? '#fff' : '#000'}} onClick={()=>setLayout('card')}>卡片</button>
+        <button className={'layout-btn'} style={{background: layout==='cube' ? '#1890ff' : '#f0f2f5', color: layout==='cube' ? '#fff' : '#000'}} onClick={()=>setLayout('cube')}>3D立方体</button>
       </div>
-      <MediaList mediaUrls={mediaUrls} mediaType={mediaType} layout={'card'} onMediaSelect={setSelectedMedia} />
+      {layout === 'cube' && mediaType === MEDIA_TYPE.IMAGE && mediaUrls.length > 0 ? (
+        <Cube3D images={mediaUrls.slice(0,6)} />
+      ) : (
+        <MediaList mediaUrls={mediaUrls} mediaType={mediaType} layout={'card'} onMediaSelect={setSelectedMedia} />
+      )}
     </div>
   );
 }
