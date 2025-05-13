@@ -5,10 +5,16 @@ import (
 	"os"
 )
 
+const (
+	imagePath  = "./data/1.png"
+	zipPath    = "./data/1.zip"
+	outputPath = "../../data/2.png"
+)
+
 func main() {
-	imagePath := "./data/1.png"
-	fileToHide := "./data/1.zip"
-	outputPath := "../../data/2.png"
+	imagePath := imagePath
+	fileToHide := zipPath
+	outputPath := outputPath
 
 	// 打开图片文件
 	fPic, err := os.Open(imagePath)
