@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	imagePath  = "./data/1.png"
-	zipPath    = "./data/1.zip"
-	outputPath = "../../data/2.png"
+	imagePath  string = "./data/1.png"
+	zipPath    string = "./data/1.zip"
+	outputPath string = "../../data/2.png"
 )
 
 func main() {
