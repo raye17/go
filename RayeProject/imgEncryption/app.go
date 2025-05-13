@@ -8,7 +8,7 @@ import (
 func main() {
 	imagePath := "./data/1.png"
 	fileToHide := "./data/1.zip"
-	outputPath := "./data/2.png"
+	outputPath := "../../data/2.png"
 
 	// 打开图片文件
 	fPic, err := os.Open(imagePath)
