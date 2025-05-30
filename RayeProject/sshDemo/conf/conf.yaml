@@ -1,0 +1,43 @@
+system:
+  mode: dev
+  version: "1.0"
+
+mysql:
+  artwork:
+    host: 127.0.0.1
+    port: 3306
+    user: fonchain_sunxiaoyang
+    password: 
+    database: 
+    charset: utf8mb4
+    parseTime: true
+    loc: Local
+  artist:
+    host: 127.0.0.1
+    port: 3306
+    user: fonchain_sunxiaoyang
+    password: 
+    database: artist
+    charset: utf8mb4
+    parseTime: true
+    loc: Local
+  digital-copyright:
+    host: 127.0.0.1
+    port: 3306
+    user: fonchain_sunxiaoyang
+    password: 
+    database: digital-copyright
+    charset: utf8mb4
+    parseTime: true
+    loc: Local
+
+ssh:
+  user: sunxiaoyang
+  password: 
+  host: 121.40.49.103
+  port: 22
+
+remote_mysql:
+  host: 
+  port: 3306
+

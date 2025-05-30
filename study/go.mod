@@ -117,4 +117,5 @@ require (
 	golang.org/x/tools v0.30.0 // indirect
 	google.golang.org/protobuf v1.36.5
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/plugin/soft_delete v1.2.1
 )
