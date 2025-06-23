@@ -15,7 +15,7 @@ func check(err error) {
 }
 
 func main() {
-	db, err := db.DbInit("test02")
+	db, err := db.DbInit("yourapi")
 	check(err)
 	fmt.Println("Successfully connected to the database!")
 	err = db.AutoMigrate(model.UserInfo{})

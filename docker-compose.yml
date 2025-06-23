@@ -14,18 +14,46 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     restart: unless-stopped
 
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: mysql
+  #   ports:
+  #     - "3307:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: 123456
+  #     MYSQL_DATABASE: test01
+  #     MYSQL_USER: root
+  #     MYSQL_PASSWORD: 123456
+  #   volumes:
+  #     - D:/Docker/mysql:/var/lib/mysql
+  #   restart: unless-stopped
+  #   networks:       
+  #    - my-network 
+
   mysql:
     image: mysql:8.0
     container_name: mysql
-    ports:
-      - "3306:3306"
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: test01
-      MYSQL_USER: root
-      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456  # Ensure this matches the password in SQL_DSN
+      MYSQL_DATABASE: yourapi
     volumes:
-      - D:/Docker/mysql:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"  
+  
+  zookeeper:
+    image: zookeeper:3.8
+    #image: image-in.fontree.cn/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    # environment:
+    #   ZOO_MY_ID: 1
+    #   ZOO_SERVERS: server.1=0.0.0.0:2888:3888
+    volumes:
+      - D:/Docker/zookeeper:/data
+      - D:/docker/zookeeper_datalog:/datalog
     restart: unless-stopped
 
   redis:
@@ -37,19 +65,36 @@ services:
       - D:/Docker/redis:/data
     restart: unless-stopped
 
-  zookeeper:
-    image: zookeeper:3.8
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=0.0.0.0:2888:3888
-    volumes:
-      - D:/Docker/zookeeper:/data
-      - D:/docker/zookeeper_datalog:/datalog
-    restart: unless-stopped
 
+  yourapi:
+    image: yourapi/yourapi:latest
+    container_name: yourapi
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/data
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=root:123456@tcp(host.docker.internal:3306)/yourapi?charset=utf8mb4&parseTime=True&loc=Local  # 修改此行，或注释掉以使用 SQLite 作为数据库
+      - REDIS_CONN_STRING=redis://redis # 也可以自定义，例如 redis://user:password@localhost:6379/0
+      - TZ=Asia/Shanghai
+      - ERROR_LOG_ENABLED=true # 是否启用错误日志记录
+    #      - TIKTOKEN_CACHE_DIR=./tiktoken_cache  # 如果需要使用tiktoken_cache，请取消注释
+    #      - SESSION_SECRET=random_string  # 多机部署时设置，必须修改这个随机字符串！！！！！！！
+    #      - NODE_TYPE=slave  # Uncomment for slave node in multi-node deployment
+    #      - SYNC_FREQUENCY=60  # Uncomment if regular database syncing is needed
+    #      - FRONTEND_BASE_URL=https://openai.justsong.cn  # Uncomment for multi-node deployment with front-end URL
+
+    depends_on:
+      - redis
+      #- mysql
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $$2}'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3 
 
   
   filebrowser:
@@ -89,6 +134,23 @@ services:
    networks:       
      - my-network 
 
+
+  syncthing:
+    image: syncthing/syncthing:latest
+    container_name: syncthing
+    ports:
+      - "8384:8384"      # Web GUI
+      - "22000:22000/tcp" # 设备通信端口 TCP
+      - "22000:22000/udp" # 设备通信端口 UDP（穿透用）
+    volumes:
+      - ./tmp/config:/var/syncthing/config   # 配置文件持久化
+      - ./tmp/data:/var/syncthing/data       # 同步数据目录
+    restart: unless-stopped
+
 networks:   
     my-network:     
         driver: bridge
+
+
+volumes:
+  mysql_data:

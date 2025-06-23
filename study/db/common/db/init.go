@@ -9,7 +9,7 @@ import (
 )
 
 func DbInit(dbName string) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("root:123456@tcp(127.0.0.1:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbName)
+	dsn := fmt.Sprintf("root:123456@tcp(127.0.0.1:3307)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbName)
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,
 		DefaultStringSize:         256,

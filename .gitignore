@@ -12,6 +12,7 @@ out
 gen
 tmp
 RayeProject/raye/conf/local/conf.yaml
+*.db
 
 
 
