@@ -8,28 +8,28 @@ mysql:
     port: 3306
     user: fonchain_sunxiaoyang
     password: 
-    database: 
+    database: artwork
     charset: utf8mb4
     parseTime: true
     loc: Local
-  artist:
-    host: 127.0.0.1
-    port: 3306
-    user: fonchain_sunxiaoyang
-    password: 
-    database: artist
-    charset: utf8mb4
-    parseTime: true
-    loc: Local
-  digital-copyright:
-    host: 127.0.0.1
-    port: 3306
-    user: fonchain_sunxiaoyang
-    password: 
-    database: digital-copyright
-    charset: utf8mb4
-    parseTime: true
-    loc: Local
+  # artist:
+  #   host: 127.0.0.1
+  #   port: 3306
+  #   user: fonchain_sunxiaoyang
+  #   password: 
+  #   database: artist
+  #   charset: utf8mb4
+  #   parseTime: true
+  #   loc: Local
+  # digital-copyright:
+  #   host: 127.0.0.1
+  #   port: 3306
+  #   user: fonchain_sunxiaoyang
+  #   password: 
+  #   database: digital-copyright
+  #   charset: utf8mb4
+  #   parseTime: true
+  #   loc: Local
 
 ssh:
   user: sunxiaoyang
@@ -37,7 +37,7 @@ ssh:
   host: 121.40.49.103
   port: 22
 
-remote_mysql:
+remoteMysql:
   host: 
   port: 3306
 

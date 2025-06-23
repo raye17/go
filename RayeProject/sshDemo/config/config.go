@@ -21,6 +21,7 @@ func InitConfig() error {
 	if err := viper.Unmarshal(&AppConfig); err != nil {
 		return fmt.Errorf("解析配置文件失败: %w", err)
 	}
+	fmt.Println("appconfig:", AppConfig)
 	return nil
 }
 
@@ -28,7 +29,7 @@ type Config struct {
 	System      SystemConfig           `yaml:"system"`
 	SSH         SSHConfig              `yaml:"ssh"`
 	MySQL       map[string]MySQLConfig `yaml:"mysql"`
-	RemoteMySQL RemoteMySQLConfig      `yaml:"remote_mysql"`
+	RemoteMySQL RemoteMySQLConfig      `yaml:"remoteMysql"`
 }
 type SystemConfig struct {
 	Mode    string `yaml:"mode"`
