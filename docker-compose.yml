@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   rabbitmq:
@@ -146,6 +146,21 @@ services:
       - ./tmp/config:/var/syncthing/config   # 配置文件持久化
       - ./tmp/data:/var/syncthing/data       # 同步数据目录
     restart: unless-stopped
+
+  watchyourports:
+    image: aceberg/watchyourports:latest  # 替换为镜像地址
+    container_name: watchyourports
+    restart: unless-stopped
+    ports:
+      - "8355:8853"  # 前端访问端口
+      - "5000:5000"  # API端口(如果需要)
+    volumes:
+      - D:/Docker/watchyourports/data:/app/data  # 持久化数据存储
+    environment:
+      - TZ=Asia/Shanghai  # 设置时区
+      - WYP_CONFIG=/app/data/config.yaml  # 配置文件路径
+    networks:
+      - my-network
 
 networks:   
     my-network:     
