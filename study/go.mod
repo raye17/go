@@ -1,11 +1,9 @@
 module study
 
-go 1.23.0
-
-toolchain go1.23.10
+go 1.23.10
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/dubbogo/gost v1.14.1
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-ini/ini v1.67.0
@@ -104,6 +102,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/raye17/raye v1.0.1
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
