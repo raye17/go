@@ -1,102 +1,110 @@
-package sshconn
+package connect
 
 import (
 	"fmt"
 	"io"
+	"log"
 	"net"
-	"ssh/demo/config"
-	"time"
+	"sync"
 
 	"golang.org/x/crypto/ssh"
 )
 
-const (
-	localAddr = "127.0.0.1:0"
-)
+type SSHTunnelService struct {
+	sshClient     *ssh.Client
+	localListener net.Listener
+	stopChan      chan struct{}
+	waitGroup     sync.WaitGroup
 
-var remoteAddr string = config.AppConfig.RemoteMySQL.Host + ":" + config.AppConfig.RemoteMySQL.Port
+	sshUser     string
+	sshPassword string
+	sshServer   string
+	localAddr   string
+	remoteAddr  string
+}
 
-func SshConnect() (*ssh.Client, error) {
-	// SSH 配置
+func NewSSHTunnelService(sshUser, sshPassword, sshServer, localAddr, remoteAddr string) *SSHTunnelService {
+	return &SSHTunnelService{
+		sshUser:     sshUser,
+		sshPassword: sshPassword,
+		sshServer:   sshServer,
+		localAddr:   localAddr,
+		remoteAddr:  remoteAddr,
+		stopChan:    make(chan struct{}),
+	}
+}
+
+func (s *SSHTunnelService) StartSSHTunnel() (int, error) {
+	// 建立SSH连接
 	sshConfig := &ssh.ClientConfig{
-		User: config.AppConfig.SSH.User,
+		User: s.sshUser,
 		Auth: []ssh.AuthMethod{
-			ssh.Password(config.AppConfig.SSH.Password),
+			ssh.Password(s.sshPassword),
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-		Timeout:         30 * time.Second,
 	}
-
-	// 建立 SSH 连接
-	sshClient, err := ssh.Dial("tcp", config.AppConfig.SSH.Host+":"+config.AppConfig.SSH.Port, sshConfig)
+	var err error
+	s.sshClient, err = ssh.Dial("tcp", s.sshServer, sshConfig)
 	if err != nil {
-		fmt.Printf("SSH 连接失败: %v\n", err)
-		return nil, err
+		log.Println("ssh dial failed")
+		return 0, err
 	}
-	return sshClient, nil
+	s.localListener, err = net.Listen("tcp", s.localAddr)
+	if err != nil {
+		log.Println("local listen failed")
+		return 0, err
+	}
+	s.waitGroup.Add(1)
+	go s.acceptConnections()
+	fmt.Println("ssh connect success")
+	return s.localListener.Addr().(*net.TCPAddr).Port, nil
 }
-
-// 处理隧道数据转发
-func handleTunnel(localConn, remoteConn net.Conn) {
-	defer localConn.Close()
-	defer remoteConn.Close()
-
-	go func() {
-		_, err := io.Copy(remoteConn, localConn)
+func (s *SSHTunnelService) acceptConnections() {
+	defer s.waitGroup.Done()
+	defer s.localListener.Close()
+	defer s.sshClient.Close()
+	for {
+		localConn, err := s.localListener.Accept()
 		if err != nil {
-			fmt.Printf("本地到远程转发失败: %v\n", err)
-		}
-	}()
-	_, err := io.Copy(localConn, remoteConn)
-	if err != nil {
-		fmt.Printf("远程到本地转发失败: %v\n", err)
-	}
-}
-
-// 封装隧道转发逻辑
-func StartTunnelForwarding(sshClient *ssh.Client) (int, chan struct{}, error) {
-	listener, err := net.Listen("tcp", localAddr)
-	if err != nil {
-		return 0, nil, fmt.Errorf("本地监听失败: %v", err)
-	}
-
-	localPort := listener.Addr().(*net.TCPAddr).Port
-	stopChan := make(chan struct{})
-
-	go func() {
-		defer listener.Close()
-		for {
 			select {
-			case <-stopChan:
+			case <-s.stopChan:
+				log.Println("local listener stopped")
 				return
 			default:
-				localConn, err := listener.Accept()
-				if err != nil {
-					if !isClosedError(err) {
-						fmt.Printf("接受本地连接失败: %v\n", err)
-					}
-					return
-				}
-
-				remoteConn, err := sshClient.Dial("tcp", remoteAddr)
-				if err != nil {
-					fmt.Printf("SSH 隧道连接 MySQL 失败: %v\n", err)
-					localConn.Close()
-					return
-				}
-				go handleTunnel(localConn, remoteConn)
+				log.Printf("Error accepting local connection: %v\n", err) // 添加错误日志
 			}
+			continue
 		}
-	}()
-
-	return localPort, stopChan, nil
+		log.Printf("Accepted local connection from %s", localConn.RemoteAddr())
+		s.waitGroup.Add(1)
+		go func() {
+			defer s.waitGroup.Done()
+			defer localConn.Close()
+			remoteConn, err := s.sshClient.Dial("tcp", s.remoteAddr)
+			if err != nil {
+				log.Println("remote dial failed")
+				return
+			}
+			defer remoteConn.Close()
+			go copyConn(localConn, remoteConn)
+			copyConn(remoteConn, localConn)
+			log.Println("remote connect closed")
+		}()
+	}
 }
-func isClosedError(err error) bool {
-	if err == nil {
-		return false
+func copyConn(a, b net.Conn) {
+	defer a.Close()
+	defer b.Close()
+	_, _ = io.Copy(a, b)
+}
+
+// Stop 停止 SSH 隧道服务
+func (s *SSHTunnelService) Stop() {
+	log.Println("Stopping SSH tunnel service...")
+	close(s.stopChan)
+	if s.localListener != nil {
+		s.localListener.Close()
 	}
-	if opErr, ok := err.(*net.OpError); ok {
-		return opErr.Err.Error() == "use of closed network connection"
-	}
-	return false
+	s.waitGroup.Wait()
+	log.Println("SSH tunnel service stopped.")
 }
