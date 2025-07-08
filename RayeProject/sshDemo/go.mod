@@ -6,7 +6,6 @@ require (
 	dubbo.apache.org/dubbo-go/v3 v3.0.2
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gin-gonic/gin v1.10.1
-	github.com/rs/zerolog v1.34.0
 	go.uber.org/zap v1.21.0
 	golang.org/x/crypto v0.23.0
 	gorm.io/datatypes v1.2.5
