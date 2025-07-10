@@ -17,7 +17,7 @@ import (
 )
 
 func Register(c *gin.Context) {
-	var req login.LoginReq
+	var req login.RegisterReq
 	if err := c.ShouldBindJSON(&req); err != nil {
 		Error(c, "参数错误")
 		return

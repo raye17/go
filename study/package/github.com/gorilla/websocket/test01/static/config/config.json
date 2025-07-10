@@ -1,0 +1,5 @@
+{
+  "env": "dev",
+  "backend": "http://localhost:8080",
+  "featureFlag": true
+}

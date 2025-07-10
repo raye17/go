@@ -10,8 +10,8 @@ services:
     volumes:
       - D:/Docker/rabbitmq:/var/lib/rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: 123456
     restart: unless-stopped
 
   # mysql:

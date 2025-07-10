@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebSocket 聊天室</title>
+</head>
+<body>
+  <h1>💬 WebSocket 聊天演示</h1>
+  <div id="log" style="white-space: pre-line; border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: auto;"></div>
+  <input id="msgInput" type="text" placeholder="输入内容..." />
+  <button onclick="sendMsg()">发送</button>
+
+  <script>
+    const log = document.getElementById("log");
+    const ws = new WebSocket("ws://localhost:8080/ws");
+
+    ws.onopen = () => {
+      appendLog("✅ 已连接服务器");
+    };
+
+    ws.onmessage = (event) => {
+      appendLog("📩 " + event.data);
+    };
+
+    ws.onclose = () => {
+      appendLog("❌ 连接已关闭");
+    };
+
+    function appendLog(message) {
+      log.textContent += message + "\n";
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function sendMsg() {
+      const input = document.getElementById("msgInput");
+      const message = input.value.trim();
+      if (message !== "") {
+        ws.send(message);
+       // appendLog("🧑 你说：" + message);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
