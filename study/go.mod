@@ -11,11 +11,13 @@ require (
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/mux v1.8.1
+	github.com/gorilla/websocket v1.5.3
 	github.com/jroimartin/gocui v0.5.0
 	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/lukasjarosch/go-docx v0.5.0
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/redis/go-redis/v9 v9.11.0
 	github.com/robfig/cron v1.2.0
 	github.com/rogierlommers/logrus-redis-hook v0.0.0-20210902125448-a9c74cf92631
@@ -38,11 +40,6 @@ require (
 	gorm.io/gorm v1.30.0
 	gorm.io/plugin/opentelemetry v0.1.15
 	gorm.io/plugin/soft_delete v1.2.1
-)
-
-require (
-	github.com/gorilla/websocket v1.5.3 // indirect
-	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 )
 
 require (

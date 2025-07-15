@@ -7,10 +7,9 @@ import (
 
 var (
 	controlChars   = regexp.MustCompile("[[:cntrl:]]")
-	controlEncoded = regexp.MustCompile("%[0-1][0-9,a-f,A-F]")
+	controlEncoded = regexp.MustCompile(`%[0-1][0-9a-fA-F]`)
 )
 
 func main() {
 	fmt.Println(controlEncoded.FindStringIndex("fgdh%0chdhd%1F"))
-	fmt.Printf("q:%q", `%20`)
 }

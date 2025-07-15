@@ -31,6 +31,7 @@ func main() {
 	}
 	time, err := time.ParseInLocation("2006/01/02 15:04:05 Mon Jan", "2006/01/02 15:04:05 Mon Jan", loc)
 	fmt.Println(time)
+	tickDemo()
 }
 func tickDemo() {
 	ticker := time.Tick(time.Second * 5)

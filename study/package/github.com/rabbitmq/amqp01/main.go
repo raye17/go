@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -49,7 +50,7 @@ loop:
 			break loop
 		}
 	}
-	zap.L().Error("GetPlatformByUid err", zap.Error(errors.New("timeout")))
+	zap.L().Error("test err:", zap.Error(errors.New("test")))
 	wg.Wait()
 }
 func failOnError(err error, msg string) {
@@ -83,38 +84,62 @@ func send() {
 			Body:        []byte(body),
 		})
 	failOnError(err, "Failed to publish a message")
-	log.Printf(" [x] Sent %s", body)
+	log.Printf(" [producer] Sent %s", body)
 }
 func receive() {
 	ch, err := amqpConn.Channel()
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
-	q, err := ch.QueueDeclare(
-		queueName, // name
-		false,     // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // no-wait
-		nil,       // arguments
-	)
-	failOnError(err, "Failed to declare a queue")
+	// q, err := ch.QueueDeclare(
+	// 	queueName, // name
+	// 	false,     // durable
+	// 	false,     // delete when unused
+	// 	false,     // exclusive
+	// 	false,     // no-wait
+	// 	nil,       // arguments
+	// )
+	// failOnError(err, "Failed to declare a queue")
 	msgs, err := ch.Consume(
-		q.Name, // queue
-		"",     // consumer
-		true,   // auto-ack
-		false,  // exclusive
-		false,  // no-local
-		false,  // no-wait
-		nil,    // args
+		queueName, // queue
+		"",        // consumer
+		true,      // auto-ack
+		false,     // exclusive
+		false,     // no-local
+		false,     // no-wait
+		nil,       // args
 	)
 	failOnError(err, "Failed to register a consumer")
-	forever := make(chan struct{})
+	connCloseChan := make(chan *amqp.Error)
+	amqpConn.NotifyClose(connCloseChan)
+
+	chCloseChan := make(chan *amqp.Error)
+	ch.NotifyClose(chCloseChan)
+
 	go func() {
-		for d := range msgs {
-			log.Printf("Received a message: %s", d.Body)
+		for {
+			select {
+			case err, ok := <-connCloseChan:
+				if !ok {
+					log.Println("connection close notify channel closed")
+					return
+				}
+				if err != nil {
+					log.Println("connection closed:", err)
+				}
+			case err, ok := <-chCloseChan:
+				if !ok {
+					fmt.Println("channel close notify channel closed")
+					return
+				}
+				if err != nil {
+					fmt.Println("channel closed:", err)
+				}
+			}
 		}
 	}()
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
-	<-forever
+
+	for msg := range msgs {
+		log.Printf("Received a message: %s", msg.Body)
+	}
 }
