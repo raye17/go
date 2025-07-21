@@ -2,8 +2,8 @@ package errors
 
 import "fmt"
 
-func Checkout(s string, err error) {
+func Checkout(msg string, err error) {
 	if err != nil {
-		fmt.Println(s, ":", err)
+		fmt.Println(msg, ":", err)
 	}
 }

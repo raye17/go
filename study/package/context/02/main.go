@@ -1,4 +1,4 @@
-package context
+package main
 
 import (
 	"context"
@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+func main() {
+	Test04()
+}
 func Test04() {
 	deadline := time.Now().Add(3 * time.Second)
 	ctx, cancel := context.WithDeadline(context.Background(), deadline)
