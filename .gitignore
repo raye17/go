@@ -44,3 +44,6 @@ dist-ssr
 *.sw?
 .air.toml
 *.air.toml
+log/
+*.log
+*.log.*

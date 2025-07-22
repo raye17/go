@@ -17,7 +17,6 @@ require (
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/lukasjarosch/go-docx v0.5.0
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
-	github.com/olivere/elastic v6.2.37+incompatible
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/redis/go-redis/v9 v9.11.0
