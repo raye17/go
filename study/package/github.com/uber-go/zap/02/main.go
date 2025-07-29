@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -24,8 +25,11 @@ func main() {
 	core := zapcore.NewCore(encoder, zapcore.AddSync(writer), level)
 	logger := zap.New(core, zap.AddCaller())
 	defer logger.Sync()
-	logger.Info("hello zap")
-	logger.Error("error zap")
-	logger.Debug("debug zap")
-	logger.Warn("warn zap")
+	// logger.Info("hello zap")
+	// logger.Error("error zap")
+	// logger.Debug("debug zap")
+	// logger.Warn("warn zap")
+	zap.ReplaceGlobals(logger)
+	fmt.Printf("logger: %p\n", logger)
+	fmt.Printf("zap.L(): %p\n", zap.L())
 }

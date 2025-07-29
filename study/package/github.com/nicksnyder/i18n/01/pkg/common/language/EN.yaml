@@ -1,0 +1,3 @@
+# EN.yaml
+- id: UsernameExists
+  translation: Username already exists {{.goods}} heihihie

@@ -32,8 +32,8 @@ services:
       - my-network 
 
   zookeeper:
-    image: zookeeper:3.8
-    #image: image-in.fontree.cn/zookeeper
+    #image: zookeeper:3.8
+    image: image-in.fontree.cn/zookeeper
     container_name: zookeeper
     ports:
       - "2181:2181"
@@ -96,17 +96,17 @@ services:
       - D:\Docker\data\filebrowser\srv:/srv
       - D:\Docker\data\filebrowser\config\config.json:/etc/config.json
       - D:\Docker\data\filebrowser\db\database.db:/etc/database.db
-#    environment:
+    environment:
 #      - DB_HOST=mariadb
-#      - DB_USER=admin
-#      - DB_PASS=admin
+      - DB_USER=admin
+      - DB_PASS=admin
 #      - DB_NAME=notepad
 #      - DB_PORT=3306
 #      - PGID=1000
 #      - PUID=1000
 #      - TZ=Aisa/Shanghai
-    #ports:
-     # - "8899:80"
+    ports:
+     - "8899:80"
     networks:
       - my-network
 

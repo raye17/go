@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/raye17/raye"
-	"github.com/raye17/raye/sxy"
+	"fmt"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 //	func main() {
@@ -55,8 +56,19 @@ func main() {
 	// }()
 	// fmt.Println("id: ", id)
 	// //fmt.Println(id1)
-	raye.Say("sss")
-	raye.Message = "HELLO"
-	raye.Say("sss")
-	sxy.Sxy()
+	// raye.Say("sss")
+	// raye.Message = "HELLO"
+	// raye.Say("sss")
+	// sxy.Sxy()
+
+	hashed := "$2a$10$nB45ICnl4aQCQalmIVg57.ZbmWMGlMU7Sgp5LSl/YtVWw6m3B9EKW"
+	input := "admin" // 猜测的密码
+
+	err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(input))
+	if err != nil {
+		fmt.Println("密码不匹配")
+	} else {
+		fmt.Println("密码匹配 ✅")
+	}
+
 }
