@@ -13,10 +13,10 @@ func main() {
 	c := cache.NewClientRedis()
 	defer c.Close()
 	err := c.Set(context.Background(), "abc", 123, 0).Err()
-	errors.CheckErr("redis set key:'abc' failed!", err)
+	errors.Checkout("redis set key:'abc' failed!", err)
 	res, err := c.Get(context.Background(), "abc").Result()
-	errors.CheckErr("redis get key:'abc' failed", err)
+	errors.Checkout("redis get key:'abc' failed", err)
 	fmt.Println("result:", res)
 	err = c.Set(context.Background(), "name", "sxy", 0).Err()
-	errors.CheckErr("redis set key 'name' failed", err)
+	errors.Checkout("redis set key 'name' failed", err)
 }

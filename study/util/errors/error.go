@@ -2,7 +2,7 @@ package errors
 
 import "fmt"
 
-func CheckErr(msg string, err error) {
+func Checkout(msg string, err error) {
 	if err != nil {
 		fmt.Println(msg, ":", err)
 	}

@@ -31,7 +31,6 @@ require (
 	github.com/swaggo/echo-swagger v1.4.1
 	github.com/uniplaces/carbon v0.2.2
 	github.com/urfave/cli/v2 v2.27.7
-	github.com/xuri/excelize/v2 v2.9.1
 	go.opentelemetry.io/otel v1.37.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.37.0
 	go.opentelemetry.io/otel/sdk v1.37.0
@@ -42,14 +41,6 @@ require (
 	gorm.io/gorm v1.30.0
 	gorm.io/plugin/opentelemetry v0.1.15
 	gorm.io/plugin/soft_delete v1.2.1
-)
-
-require (
-	github.com/richardlehane/mscfb v1.0.4 // indirect
-	github.com/richardlehane/msoleps v1.0.4 // indirect
-	github.com/tiendc/go-deepcopy v1.6.0 // indirect
-	github.com/xuri/efp v0.0.1 // indirect
-	github.com/xuri/nfp v0.0.1 // indirect
 )
 
 require (
@@ -114,10 +105,11 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pierrec/lz4/v4 v4.1.21 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/raye17/raye v1.0.1
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	github.com/shopspring/decimal v1.4.0
+	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect

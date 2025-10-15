@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"strconv"
 
-	"github.com/xuri/excelize/v2"
+	"golang.org/x/crypto/bcrypt"
 )
 
 //	func main() {
@@ -50,88 +47,28 @@ import (
 //		}
 //	}
 func main() {
-	fileDir := "./runtime/import/"
-	filename := "画家视频详情记录.xlsx"
-	filePath := filepath.Join(fileDir, filename)
-	_ = os.MkdirAll(fileDir, os.ModePerm)
+	// node := snowflakeNode.NewSf()
+	// id := node.Generate()
+	// //time.Sleep(time.Microsecond)
+	// go func() {
+	// 	id1 := node.Generate()
+	// 	fmt.Println(id1)
+	// }()
+	// fmt.Println("id: ", id)
+	// //fmt.Println(id1)
+	// raye.Say("sss")
+	// raye.Message = "HELLO"
+	// raye.Say("sss")
+	// sxy.Sxy()
 
-	var f *excelize.File
-	sheet := "Sheet1"
+	hashed := "$2a$10$nB45ICnl4aQCQalmIVg57.ZbmWMGlMU7Sgp5LSl/YtVWw6m3B9EKW"
+	input := "admin" // 猜测的密码
 
-	// 判断文件是否存在
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		// 文件不存在，新建文件和Sheet
-		f = excelize.NewFile()
-		f.SetSheetName(f.GetSheetName(0), sheet)
-
-		// 写表头
-		headers := []string{"序号", "画家名", "标题", "uuid", "youtube", "instagram", "tiktok"}
-		for col, h := range headers {
-			_ = f.SetCellValue(sheet, string('A'+col)+"1", h)
-		}
-	} else {
-		// 文件存在，打开
-		var err error
-		f, err = excelize.OpenFile(filePath)
-		if err != nil {
-			return
-		}
-	}
-
-	// 找到最后一行，追加数据
-	rows, err := f.GetRows(sheet)
+	err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(input))
 	if err != nil {
-		return
+		fmt.Println("密码不匹配")
+	} else {
+		fmt.Println("密码匹配 ✅")
 	}
 
-	// 计算下一行，从表头之后开始
-	startRow := len(rows) + 1
-	if startRow == 1 {
-		startRow = 2 // 文件新建或没有数据，从第2行开始
-	}
-	var artistInfos = []ArtistVideoDetail{
-		{
-			ArtistName: "画家3",
-			Title:      "作品3",
-			WorkUuid:   "uuid3",
-			Youtube:    "https://www.youtube.com",
-			Instagram:  "https://www.instagram.com",
-			TikTok:     "https://www.tiktok.com",
-		},
-		{
-			ArtistName: "画家4",
-			Title:      "作品4",
-			WorkUuid:   "uuid4",
-			Youtube:    "https://www.youtube.com",
-			Instagram:  "https://www.instagram.com",
-			TikTok:     "https://www.tiktok.com",
-		},
-	}
-
-	// 写数据
-	for i, artistInfo := range artistInfos {
-		row := startRow + i
-		_ = f.SetCellValue(sheet, "A"+strconv.Itoa(row), row-1) // 序号连续
-		_ = f.SetCellValue(sheet, "B"+strconv.Itoa(row), artistInfo.ArtistName)
-		_ = f.SetCellValue(sheet, "C"+strconv.Itoa(row), artistInfo.Title)
-		_ = f.SetCellValue(sheet, "D"+strconv.Itoa(row), artistInfo.WorkUuid)
-		_ = f.SetCellValue(sheet, "E"+strconv.Itoa(row), artistInfo.Youtube)
-		_ = f.SetCellValue(sheet, "F"+strconv.Itoa(row), artistInfo.Instagram)
-		_ = f.SetCellValue(sheet, "G"+strconv.Itoa(row), artistInfo.TikTok)
-	}
-	if err := f.SaveAs(filePath); err != nil {
-		fmt.Println("save excel err: ", err)
-		return
-	}
-
-}
-
-type ArtistVideoDetail struct {
-	Id         string `json:"id"`
-	ArtistName string `json:"artistName"`
-	Title      string `json:"title"`
-	WorkUuid   string `json:"workUuid"`
-	Youtube    string `json:"youtube"`
-	Instagram  string `json:"instagram"`
-	TikTok     string `json:"tiktok"`
 }

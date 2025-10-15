@@ -13,6 +13,7 @@ gen
 tmp
 RayeProject/raye/conf/local/conf.yaml
 *.db
+.zed
 
 
 
@@ -47,3 +48,5 @@ dist-ssr
 log/
 *.log
 *.log.*
+.zed
+.codebuddy
