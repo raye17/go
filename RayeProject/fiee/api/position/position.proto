@@ -1,0 +1,364 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+package position;
+import "github.com/mwitkow/go-proto-validators@v0.3.2/validator.proto";
+
+option go_package = "./;position";
+
+service Position {
+  rpc Create (CreateRequest) returns (CreateResponse) ;
+  rpc ListByDid (ListByDidRequest) returns (ListByDidResponse) ;
+  rpc Remove (RemoveRequest) returns (RemoveResponse) ;
+  rpc BatchRemove (BatchRemoveRequest) returns (RemoveResponse) ;
+  rpc Detail(DetailRequest) returns(CreateRequest);
+  rpc Update(CreateRequest) returns(CreateResponse);
+  rpc List(ListRequest) returns(ListResponse);
+  rpc RemoveUser(RemoveUserRequest) returns(RemoveUserResponse);//删除绑定的用户等信息
+  rpc BindUser(BindUserRequest) returns(BindUserResponse);//用户绑定岗位
+  rpc BindUserForName(BindUserRequest) returns(BindUserResponse);//用户绑定岗位
+  rpc AndBindUser(AddUserRequest) returns(BindUserResponse);//用户绑定岗位
+  rpc FindOneFromName(FindOneFromNameRequest) returns(CreateRequest);//根据部门id和名称获取职位信息
+  rpc PositionByUrl(PositionByUrlRequest) returns(PositionByUrlResponse);//通过部门查找部门
+  rpc PositionByUrls(PositionByUrlsRequest) returns(PositionByUrlResponse);//通过部门查找部门
+  rpc DoIHavaAuth(DoIHavaAuthRequest) returns(DoIHavaAuthResponse);//查账是否有某个权限
+  rpc DoHavaAuthBatch(DoHavaAuthBatchRequest) returns(DoHavaAuthBatchResponse);//查账是否有某个权限
+  rpc SearchDepartment(SearchDepartmentRequest) returns(SearchDepartmentResponse);//查账是否有某个权限
+  rpc FindUsersByRule(FindUsersByRuleRequest) returns(PositionUsersResponse);//查找有某个权限的所有人员
+  rpc FindRuleByUserId(FindRuleByUserIdRequest) returns(FindRuleByUserIdResponse);//查找某人下有权限列表的那几个
+  rpc BindUserV2(BindUserV2Request) returns(CommonResponse);//用户绑定岗位v2
+  rpc BindUserForNameV2(BindUserV2Request) returns(CommonResponse);//用户绑定岗位v2,通过名称
+  rpc AndBindUserV2(BindUserV2Request) returns(CommonResponse);//用户绑定岗位v2 仅增加岗位绑定
+  rpc UserInfoV2(CreateResponse) returns(BindUserV2Request);//根据用户id 查找该用户的岗位和部门权限
+  rpc UserInfosV2(UserInfosV2Request) returns(UserInfosV2Response);//根据用户id数据，查询他的岗位信息
+  rpc DetailV2(DetailRequest) returns(DetailResponse);
+}
+
+message UserInfosV2Request {
+  repeated uint32 IDs   = 2;
+}
+
+message UserInfosV2Response {
+  repeated BindUserV2Request userInfo   = 1;
+}
+
+message BatchRemoveRequest {
+  repeated uint32 IDs   = 2;
+}
+
+message FindRuleByUserIdRequest {
+  string domain         = 1;
+  repeated string urls   = 2;
+  uint64 userId         = 3;
+}
+
+message FindRuleByUserIdResponse {
+  repeated RuleInfo   rules = 1;
+}
+
+message FindUsersByRuleRequest {
+  string Domain         = 1 [json_name = "domain"];
+  string Url         = 2 [json_name = "url"];//权限的唯一值
+  uint64 DepartmentId = 3 [json_name = "departmentId"];
+}
+
+message PositionUsersResponse {
+  repeated PositionUser positionUsers = 1 [json_name = "positionUsers"];
+}
+
+message PositionByUrlResponse {
+  repeated BasePosition List = 1[json_name = "domain"];
+}
+
+message PositionByUrlRequest {
+  string Domain         = 1 [json_name = "domain"];
+  uint64 DepartmentId   = 2 [json_name = "departmentId"];
+  string Url            = 3 [json_name = "url"];
+}
+
+message PositionByUrlsRequest {
+  string Domain         = 1 [json_name = "domain"];
+  repeated uint64 departmentIds   = 2;
+  repeated string urls            = 3;
+}
+
+message SearchDepartmentRequest {
+  string Domain       = 1 [json_name = "domain"];
+  uint64 UserId       = 2 [json_name = "userId",(validator.field) = {string_not_empty: true,human_error: "70010"} ];
+  repeated string Urls          = 3 [json_name = "url",(validator.field) = {string_not_empty: true,human_error: "70014"} ];
+}
+
+message PDInfo {
+  uint64 ID             = 1 [json_name = "ID"];
+  string Name           = 2 [json_name = "Name"];
+  uint64 PositionID     = 3 [json_name = "PositionID"];
+  string PositionName   = 4 [json_name = "PositionName"];
+}
+
+message SearchDepartmentResponse {
+  repeated PDInfo List = 1 [json_name = "list"];
+}
+
+message DoIHavaAuthRequest {
+  string Domain       = 1 [json_name = "domain"];
+  uint64 UserId       = 2 [json_name = "userId",(validator.field) = {string_not_empty: true,human_error: "70010"} ];
+  string Url          = 3 [json_name = "url",(validator.field) = {string_not_empty: true,human_error: "70014"} ];
+  uint64 DepartmentID = 4 [json_name = "department",(validator.field) = {string_not_empty: true,human_error: "70014"} ];
+  string type = 5;
+}
+
+message DoHavaAuthBatchRequest {
+  string domain       = 1 [json_name = "domain"];
+  repeated uint32 userIds       = 2 ;
+  string url          = 3 [json_name = "url",(validator.field) = {string_not_empty: true,human_error: "70014"} ];
+  uint64 departmentID = 4 [json_name = "department",(validator.field) = {string_not_empty: true,human_error: "70014"} ];
+}
+
+message  DoIHavaAuthResponse{
+  bool Hava   = 1 [json_name = "Hava"];
+}
+
+
+message  DoHavaAuthBatchResponse{
+  bool hava   = 1 ;//是否同时有次权限
+  bool allNotHave   = 2 ;//是否全部没有此权限，查看是否部门人员有次权限
+}
+
+message FindOneFromNameRequest {
+  string Domain   = 1 [json_name = "domain"];
+  uint64 DepartmentId   = 2 [json_name = "departmentId"];
+  string Name   = 3 [json_name = "name"];
+}
+
+message ListByDidRequest {
+  string Domain   = 1 [json_name = "domain"];
+  uint64 UserId   = 2 [json_name = "userId"];
+}
+
+// 绑定用户的绑定关系
+message BasePosition {
+  uint64                        ID                = 1 [json_name = "ID"];
+  string                        Name              = 2 [json_name = "name"];
+  uint64                        DepartmentId      = 10 [json_name = "departmentId"];
+  string                        PositionCode      = 11 [json_name = "positionCode"];
+  string                        DepartmentCode    = 12 [json_name = "departmentCode"];
+}
+
+message ListByDidResponse {
+  repeated BasePosition Positions    = 1 [json_name = "positions"];
+}
+
+// 绑定用户的绑定关系
+message BindUserV2Request {
+  string Domain   = 1 [json_name = "domain"];
+  UserInfo userInfo = 2;
+  repeated DepPosition depPositions = 5 [json_name = "positionUsers"];
+}
+
+message DepPosition {
+  uint32 ID   = 1 ;
+  repeated PositionV2 positions = 2;
+  string name = 3;
+  bool isLeader = 4;
+}
+
+message PositionV2 {
+  uint32 ID     = 1 ;
+  string name   = 2 ;
+  string color   = 3 ;
+}
+
+message UserInfo {
+  uint32 UserID   = 1 [json_name = "userID"];
+  string UserName = 2 [json_name = "userName"];
+  string Avatar   = 3 [json_name = "avatar"];
+}
+
+// 绑定用户的绑定关系
+message BindUserRequest {
+  string Domain   = 1 [json_name = "domain"];
+  uint64 UserID   = 2 [json_name = "userID"];
+  string UserName = 3 [json_name = "UserName"];
+  string Avatar   = 4 [json_name = "Avatar"];
+  repeated PositionUser positionUsers = 5 [json_name = "positionUsers"];
+}
+
+message AddUserRequest {
+  string Domain   = 1 [json_name = "domain"];
+  uint64 UserID   = 2 [json_name = "userID"];
+  string UserName = 3 [json_name = "UserName"];
+  string Avatar   = 4 [json_name = "Avatar"];
+  PositionUser positionUser = 5 [json_name = "positionUser"];
+}
+
+message BindUserResponse {
+}
+
+
+message CommonResponse {
+}
+
+message PositionUser {
+  uint64 PositionID     = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 DepartmentID   = 2 [json_name = "departmentID"];
+  string DepartmentCode = 3 [json_name = "departmentCode"];
+  string PositionCode   = 4 [json_name = "positionCode"];
+  uint64 UserId           =5 [json_name = "userId"];
+  string UserName         =6 [json_name = "userName"];
+  string DepartmentName = 7 [json_name = "departmentName"];
+  string PositionName = 8 [json_name = "pPositionName"];
+}
+
+// 删除用户的绑定关系
+message RemoveUserRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 ID       = 2 [json_name = "ID"];
+}
+
+message RemoveUserResponse {
+}
+
+message CreateResponse {
+  uint64 ID = 1 [json_name = "ID"];
+}
+
+message RemoveRequest {
+  uint64 ID       = 1;
+  string Domain   = 2 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+}
+
+message RemoveResponse {
+}
+
+message DetailRequest {
+  uint64 ID       = 1 [json_name = "ID"];
+  string Domain   = 2 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+}
+
+message DetailResponse {
+  uint64                        ID                = 1 ;
+  string                        name              = 2 ;
+  string                        remark            = 3 ;
+  string                        createdAt         = 6 ;
+  string                        updatedAt         = 7 ;
+  //int64                         status            = 8 ;
+  repeated RuleInfo             rules             = 9 ;//关联部门
+  uint64                        departmentID      = 10 ;
+  string                        positionCode      = 11 ;
+  string                        departmentCode    = 12 ;
+  repeated RuleInfo             positionTreeRule  = 13 ;
+  string color                                    = 17 ;
+  string operatorName                             = 18 ;
+  repeated string menuAuths                       = 19;
+  uint32 linkerNum                                = 20;
+}
+
+message CreateRequest {
+  uint64                        ID                = 1 [json_name = "ID"];
+  string                        Name              = 2 [json_name = "name"];
+  string                        Remark            = 3 [json_name = "remark"];
+  string                        CreatedAt         = 6 [json_name = "createAt"];
+  string                        UpdatedAt         = 7 [json_name = "updateAt"];
+  int64                         Status            = 8 [json_name = "status"];
+  repeated RuleInfo             Rules             = 9 [json_name = "rules"];//关联部门
+  uint64                        DepartmentID      = 10 [json_name = "departmentID"];
+  string                        PositionCode      = 11 [json_name = "positionCode"];
+  string                        DepartmentCode    = 12 [json_name = "departmentCode"];
+  repeated RuleInfo             PositionTreeRule = 13 [json_name = "positionTreeRules"];
+  string                        Domain            = 14 [json_name = "domain"];
+  int32 Num           = 15    [json_name = "num"];
+  string DepartmentName = 16;
+  string color           = 17    [json_name = "color"];
+  string operatorName    = 18 ;
+  repeated string menuAuths    = 19;
+  uint32 linkerNum    = 20;
+  repeated uint32 departmentIDs    = 21;
+}
+
+message Leader {
+  int64 ID     = 1 [json_name = "ID"];
+  string Name   = 2 [json_name = "name"];
+}
+
+//更新
+message ListRequest {
+  uint64 DepartmentID  = 1 [json_name = "departmentID"];
+  uint64 PageSize      = 2 [json_name = "pageSize"];
+  uint64 Page          = 3 [json_name = "page"];
+  string Domain        = 4 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string Key           = 5 [json_name = "key"];
+  string ID            = 6; //ID搜
+  string name          = 7;//岗位名称
+  string menuAuth      = 8;//权限名称
+  string operatorName  = 9; //操作人
+  string updateStartAt = 10;//更新开始时间
+  string updateEndAt    =11;//更新结束时间
+  uint32 notDepartmentID  =13;//新版本 非部门查找
+  string sortField        = 14;//排序字段
+  string sortOrder        = 15;//顺序
+  repeated uint32 departmentIds        = 16;//顺序
+}
+
+//列表
+message Rule {
+  uint64 ID         = 1;
+  string name       = 2;
+  uint64 RuleDataID = 3;
+}
+
+//权限信息
+message RuleInfo {
+  uint64 ID                       = 1;
+  string Name                     = 2;
+  string Url                      = 3;
+  string Method                   = 4;
+  uint64 RuleDataID               = 5;
+  string RuleDataName             = 6;
+  repeated string RuleDataField   = 7;
+  repeated RuleInfo Son           = 8;
+  uint64 Pid                      = 9;
+  repeated RuleData     RuleData  = 10;
+  string MenuType                 = 11;
+  string Type                     = 12;
+  repeated  PositionRuleField PositionRuleFields   = 13;
+  uint32 dataRange                = 14  ;//数据范围 0-默认所有 1-仅自己 2- 自己以及下属 3-本部门
+  repeated RuleInfo interfaceList = 15 ;
+  repeated RuleInfo buttonList    = 16;
+}
+
+
+//数据权限
+message PositionRuleField {
+  uint64 ID                   = 1 ;
+  uint64 ruleFieldId          = 2 ;
+  uint64 ruleId               = 3 ;
+  string fieldCnName          = 4 ;
+  string fieldKey             = 5 ;
+  uint64 index                = 6 ;
+}
+
+message RuleData {
+  uint64 ID     = 1;
+  string Title  = 2;
+}
+
+message ListResponse {
+  uint64 Count                  = 1;
+  //uint64 NextID                 = 2;
+  repeated CreateRequest data  = 4;
+}

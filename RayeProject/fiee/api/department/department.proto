@@ -1,0 +1,524 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+package department;
+import "api/department/validator.proto";
+
+option go_package = "./;department";
+
+service Department {
+  rpc Create (CreateRequest) returns (CreateResponse) {}
+  rpc Remove (RemoveRequest) returns (RemoveResponse) {}
+  rpc Detail(DetailRequest) returns(DetailResponse);
+  rpc Details(DetailsRequest) returns(DetailsResponse);
+  rpc Update(CreateRequest) returns(UpdateResponse);
+  rpc BindPositions(CoBindRequest) returns(CommonResponse);//岗位绑定
+  rpc UnBindPositions(CoBindRequest) returns(CommonResponse);//岗位解绑
+  rpc List(ListRequest) returns(ListResponse);
+  rpc Tree(TreeRequest) returns(TreeResponse);
+  rpc BaseList(BaseAllRequest) returns(BaseListResponse);
+  rpc BaseSyncList(BaseAllRequest) returns(BaseListResponse);
+  rpc BaseAll(BaseAllRequest) returns(BaseAllResponse);
+  rpc Users(UsersRequest) returns(UsersResponse);//获取部门下的人
+  rpc SellerUsers(UsersRequest) returns(UsersResponse);//获取部门下的人
+  rpc InfoByUserId(InfoByUserIdRequest) returns(InfoByUserIdResponse);//获取人的所属部门
+  rpc InfoByUserIds(InfoByUserIdsRequest) returns(InfoByUserIdsResponse);//批量获取人的所属部门
+  rpc RemoveUser(RemoveUserRequest) returns(RemoveUserResponse);//删除绑定的用户等信息
+  rpc Bases(BasesRequest) returns(BasesResponse);//删除绑定的用户等信息
+  rpc FindLeaderFromDId(FindLeaderFromDIdRequest) returns(LeaderNameResponse);//删除绑定的用户等信息
+  rpc FindLeadersFromDId(FindLeaderFromDIdRequest) returns(FindLeadersFromDIdResponse);//某个部门下的所有领导
+  rpc UserIsLeader(MyDirectLeadersRequest) returns(UserIsLeaderResponse);//是否是领导
+  rpc DepartmentsByAuth(DepartmentsByAuthRequest) returns(BasesResponse);//有某个权限的部门
+  rpc UserIdByBossId(UserIdByBossIdRequest) returns(UserIdByBossIdResponse);//获取我所有的小弟
+  rpc UserIdByBossIdInAuth(UserIdByBossIdInAuthReq) returns(UserIdByBossIdResponse);//通过Auth获取我所有的小弟
+  rpc MyBosses(MyBossesReq) returns(MyBossesResponse);//我的上级领导们
+  rpc DepartmentBossesByAuth(DepartmentBossesByAuthReq) returns(DepartmentBossesByAuthResponse);//根据权限获取有该权限的部门和权限
+  rpc TreeWithPosition(TreeRequest) returns(TreeWithPositionResponse);
+  rpc MyDirectLeaders(MyDirectLeadersRequest) returns(MyDirectLeadersResponse);//我的直属领导们
+  rpc MyDepartmentsDirectLeaders(MyDepartmentsDirectLeadersRequest) returns(MyDirectLeadersResponse);
+
+  rpc BaseListV2(BaseListV2Request) returns(BaseListV2Response);
+
+  rpc UserIdsByFatherDepIds(UserIdsByFatherDepIdRequest) returns(UserIdsByFatherDepIdResponse);//获取组织架构某节点下所有的人员id
+  rpc CreateDepartmentHead(CreateDepartmentHeadRequest)returns(CreateDepartmentHeadResponse);
+  rpc UpdateDepartmentHead(CreateDepartmentHeadRequest)returns(CreateDepartmentHeadResponse);
+  rpc FindDepartmentHead(FindDepartmentHeadRequest)returns(FindDepartmentHeadResponse);
+}
+message FindDepartmentHeadResponse{
+  repeated FindDepartmentHead list = 1;
+  uint64 count = 2;
+}
+message FindDepartmentHead{
+  uint64 id = 1;
+  uint64 storeId = 2;
+  string storeName = 3;
+  string alias = 4;
+  string address = 5;
+}
+message FindDepartmentHeadRequest{
+  uint64 storeId = 1;
+  string storeName = 2;
+}
+message CreateDepartmentHeadResponse{
+  uint64 id = 1;
+}
+message CreateDepartmentHeadRequest{
+  uint64 storeId = 1;
+  string storeName = 2;
+  string alias = 3;
+  string address = 4;
+}
+message UserIdsByFatherDepIdResponse {
+  repeated uint32 userIds   = 1;
+}
+
+message UserIdsByFatherDepIdRequest {
+  string  domain    = 1;
+  repeated uint32 fatherIds   = 2;
+}
+
+message BaseListV2Request {
+  uint32 userId         = 1; //当前查看的用户id
+  uint32 page         = 2; //当前查看的用户id
+  uint32 pageSize         = 3; //当前查看的用户id
+  uint32 departmentId   = 4; //当前查看的用户id
+  repeated uint32 notDepartmentIds   = 5; //当前查看的用户id
+  repeated uint32 departmentIds   = 6; //当前查看的用户id
+}
+
+message BaseListV2Response{
+  uint64    count                     = 1;
+  repeated  BaseDetailV2Response  list  = 2;
+}
+
+message BaseDetailV2Response {
+  uint64                        ID                = 1 [json_name = "ID"];
+  string                        name              = 2 [json_name = "name"];
+  string                        remark            = 3 [json_name = "remark"];
+  string                        departmentCode    = 4 [json_name = "departmentCode"];
+  uint32                        level             = 5 ;
+}
+
+message UserIsLeaderResponse{
+  bool isLeader = 1;
+}
+
+message FindLeadersFromDIdResponse{
+  repeated LeaderNameResponse list = 1;
+}
+
+message MyDepartmentsDirectLeadersRequest {
+  uint32 userId         = 1; //当前查看的用户id
+  repeated uint64 departmentIds   = 3; //当前查看的用户id
+  string domain         = 4;
+}
+
+message MyDirectLeadersRequest {
+  uint32 userId         = 1; //当前查看的用户id
+  uint32 level   = 2; //当前查看的用户id
+  uint32 departmentId   = 3; //当前查看的用户id
+  string domain         = 4;
+}
+
+message LeaderInfo {
+  uint32 userId         = 1; //当前查看的用户id
+  string userName          = 2; //当前查看的用户id
+}
+
+message MyDirectLeadersResponse {
+  repeated LeaderInfo list = 1;
+}
+
+
+message PositionInfo {
+  uint64                        ID                = 1 [json_name = "ID"];
+  string                        name              = 2 [json_name = "name"];
+  uint64                        departmentID      = 10 [json_name = "departmentID"];
+  int32 num           = 15    [json_name = "num"];
+  string departmentName = 16;
+  string color           = 17    [json_name = "color"];
+  string operatorName    = 18 ;
+  repeated string menuAuths    = 19;
+  uint32 linkerNum    = 20;
+  repeated uint32 departmentIDs    = 21;
+}
+
+message NodeWithPosition {
+  uint32 ID = 1;
+  string name = 2;
+  repeated NodeWithPosition sons = 3;
+  uint32 level = 4;
+  repeated PositionInfo positions = 5;
+}
+
+message TreeWithPositionResponse {
+  repeated NodeWithPosition nodes = 3;
+}
+
+message DepartmentBossesByAuthReq {
+  string authKey = 1;
+  string domain = 2;
+}
+
+message DepartmentBoss {
+  uint32 ID = 1;
+  string name = 4;
+  string telNum = 2;
+  string avatar = 3;
+}
+
+message DepartmentAndBoss {
+  uint32 ID = 1;
+  string name = 2;
+  repeated DepartmentBoss bosses = 3;
+}
+
+message DepartmentBossesByAuthResponse {
+  repeated DepartmentAndBoss list = 1;
+}
+
+message MyBossesResponse {
+  repeated Bosses list = 1;
+}
+
+message Bosses {
+  repeated Boss bosses = 1;
+}
+
+message Boss {
+  uint32 ID                 = 1; //当前查看的用户id
+  string name               = 2; //当前查看的用户id
+  string avatar             = 3; //当前查看的用户id
+  uint32 departmentId       = 4; //当前查看的用户id
+}
+
+message MyBossesReq {
+  uint32 userId         = 1; //当前查看的用户id
+  uint32 level          = 2; //当前查看的用户id
+  uint32 departmentId   = 3; //当前查看的用户id
+  bool    isDesignate =4;
+}
+
+message TreeRequest {
+  uint32 nowUserId = 1;//当前查看的用户id
+  string domain    = 2 [(validator.field) = {string_not_empty: true,human_error: "70001"}];;//环境变量
+  repeated uint32 filterDepartmentIds = 3;//当前查看的用户id
+}
+
+message Node {
+  uint32 ID = 1;
+  string name = 2;
+  repeated Node sons = 3;
+  uint32 level = 4;
+  repeated string pathName = 5;
+  uint32 flagNum       = 21 ;
+  uint32 sonMaxDepth = 6;
+  repeated uint32 pathIds = 7;
+  bool sync = 11;
+  string syncId = 12;
+  uint32 staffNum = 13;
+}
+
+message TreeResponse {
+  repeated Node nodes = 3;
+}
+
+message UserIdByBossIdInAuthReq {
+  string  Domain    = 1;
+  uint64  UserId    = 2;
+  string Auth = 3;
+}
+
+message CoBindRequest {
+  string  domain    = 1;
+  uint32  ID    = 2;
+  repeated uint32 positionIds = 3;
+}
+
+message CommonResponse {
+}
+
+message UserIdByBossIdRequest {
+  string  Domain    = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  uint64  UserId    = 1 [json_name = "userId"];
+}
+
+message UserIdByBossIdResponse {
+  repeated uint64  UserIds       = 1 [json_name = "userIds"];
+}
+
+message DepartmentsByAuthRequest {
+  string  Domain    = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  string  Url       = 1 [json_name = "url"];
+}
+
+message FindLeaderFromDIdRequest{
+  uint64    DepartmentId = 1;
+  string    Domain         = 2;
+}
+
+message LeaderNameResponse{
+  string    LeaderName = 1;
+  uint64    LeaderId = 2;
+}
+
+message BasesRequest{
+  string    DepartmentCode = 1;
+  string    Domain         = 2;
+}
+
+
+message BaseDep{
+  uint64                        ID                = 1   [json_name = "ID"];
+  string                        Name              = 2   [json_name = "name"];
+}
+
+message BasesResponse{
+  repeated  BaseDep  Data  = 2;
+}
+
+message BaseListResponse{
+  uint64    Count                     = 1;
+  repeated  BaseDetailResponse  Data  = 2;
+  uint64 page = 3;
+  uint64 pageSize = 4;
+}
+
+message BaseDetailResponse {
+  uint64                        ID                = 1   [json_name = "ID"];
+  string                        Name              = 2   [json_name = "name"];
+  string                        Remark            = 3   [json_name = "remark"];
+  string                        DepartmentCode    = 4   [json_name = "departmentCode"];
+  repeated Position             AllPositions      = 5  [json_name = "allPositions"];
+  string syncId = 6;
+}
+
+message BaseAllRequest {
+  string  Domain    = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  uint32 userID = 3;
+  string departmentName = 4;
+  uint64 page = 5;
+  uint64 pageSize = 6;
+}
+
+message BaseAllResponse {
+  repeated CreateRequest Data =1;
+}
+
+message InfoByUserIdRequest {
+  uint64  UserID    = 1 [json_name = "ID",(validator.field) = {int_gt: 0,human_error: "70010"}];
+  string  Domain    = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+}
+
+message InfoByUserIdsRequest {
+  repeated uint64  UserIDs    = 1 [json_name = "userID",(validator.field) = {int_gt: 0,human_error: "70010"}];
+  string  Domain              = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+}
+
+message InfoByUserIdsResponse {
+  map<uint64,string> DepartmentByUserId = 1 [json_name = "departmentByUserId"];
+}
+
+message InfoByUserIdResponse {
+  uint64 DepartmentID  = 1 [json_name = "departmentID"];
+  string DepartmentName  = 2 [json_name = "departmentName"];
+}
+
+message UsersRequest {
+  uint64  ID          = 1 [json_name = "ID"];
+  uint64  PositionID  = 2 [json_name = "positionID"];
+  string  Domain      = 3 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  string  Name        = 4 [json_name = "name"];
+  uint64  Page        = 5 [json_name = "Page"];
+  uint64  PageSize    = 6 [json_name = "pageSize"];
+  uint64  NotPositionID  = 7 [json_name = "notPositionID"];
+  repeated uint64  InPositionIds  = 8 [json_name = "inPositionIds"];
+}
+
+message UsersResponse {
+  repeated UserInfo Users = 1 [json_name = "users"];
+  uint64 Count = 2 [json_name = "count"];
+}
+
+message UserInfo{
+  uint64  UserID    = 1 [json_name = "userID"];
+  string  UserName  = 2 [json_name = "userName"];
+  string  Avatar    = 3 [json_name = "avatar"];
+  string  Position  = 4 [json_name = "position"];
+  string  Department= 5 [json_name = "department"];
+  string  TelNum    = 6 [json_name = "telNum"];
+  uint64 DepartmentID = 7 [json_name = "departmentID"];
+  uint64 PositionID  = 8 [json_name = "positionID"];
+}
+
+// 删除用户的绑定关系
+message RemoveUserRequest {
+  string Domain   = 1 [json_name = "departmentID",(validator.field) = {string_not_empty: true,human_error: "70004"}];
+  uint64 LeaderID = 2 [json_name = "leaderID",(validator.field) = {string_not_empty: true,human_error: "70010"}];
+}
+
+message RemoveUserResponse {
+}
+
+message RemoveRequest {
+  uint64  ID        = 1 [json_name = "ID",(validator.field) = {int_gt: 0,human_error: "70004"}];
+  string  Domain    = 2 [json_name = "departmentID",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+}
+
+message RemoveResponse {
+}
+
+message DetailsRequest {
+  repeated uint64 IDs          = 1 [json_name = "IDs"];
+  string  Domain      = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+}
+
+message DetailRequest {
+  int64   ID          = 1 [json_name = "ID"];
+  string  Domain      = 2 [json_name = "Domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+}
+
+message DetailsResponse {
+  repeated DetailResponse data = 1 [json_name = "data"];
+}
+
+message DetailResponse {
+  uint64                        ID                = 1   [json_name = "ID"];
+  string                        Name              = 2   [json_name = "name"];
+  string                        Remark            = 3   [json_name = "remark"];
+  int64                         LeaderID          = 4   [json_name = "leaderID"];
+  string                        LeaderName        = 5   [json_name = "leaderName"];
+  repeated DepartmentRule       Rules             = 6   [json_name = "rules"];//部门本身的权限
+  string                        DepartmentCode    = 14   [json_name = "departmentCode"];
+  //repeated Leader               Leaders       = 7  [json_name = "leader"];
+  Position                      LeaderPosition    = 7  [json_name = "leaderPosition"];
+  repeated Position             Positions         = 8  [json_name = "positions"];
+  repeated Position             AllPositions      = 9  [json_name = "allPositions"];
+  repeated RuleDetail           DepartmentTreeRule= 10  [json_name = "departmentTreeRule"];
+  bool sync = 11;
+  string syncID = 12;
+  string CreatedAt           = 13    [json_name = "createdAt"];
+  int32 Num           = 15    [json_name = "num"];
+  uint32 pid           = 16 ;
+  uint32 level         = 17 ;
+  string levelPath     = 18 ;
+  string pName         = 19 ;
+  string updatedAt     = 20    [json_name = "updatedAt"];
+  uint32 flagNum       = 21 ;
+}
+
+message Leader {
+  int64   ID     = 1 [json_name = "ID"];
+  string  Name   = 2 [json_name = "name"];
+}
+
+message Position {
+  int64     ID                = 1 [json_name = "ID"];
+  string    Name              = 2 [json_name = "name"];
+  repeated  RuleInfo Rules    = 3 [json_name = "rules"];
+  repeated  UserInfo Users    = 4 [json_name = "users"];
+  string    PositionCode      = 5 [json_name = "positionCode"];
+}
+
+message CreateRequest {
+  uint64          ID              = 1 [json_name = "ID"];
+  string          Name            = 2  [json_name = "name",(validator.field) = {string_not_empty: true,human_error: "70011"}];
+  string          Remark          = 3  [json_name = "remark"];
+  string           Domain        = 4  [json_name = "domain"];
+  repeated Rule   Rules           = 6  [json_name = "rules"];
+  repeated Leader Leaders         = 7  [json_name = "leaders"];
+  string          DepartmentCode  = 8  [json_name = "departmentCode"];
+  repeated RuleDetail           DepartmentTreeRule     = 9  [json_name = "departmentTreeRule"];
+  bool sync = 10;
+  string syncID = 11;
+  uint32 pid = 12;
+}
+
+message UpdateResponse {
+
+}
+
+//创建
+message CreateResponse {
+  uint64 ID = 1 [json_name = "ID"];
+}
+
+message ListRequest {
+  uint64 LeaderID     = 1 [json_name = "leaderID"];
+  string Domain       = 2 [json_name = "domain"];
+  uint64 PageSize     = 3 [json_name = "pageSize"];
+  uint64 Page         = 4 [json_name = "page"];
+  string Key          = 5 [json_name = "key"];
+}
+
+message RuleData {
+  repeated string DataField   = 1 [json_name = "dataField"];
+  uint64 ID           = 2 [json_name = "ID"];
+  string Title         = 3 [json_name = "Title"];
+}
+
+//列表
+message Rule {
+  uint64 ID                   = 1;
+  string Name                 = 2;
+  repeated RuleData RuleData  = 3;
+}
+
+//权限信息
+message RuleInfo {
+  uint64 ID                     = 1;
+  string Title                  = 2;
+  string Url                    = 3;
+  string Method                 = 4;
+  uint64 RuleDataID             = 5;
+  string RuleDataName           = 6;
+  repeated string RuleDataField = 7;
+
+}
+
+
+message DepartmentRule {
+  uint64 ID                     = 1;
+  string Title                  = 2;
+  string Url                    = 3;
+  string Method                 = 4;
+  repeated RuleData RuleData    = 7;
+
+}
+
+message ListResponse {
+  uint64 Count                  = 1;
+  repeated DetailResponse Data  = 3;
+}
+
+message RuleDetail {
+  uint64                  ID            = 1     [json_name = "ID"];
+  string                  Type          = 2     [json_name = "type"];
+  uint64                  Pid           = 3     [json_name = "pid"];
+  string                  Title         = 4     [json_name = "title"];
+  string                  Icon          = 5     [json_name = "icon"];
+  string                  Url           = 6     [json_name = "url"];
+  string                  Method        = 7     [json_name = "method"];
+  uint64                  Weigh         = 8     [json_name = "weigh"];
+  string                  Status        = 9     [json_name = "status"];
+  string                  Remark        = 10    [json_name = "remark"];
+  string                  Extend        = 11    [json_name = "extend"];
+  repeated RuleData       RuleData      = 12    [json_name = "ruleData"];
+  repeated RuleDetail Son           = 13    [json_name = "rules"];
+  string                  grayIcon      = 19 ;
+}

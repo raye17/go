@@ -1,0 +1,1112 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+package account;
+import "github.com/mwitkow/go-proto-validators@v0.3.2/validator.proto";
+//import "descriptor.proto";
+//import "validator.proto";
+
+option go_package = "./;account";
+
+service Account {
+  rpc Login (LoginRequest) returns (TokenInfo) {}
+  rpc RefreshToken (RefreshTokenRequest) returns (TokenInfo) {} //刷新token
+  rpc Logout (DecryptJwtRequest) returns (CommonResponse) {}
+  rpc WxApp (WxAppRequest) returns (WxAppResponse) {}//获取微信公众号记录
+  rpc WxUserInfo (WxUserOrCreateRequest) returns (WxUserResponse) {}//获取微信用户信息
+  rpc WxUserCreate (WxUserOrCreateRequest) returns (WxUserResponse) {}//创建微信用户
+  rpc WxUserUpdate (WxUserUpdateRequest) returns (WxUserResponse) {}//更新微信用户
+  rpc WxGetOpenIdByCode (WxGetOpenIdByCodeRequest) returns (WxGetOpenIdByCodeResponse) {}//仅校验之前发送的验证码
+  rpc WxBoxLogin (WxGetOpenIdByCodeRequest) returns (WxBoxUserInfo) {}//微信小程序登陆并且获取详情
+  rpc WxBoxUserInfoByOpenId (WxBoxUserInfoRequest) returns (WxBoxUserInfo) {}//微信小程序登陆并且获取详情
+  rpc WxBoxTelNumByCode (WxGetOpenIdByCodeRequest) returns (WxBoxTelNumByCodeResponse) {}//小程序获取手机号
+  rpc WxBoxUpdateUser (WxBoxUserInfo) returns (CommonResponse) {}//更新用户信息
+  rpc WxBoxCreateUser (WxBoxUserInfo) returns (CommonResponse) {}//更新用户信息
+  rpc FddCreateUser (FddCreateUserRequest) returns (CommonResponse) {}//同步法大大数据
+  rpc FddUpdateUser (FddCreateUserRequest) returns (CommonResponse) {}//同步法大大数据
+  rpc FddRemoveUser (FddRemoveUserRequest) returns (CommonResponse) {}//同步法大大数据
+  rpc OffLine (CommonRequest) returns (CommonResponse) {}
+  rpc OnlineLog (LoginInfosByUserIdRequest) returns (LoginLogsResponse) {}//根据用户id获取登录的信息
+  rpc OnlineLogById (OnlineLogByIdRequest) returns (LoginLog) {}//根据用户id获取登录的信息
+  rpc CheckPwd (CheckPwdRequest) returns (UpdateResponse) {}//检测密码是否正确
+  rpc Register (RegistRequest) returns (RequestStatus) {}
+  rpc RegisterOrExist (RegistRequest) returns (RequestStatus) {}
+  rpc SendMsg (SendMsgRequest) returns (SendMsgStatusResponse) {} //登陆发送验证码
+  rpc SendCustomMsg (SendCustomMsgRequest) returns (SendMsgStatusResponse) {}//定制化发送内容
+  rpc SendExCustomMsg (SendCustomMsgRequest) returns (SendMsgStatusResponse) {}//定制化发送内容
+  rpc SendMsgRegister (SendMsgRequest) returns (SendMsgStatusResponse) {}//注册发送
+  rpc CheckMsg (CheckMsgRequest) returns (SendMsgStatusResponse) {}
+  rpc SendNewTelNumMsg (SendNewTelNumMsgRequest) returns (SendMsgStatusResponse) {}//发送新账号验证码,不携带新号码
+  rpc UpdateTelNum (SendNewTelNumMsgRequest) returns (SendMsgStatusResponse) {}//更新新手机号，校验新号码验证码
+  rpc Authentication (AuthenticationRequest) returns (RequestStatus) {}
+  rpc DecryptJwt (DecryptJwtRequest) returns (DecryptJwtResponse) {}//最好放在调用方
+  rpc Info (InfoRequest) returns (InfoResponse) {}
+  rpc JobNumGetInfo (JobNumGetInfoRequest) returns (InfoResponse) {}
+  rpc List (ListRequest) returns (ListResponse) {}
+  rpc RandList (ListRequest) returns (ListResponse) {}
+  rpc ListByIDs (ListByIDsRequest) returns (ListResponse) {}
+  rpc Remove (RemoveRequest) returns (RemoveResponse) {}
+  rpc WriteOff (WriteOffRequest) returns (RemoveResponse) {} //用户注销
+  rpc WriteOffApp (RemoveRequest) returns (RemoveResponse) {} //app用户注销
+  rpc WriteOffInfo (WriteOffApproveRequest) returns (WriteOffRequest) {} //用户注销详情
+  rpc FindWriteOffList (WriteOffListRequest) returns (WriteOffListResponse) {} //用户注销列表
+  rpc WriteOffUpdate (WriteOffApproveRequest)returns(RemoveResponse){} //用户注销更新
+  rpc Update (UpdateRequest) returns (UpdateResponse) {}
+  rpc PrivacyInfo (PrivacyInfoRequest) returns (AccountInfo) {}
+  rpc UsersByTel (UsersByTelRequest) returns (ListResponse) {}
+  rpc UserByTel (UserByTelRequest) returns (InfoResponse) {}
+  rpc CheckBeforeRegister (CheckBeforeRegisterRequest) returns (CommonResponse) {}
+  rpc OnlySendMsg (SendMsgRequest) returns (SendMsgStatusResponse) {} //仅发验证码
+  rpc OnlyCheckMsg (CheckMsgRequest) returns (SendMsgStatusResponse) {}//仅校验之前发送的验证码
+  rpc CreateClockDevice(CreateClockDeviceRequest) returns(ClockDeviceResponse){} //创建打卡机设备
+  rpc UpdateClockDevice(UpdateClockDeviceRequest) returns(ClockDeviceResponse){} //更新打卡机设备
+  rpc RemoveClockDevice(RemoveClockDeviceRequest) returns(ClockDeviceResponse){} //删除打卡机设备
+  rpc ClockDeviceList(ClockDeviceListRequest) returns(ClockDeviceListResponse){} //打卡机设备列表
+  rpc ClockDeviceInfo(ClockDeviceInfoRequest) returns(ClockDeviceInfoResponse){} //打卡机设备详情
+  rpc ClockDeviceSingleUntie(RemoveClockDeviceRequest) returns(ClockDeviceResponse){} //单人解绑打卡机
+  rpc ClockDeviceBatchBind(ClockBatchListResponse) returns(ClockDeviceInfoResponse){} //批量绑定打卡机
+  rpc ClockDeviceBatchUntie(ClockBatchBindRequest) returns(ClockDeviceInfoResponse){} //批量解绑打卡机
+  rpc ClockDeviceBatchList(ClockBatchBindRequest) returns(ClockBatchListResponse){} //查询绑定关系
+  rpc UpdateDeviceRelevance(ClockUserDeviceBatch) returns(ClockDeviceResponse){} //更新绑定中间表
+  rpc MailAccountByNickName(MailAccountByNickNameRequest) returns(MaiAccountResponse){} //根据昵称姓名获取昵称的邮箱和拼音名称
+  rpc CreateMaiAccount(CreateMaiAccountRequest) returns(CommonResponse){} //生成邮箱号
+  rpc CreateClockLog(ClockLogInfo) returns(ClockDeviceResponse){} //创建打卡记录
+  rpc SendClockInWechat(SendClockInWechatRequest) returns(CommonResponse){} //发送模版消息
+  rpc FindClockLogList(ClockLogReq) returns(ClockLogListResponse){} //查看打卡记录
+  rpc SendStrangerClockInWechat(SendClockInWechatRequest) returns(CommonResponse){} //发送陌生人模版消息
+  rpc ListV2 (ListV2Request) returns (ListResponse) {}// 新版列表 查询
+  rpc CreateChainAccount(CommonRequest) returns (CreateChainAccountResponse) {}// 新版列表 查询
+  rpc SendNationMsg (SendNationMsgRequest) returns (SendMsgStatusResponse) {} //发送境外国际短信验证码 --艺术商城
+  rpc UpdateLanguage(UpdateLanguageRequest) returns (UpdateLanguageResponse) {}// 修改用户使用的语言
+  rpc GenerateSliderCaptcha(GenerateSliderCaptchaRequest) returns (GenerateSliderCaptchaResponse) {}// 生成滑块验证码图片+位置
+  rpc VerifySliderCaptcha(VerifySliderCaptchaRequest) returns (VerifySliderCaptchaResponse) {}// 验证滑块验证码位置
+  rpc VerifySliderStatus(VerifySliderStatusRequest) returns (VerifySliderStatusResponse) {}// 验证滑块验证码状态
+  rpc SampleAccount (SampleAccountRequest) returns (SampleAccountResponse) {} //同一帐号还有谁在登陆
+  rpc LoginAndSqueezeOther (LoginRequest) returns (TokenInfo) {} //唯一登陆，干掉其他人
+  rpc QueryPersonnelWithTheSameName (QueryPersonnelWithTheSameNameRequest) returns (QueryPersonnelWithTheSameNameResponse) {}// 查询同名的员工
+  rpc UsersByJobNum (UsersByJobNumRequest) returns (ListResponse) {}
+
+  //人脸检测
+  rpc IsSamePerson(IsSamePersonRequest)returns(IsSamePersonResponse){}//是否是同一人
+  rpc CreateRealNameOrPassPort(UserInfo)returns(CommonResponse){}//实名信息注册
+  rpc FddCreateUserV2(FddCreateUserRequest) returns(CommonResponse){}//创建法大大
+  rpc FddUserFindByUserId(UserInfo)returns(FddInfo){}//通过userid获取法大大信息
+  rpc UserInfoById(InfoRequest)returns(UserInfo){}//通过userid获取实名信息
+
+  //校验短信二维码
+  rpc ValidateCode(ValidateCodeReq)returns(ValidateCodeResp){}
+  rpc SaveSubmitInfo(SubmitInfoRequest) returns (CommonResponse);
+  rpc SmsLog(SmsLogReq) returns (SmsLogRes);
+
+  //认证审核
+  rpc ReviewRealName(ReviewRealNameRequest) returns (CommonResponse);
+  rpc ReviewRealNameList(ReviewRealNameListRequest) returns (ReviewRealNameListResponse);
+
+  //风和商城以及销售宝部分
+  rpc BindStaff(BindStaffRequest) returns (CommonResponse);//丰和商城用户绑定 销售人员
+
+  // seller 销售宝 客户和销售关联
+  rpc SellerCustomerRelations(SellerCustomerRelationsRequest) returns (SellerCustomerRelationsResponse);
+  rpc SellerCustomerRelationsList(SellerCustomerRelationsListRequest) returns (SellerCustomerRelationsListResponse);
+  rpc SellerCustomerCount(SellerCustomerCountRequest) returns (SellerCustomerCountResponse);
+}
+
+message SmsLogReq{
+  string msgNo = 1; //用户的uuid
+  string mobile = 2; //用户的uuid
+  string allContent = 3; //用户的uuid
+  uint32 baseStatus = 4; //用户的uuid
+  string startSendTime = 5; //用户的uuid
+  string endSendTime = 6; //用户的uuid
+  string startReceiveTime = 7; //用户的uuid
+  string endReceiveTime = 8; //用户的uuid
+  uint64 pageSize    = 9 ;
+  uint64 page   = 10 ;
+}
+
+message SmsLogRes{
+  repeated SmsLogInfo list = 1;
+  uint32 count = 2; //用户的uuid
+}
+
+message SmsLogInfo{
+  string msgNo = 1; //用户的uuid
+  string mobile = 2; //用户的uuid
+  string allContent = 3; //用户的uuid
+  uint32 baseStatus = 4; //用户的uuid
+  string sendTime = 5; //用户的uuid
+  string receiveTime = 7; //用户的uuid
+  string statusDesc = 8; //用户的uuid
+  string status = 6; //用户的uuid
+  uint32 id = 9; //用户的uuid
+  string plat = 10; //短信平台 feige-飞鸽国内 feige-intel -飞鸽国际
+}
+
+
+message BindStaffRequest{
+  uint32 userId = 1; //用户的uuid
+  uint32 staffId = 2; //销售的uuid
+}
+
+message ReviewRealNameListRequest{
+  uint32 userId = 1;
+  uint32 page = 2;
+  uint32 pageSize = 3;
+}
+
+message ReviewRealNameListResponse{
+  repeated ReviewRealNameRequest data = 1;
+  int64 count = 2;
+}
+
+message ReviewRealNameInfo{
+  uint64 id = 1 ;
+  string createAt = 2 ;
+  string updateAt = 3 ;
+  string message = 4;
+  uint32 passStatus = 5;
+  uint32 userId = 6;
+  string userName = 7;
+}
+
+message ReviewRealNameRequest{
+  repeated uint32 ids = 1;
+  string message = 2;
+  bool isPass = 3;
+  uint32 userId = 4;
+  string userName = 5;
+  string createdAt = 6;
+  uint32 passStatus = 7;
+}
+
+message SubmitInfoRequest{
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+  string company = 4;
+  string phone = 5;
+}
+
+message CheckBeforeRegisterRequest{
+  string  domain = 1;
+  string  jobNum = 2;
+  string  telNum = 3;
+}
+
+message SampleAccountRequest{
+  string  domain = 1;
+  string  password = 2;
+  string  code = 3;
+  string  from = 4;
+  string  telNum = 5;
+  string  zone = 6;
+}
+
+message SampleAccountResponse{
+  bool  isNowAlreadyLogin = 1;
+  uint32  num = 2;// 同时在线的数量
+}
+
+message LoginAndSqueezeOtherResponse{
+  string  needDetectImageUrl = 1;
+  string  recentImageUrl = 2;
+}
+
+message IsSamePersonResponse{
+  bool  isPass = 1;
+  uint32  rate = 2;//相似度
+  string  message = 3;//相似度
+}
+
+message IsSamePersonRequest{
+  string  needDetectImageUrl = 1;
+  string  recentImageUrl = 2;
+}
+
+message UpdatePassportStatusRequest{
+  uint32 ID  = 1;
+  uint32 status  = 2;
+}
+
+message CreateChainAccountResponse {
+  string account = 1 ;
+  string men = 2 ;
+  string publicKey = 3 ;
+}
+message UsersByJobNumRequest{
+  string domain = 1 ;
+  repeated string jobNum =2 ;
+}
+message QueryPersonnelWithTheSameNameRequest{
+  repeated string names = 1 ;
+  string domain = 2 ;
+  string status = 3 ;
+}
+message QueryPersonnelWithTheSameNameResponse{
+  repeated string names = 1 ;
+  uint64 count = 2 ;
+}
+message ListV2Request {
+  string domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 pageSize    = 2 ;
+  uint64 page   = 3 ;
+  string key   = 4 ;
+  string nickName   = 5;
+  string telNum   = 6 ;
+  string status   = 7 ;
+  string positionName   = 8 ;
+  string jobNum   = 9 ;
+  string mailAccount   = 10 ;
+  string startEnterDate   = 11 ;
+  string endEnterDate   = 12 ;
+  uint32 positionId   = 13 ;
+  uint32 departmentId   = 14 ;
+  string departmentName =15 ;
+  repeated string departmentNames =16 ;
+  repeated uint32 positionIds =17 ;
+  repeated uint32 departmentIds =18 ;
+  uint32 fatherDepartmentId =19 ;
+  string blurTelName = 20;
+}
+
+message SendClockInWechatRequest {
+  string domain = 1;
+  string telNum =2;
+  string operatedAt =3;
+  string clockType =4;
+  uint32 userId =5;
+  string ghId =6;
+  string address =7;
+  uint64 logId = 8;
+}
+message MailAccountByNickNameRequest {
+  string Domain                       = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  string NickName                     = 2 [json_name = "nickName",(validator.field) = {length_lt: 20,string_not_empty: true,human_error: "70005"}];
+  uint32 ID                     = 3 ;
+}
+
+message CreateMaiAccountRequest {
+  uint32 ID        = 1 ;
+  string nickName      = 2;
+  string domain        = 3 ;
+}
+
+message MaiAccountResponse {
+  string englishName        = 1 ;
+  string mailAccount      = 2;
+}
+
+message FddRemoveUserRequest {
+  uint32 wxUserId      = 2;
+}
+
+message FddCreateUserRequest {
+  string openid        = 1 ;
+  uint32 wxUserId      = 2;
+  uint64 UserId        = 3;
+  string customerId    = 4;
+  bool   isVerify      = 5;
+  string   transactionNo      = 6;
+  uint32   status      = 7;
+  string   idType      = 8;
+}
+
+message WxBoxUserInfoRequest {
+  string openid        = 2 ;
+  string ghId         = 3;
+}
+
+message WxGetOpenIdByCodeRequest {
+  string code         = 1 ;
+  string state        = 2 ;
+  string ghId         = 3;
+}
+
+message WxGetOpenIdByCodeResponse {
+  string openId         = 1 ;
+}
+
+message WxBoxTelNumByCodeResponse {
+  string telNum         = 1 ;
+}
+
+message WxBoxUserInfo {
+  string openId       = 1 ;
+  string ghId         = 2 ;
+  bool isNew          = 3 ;
+  UserInfo user       = 4 ;
+  uint32 wxUserId     = 5 ;
+  FddInfo fdd         = 6 ;
+}
+
+message FddInfo {
+  uint64    ID              = 1 ;
+  string    customerId      = 2 ;
+  bool      isVerify        = 3 ;
+  string    transactionNo   = 4;
+  uint32 status = 5;
+  string    idType    =6;
+}
+
+message UserInfo {
+  uint64    ID              = 1 ;
+  string    nickName        = 3 ;
+  string    telNum          = 5 ;
+  string    avatar          = 7 ;
+  string    createAt        = 8 ;
+  uint64    realNameID      = 9 ;
+  string    realName        = 10;
+  string    iDNum           = 11;
+  string    domain          = 12;
+  string    realIDImgA      = 17;
+  string    realIDImgB      = 18;
+  string    realNameIDName = 19;
+  string    video = 20;
+  string idType = 21; //0 护照 港澳台 护照 通信证等
+  Passport passport = 22; //护照 港澳台 护照 通信证等
+}
+
+message CommonRequest {
+  uint64 ID         = 1 [json_name = "ID"];
+  string from         = 2 ;
+}
+
+message WxAppRequest {
+  string GhId         = 1 [json_name = "ID"];
+}
+
+message WxAppResponse {
+  string AppID        = 1 [json_name = "appID"];
+  string AppSecret    = 2 [json_name = "appSecret"];
+}
+
+message WxUserUpdateRequest {
+  uint32 wxID          = 1 [json_name = "wxId" ,(validator.field) = {string_not_empty: true,human_error: "缺少参数wxID"} ];
+  uint32 userID        = 2 [json_name = "userID"];
+}
+
+message WxUserOrCreateRequest {
+  string OpenID        = 1 [json_name = "openID" ,(validator.field) = {string_not_empty: true,human_error: "缺少openid"} ];
+  string GhID          = 2 [json_name = "ghID" ,(validator.field) = {string_not_empty: true,human_error: "缺少参数ghid"} ];
+}
+
+message WxUserResponse {
+  string OpenID        = 1 [json_name = "openID"];
+  uint32 UserID        = 2 [json_name = "userID"];
+  string GhID          = 3 [json_name = "ghID"];
+  string RoleAuth      = 4 [json_name = "roleAuth"];
+  uint32 ID            = 5 [json_name = "ID"];
+}
+
+
+message LoginLogsResponse {
+  repeated LoginLog Data     = 1 [json_name = "data"];
+}
+
+message LoginLog {
+  string Domain     = 1 [json_name = "domain"];
+  uint64 ID         = 2 [json_name = "ID"];
+  uint64 UserId     = 3 [json_name = "userId"];
+  string Ip         = 4 [json_name = "ip"];
+  string Token      = 5 [json_name = "token"];
+  uint64 Status     = 6 [json_name = "status"];
+  string ExpireDate = 7 [json_name = "expireDate"];
+  string LastDate   = 8 [json_name = "lastDate"];
+  string LogoutDate = 9 [json_name = "logoutDate"];
+  string CreatedAt  = 10 [json_name = "createdAt"];
+  string Address    = 11 [json_name = "address"];
+}
+
+message OnlineLogByIdRequest {
+  string Domain = 1 [json_name = "domain"];
+  uint64 ID     = 2 [json_name = "ID"];
+}
+
+message LoginInfosByUserIdRequest {
+  string Domain     = 1 [json_name = "domain"];
+  uint64 UserId     = 2 [json_name = "userId"];
+}
+
+message SendNewTelNumMsgRequest {
+  string Domain     = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 ID         = 2 [json_name = "ID",(validator.field) = {string_not_empty: true,human_error: "缺少参数"} ];
+  string NewTelNum  = 3 [json_name = "newTelNum"];
+  string Code       = 4 [json_name = "code"];
+  string Project    = 5 [json_name = "project"];
+  uint32 signNo     = 6 ;
+}
+
+message UserByTelRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string Tel =2 [json_name = "tel"];
+}
+
+message CommonResponse {
+}
+
+message UsersByTelRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  repeated string Tels =2 [json_name = "tels"];
+}
+
+message ListByIDsRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  repeated uint64 IDs = 2 [json_name = "IDs"];
+  uint64 OrderType = 3 [json_name = "OrderType"];
+  uint64 Page = 4 [json_name = "page"];
+  uint64 PageSize = 5 [json_name = "pageSize"];
+  string NickName = 6 [json_name = "nickName"];
+  repeated string InvitationCode  = 7 [json_name = "invitationCode"];
+  string Status = 8 [json_name = "status"];
+
+}
+
+message SendMsgRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string TelNum   = 2 [json_name = "telNum"];
+  string Project  = 3 [json_name = "project"];
+  uint32 signNo  = 4;
+  uint32 mId  = 5;
+  string scope  = 6;  //标记模块
+  string zone  = 7;   //地区 不同地区切换不同发送帐号
+}
+
+message SendCustomMsgRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string TelNum   = 2 [json_name = "telNum"];
+  string Project  = 3 [json_name = "project"];
+  string Url      = 4 [json_name = "Url"];
+  uint64 ID       = 5 [json_name = "ID"];
+  uint64 MId      = 6 [json_name = "mId"];
+  uint64 Location = 7 [json_name = "location"];
+  uint32 SigNo = 8 [json_name = "sigNo"];
+  string zone  = 9;   //地区 不同地区切换不同发送帐号
+}
+
+message CheckMsgRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string TelNum   = 2 [json_name = "telNum"];
+  string Code     = 3 [json_name = "code",(validator.field) = {string_not_empty: true,human_error: "70003"} ];
+  string scope    = 4;//标记模块
+}
+
+message SendMsgStatusResponse {
+}
+
+message RemoveRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 ID       = 2 [json_name = "ID",(validator.field) = {int_gt: 0,human_error: "70004"} ];
+  string code = 3;
+}
+message WriteOffRequest{
+  uint64 id = 1;
+  string domain = 2;
+  uint64 userId = 3;
+  string tel = 4;
+  string jonNum = 5;
+  string userName = 6;
+  string enterDate = 7;
+  string positionName =8;
+  uint64 positionId = 9;
+  string siteName = 10;
+  uint64 siteId =11;
+  string authUrl =12;
+  string type =13;
+  uint32 status =14;
+  string submitDate=15;
+}
+message WriteOffListRequest{
+  uint64 page = 1;
+  uint64 pageSize =2;
+  string domain = 3;
+  string userName =4;
+  uint64 userId = 5;
+  uint64 siteId =6;
+  string type =7;
+  uint32 status =8;
+}
+message WriteOffApproveRequest{
+  uint64 id = 1;
+  uint32 status = 2;
+}
+message WriteOffListResponse{
+  int64 total = 1;
+  repeated WriteOffRequest writeOffList = 2;
+}
+message RemoveResponse {
+}
+
+message UpdateRequest {
+  uint64 ID                           = 1 [json_name = "ID"];  //ID
+  string Domain                       = 2 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string NickName                     = 3 [json_name = "nickName"];
+  string Password                     = 4 [json_name = "password"];  //密码
+  string Avatar                       = 5 [json_name = "avatar"];    //头像
+  string Status                       = 7 [json_name = "status"];
+  string TelNum                       = 8 [json_name = "telNum"];
+  string EnterDate                    = 14 [json_name = "enterDate"];
+  Extend Extend                       = 17 [json_name = "extend"];
+  string Title                        = 18 [json_name = "title"];
+  string  JobNum                      = 19 [json_name = "jobNum"];
+  string BirthDate                    = 20 [json_name = "birthDate"];
+  uint64 Sex                          = 21 [json_name = "sex"];
+  string IdNum                        = 22 [json_name = "idNum"];
+  string RealName                     = 23 [json_name = "realName"];
+  string InvitationCode               = 24 [json_name = "invitationCode"];
+  string LeftDate                     = 25 [json_name = "leftDate"];
+  string Remark                       = 26 [json_name = "remark"];
+  string RecentImg = 27 [json_name = "recentImg"];
+  string ICNum = 28 [json_name = "icNum"];
+  string Train = 29 [json_name = "train"];
+  string Certificate = 30 [json_name = "certificate"];
+  repeated trainVideo TrainVideos = 31 [json_name = "trainVideos"];
+  Operator operator = 32;
+  string SecurityCode = 33 [json_name = "securityCode"];
+  UserExtend userExtend = 34 ;
+}
+
+message  Operator {
+  uint32  ID = 1;
+  string  Name = 2;
+}
+
+message  trainVideo {
+  string  trainUUID = 1 [json_name = "trainUUID"];
+  string  trainDesc = 2 [json_name = "trainDesc"];
+  string  video = 3 [json_name = "video"];
+  string SecurityCode = 31 [json_name = "securityCode"];
+}
+
+message UpdateResponse {
+}
+
+message PrivacyInfoRequest {
+  uint64 ID                           = 1 [json_name = "ID"];  //ID
+  string Domain                       = 2 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string SecurityCode = 3 [json_name = "securityCode"];
+}
+
+message ListRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 PageSize = 2 [json_name = "pageSize"];
+  uint64 Page     = 3 [json_name = "page"];
+  string key      = 4 [json_name = "key"];
+  string status   = 5 ;
+  string telNum = 6;
+  string startEnterDate = 7;
+  string endEnterDate = 8;
+  string nickName = 9;
+  uint32 isReal = 10;
+  uint32 isMainLand = 11;
+  string fromCode = 12;
+  string bankName = 13;
+  string bankNo = 14;
+  uint32 sex = 15;
+  string startRealTime = 16;
+  string endRealTime = 17;
+  string endCreatedAt = 18;
+  string startCreatedAt = 19;
+  string realName = 20;
+  string iDNum = 21;
+  uint32 passStatus = 22;
+}
+
+message ListResponse {
+  string Status                 = 1 [json_name = "status"];
+  uint64 Count                  = 2 [json_name = "count"];
+  repeated AccountInfo Data     = 3 [json_name = "data"];
+  uint64 AllCount               = 4 [json_name = "allCount"];
+}
+
+message InfoRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 ID       = 2 [json_name = "id"];
+  string scene    = 3 ;//场景值 base-默认仅仅user数据
+  string uuid     = 4 ;
+  repeated string extends    = 5 ;//加载的扩展数据
+}
+
+message InfoResponse {
+  string      Status    = 1 [json_name = "status"];
+  AccountInfo Info    = 2 [json_name = "accountInfo"];
+  bool        IsExist     = 3 [json_name = "isExist"];
+}
+
+message DecryptJwtResponse {
+  string Domain     = 1 [json_name = "status"];
+  uint64 ID         = 2 [json_name = "id"];
+  string Account    = 3 [json_name = "account"];
+  string NickName   = 4 [json_name = "nickName"];
+  bool   IsOffline  = 5 [json_name = "isOffline"];
+  string offlineCode = 6 ;//下线的原因
+}
+
+message DecryptJwtRequest {
+  string token = 1 [json_name = "token"];
+  string Domain = 2 [json_name = "Domain"];
+}
+
+message CheckPwdRequest {
+  string Token = 1 [json_name = "token"];
+  string Password = 2 [json_name = "password"];
+}
+
+message AuthenticationRequest {
+  string Name = 1 [json_name = "name"];
+  string IDNum = 2 [json_name = "idNum",(validator.field) = {length_eq: 18,human_error: "70006"}];
+  string Token = 3 [json_name = "token"];
+}
+
+message RequestStatus {
+  string Status = 1 [json_name = "status"];
+  uint64 ID     = 2 [json_name = "ID"];
+  bool isExist     = 3;
+}
+
+message RegistRequest {
+  string Domain                       = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  string NickName                     = 2 [json_name = "nickName",(validator.field) = {length_lt: 20,string_not_empty: true,human_error: "70005"}];
+  string TelNum                       = 3 [json_name = "telNum"];
+  string Password                     = 4 [json_name = "password",(validator.field) = {length_gt: 5,human_error: "70007"}];  //密码
+  string Avatar                       = 5 [json_name = "avatar"];    //头像
+  string EnterDate                    = 14 [json_name = "enterDate"];
+  Extend Extend                       = 15 [json_name = "extend"];
+  string JobNum                       = 16 [json_name = "JobNum"]; //工号
+  string Code                         = 17 [json_name = "code"]; //工号
+  string IdNum                        = 18 [json_name = "idNum"]; //年龄
+  string RealName                     = 19 [json_name = "realName"]; //
+  string RecentImg = 20;
+  string RealIDImgA = 21;
+  string RealIDImgB = 22;
+  string Video = 23;
+  string ICNum = 24;
+  string Train = 25;
+  string Certificate = 26;
+  string Source =27;
+  Operator operator = 28;
+  string Status =29;
+  string BlockAddr = 30;
+  Passport passport = 31; //护照 港澳台 护照 通信证等
+  string  leftDate = 32; //离职时间
+  UserExtend  UserExtend= 33; //离职时间
+  bool notCheckTelNum      =34 ;
+}
+
+message UserExtend {
+  string id         = 1;
+  string uuid       = 2;
+  string userID     = 3;
+  string address    = 4; //家庭住址
+  string bankName   = 5;
+  string bankNo     = 6;
+  string zone       = 7;
+  uint32 isMainland = 8;
+  uint32 isReal = 9;      //是否实名
+  string fromCode = 10;   // 99999
+  string realTime = 11;   // 实名信息时间
+  string realName = 12;   // 姓名
+  string idType   = 13;   //证件类型
+  string  idNo    = 14;   //证件号码
+  string  cardA    = 15;   //证件照片A
+  string  cardB    = 16;   //证件照片B
+  uint32  passStatus    = 17;   //审核状态
+  uint32  recommendStaffId    = 18;   //我的推荐人ID
+  bool    isRecommended    = 19;   //我的推荐人ID
+  string  passStatusMsg     = 20;   //拒绝的原因
+}
+
+message Passport {
+  string idNum = 1; //编号
+  string realIDImgA = 2;//正反面
+  string realIDImgB = 3;//正反面
+  string name = 4; //名字
+  string idType = 5; //法大大 保持一致 "0"身份证号 "1" 护照号 "B" 港澳居民来往内地通行证号 "C" 台湾居民来往大陆通行证号
+}
+
+message LoginRequest {
+  string Domain     = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  //string TelNum     = 2 [json_name = "telNum",(validator.field) = {regex: "^1\\d{10}$",human_error: "70002"}];
+  string TelNum     = 2 [json_name = "telNum"];
+  string Code       = 3 [json_name = "code"];
+  string Password   = 4 [json_name = "password"];
+  string Ip         = 5 [json_name = "ip"];
+  bool passCheckIp  = 6 ;
+  string from       = 7 [json_name = "from"]; //登陆来源 PC 还是 h5 之类的
+  string zone       = 8;
+}
+
+message TokenInfo {
+  AccountInfo AccountInfo   = 1 [json_name = "accountInfo"];
+  string Token              = 2 [json_name = "token"];
+  string RefreshToken            = 4 [json_name = "refresh"];
+  bool IsSampleAddress      = 3 [json_name = "isSampleAddress"];
+  string nowAddress        = 5 [json_name = "nowAddress"];
+}
+
+message Extend {
+  string JumpTo = 1 [json_name = "jumpTo"];
+  string Lang = 2 [json_name = "lang"];
+  bool CanScan = 3 [json_name = "canScan"];
+  bool ResolutionRatio = 4 [json_name = "resolutionRatio"];
+}
+
+message Department {
+  uint64 ID = 1 [json_name = "ID"];
+  string Name = 2 [json_name = "name"];
+}
+
+// The response message containing the greetings
+message AccountInfo {
+  uint64    ID              = 1 [json_name = "id"];
+  string    Account         = 2 [json_name = "account"];
+  string    NickName        = 3 [json_name = "nickName"];
+  int64     Type            = 4 [json_name = "type"];
+  string    TelNum          = 5 [json_name = "telNum"];
+  string    Status          = 6 [json_name = "status"];
+  string    Avatar          = 7 [json_name = "avatar"];
+  string    CreateAt        = 8 [json_name = "createAt"];
+  uint64    RealNameID      = 9 [json_name = "realNameID"];
+  string    RealName        = 10 [json_name = "realName"];
+  string    IDNum           = 11 [json_name = "iDNum"];
+  string    MnemonicWords   = 12 [json_name = "mnemonicWords"];
+  uint64    IsNeedChange    = 13 [json_name = "isNeedChange"];
+  string    EnterDate       = 14 [json_name = "enterDate"];
+  float     WorkYear        = 15 [json_name = "workYear"];
+  string    Domain          = 16 [json_name = "domain"];
+  Extend    Extend          = 17 [json_name = "extend"];
+  string    JobNum          = 18 [json_name = "jobNum"];
+  string    BirthDate       = 19 [json_name = "birth_date"];
+  uint64    Age             = 20 [json_name = "age"];
+  uint64    Sex             = 21 [json_name = "sex"];
+  string    Title           = 22 [json_name = "title"];
+  repeated Department   Departments          = 23 [json_name = "departments"];
+  string    Ip              = 24 [json_name = "ip"];
+  string    LoginDate       = 25 [json_name = "loginDate"];
+  string    InvitationCode  = 26 [json_name = "invitationCode"];
+  uint64    NowLogId        = 27 [json_name = "nowLogId"];
+  bool      CanScan         = 28 [json_name = "canScan"];
+  string    LeftDate        = 29 [json_name = "leftDate"];
+  repeated  PositionUser  Positions = 30 [json_name = "positions"];
+  string    Remark        = 31 [json_name = "remark"];
+  string recentImg =32;
+  repeated ClockUser clocks = 33;
+  string mailAccount  = 34;
+  string ICNum = 35 [json_name = "icNum"];
+  string englishName  = 36;
+  string Train = 37 [json_name = "train"];
+  string Certificate = 38 [json_name = "certificate"];
+  repeated trainVideo TrainVideos = 39 [json_name = "trainVideos"];
+  Operator  operator        = 40;
+  string    updatedAt       = 41;
+  string SecurityCode = 42 [json_name = "securityCode"];
+  string BlockAddr = 43 [json_name = "blockAddr"];
+  string Language = 44 [json_name = "language"];
+  UserExtend userExtend = 45 ;
+}
+
+message UserInfoV2 {
+  uint64    ID              = 1 ;
+  string    Account         = 2 ;
+  string    NickName        = 3 ;
+  string    TelNum          = 4 ;
+  string    Status          = 5 ;
+  string    Avatar          = 6 ;
+  string    CreateAt        = 7 ;
+  string    RealName        = 8;
+  string    IDNum           = 9;
+  string    EnterDate       = 10;
+  Extend    Extend          = 11;
+  string    JobNum          = 12;
+  string    recentImg       = 13;
+  string    mailAccount     = 14;
+  Operator  operator        = 15;
+  string    updatedAt       = 16;
+}
+
+message RefreshTokenRequest {
+  string    refreshToken    = 1 ;
+  string    domain          = 2;
+  string    ip              = 3 ;
+}
+
+message PositionUser {
+  uint64            PositionID          = 1     [json_name = "positionID"];
+  string            PositionName        = 2     [json_name = "positionName"];
+  uint64            DepartmentId        = 3     [json_name = "departmentId"];
+  string            DepartmentCode      = 4     [json_name = "departmentCode"];
+  string            DepartmentName      = 5     [json_name = "departmentName"];
+  uint64            UserId              = 6     [json_name = "userId"];
+  string            UserName            = 7     [json_name = "userName"];
+}
+message JobNumGetInfoRequest{
+  string jobNum = 1;
+  string    domain          = 2;
+}
+message CreateClockDeviceRequest{
+  string deviceNum =1;
+  string deviceName =2;
+  string deviceSite = 3;
+}
+message UpdateClockDeviceRequest{
+  uint64 id = 1;
+  string deviceNum =2;
+  string deviceName =3;
+  string deviceSite = 4;
+}
+message ClockDeviceResponse{
+  uint64 id = 1;
+}
+message RemoveClockDeviceRequest{
+  uint64 id = 1;
+}
+message ClockDeviceListRequest{
+  uint64 id =1;
+  string deviceSite = 2;
+  string deviceNum = 3;
+  string deviceName = 4;
+  uint64 page = 5 ;
+  uint64 pageSize = 6 ;
+  repeated uint64 ids = 7;
+}
+message ClockDeviceListResponse{
+  uint64 count =1;
+  repeated ClockDeviceInfo data = 2;
+}
+message ClockUser{
+  uint64 id       =1;
+  string createdAt =2;
+  string updatedAt =3;
+  string deletedAt =4;
+  uint64 deviceID  =5;
+  uint64 userId    =6;
+  uint64 status    =7;
+  ClockDeviceInfo device = 8;
+}
+message ClockDeviceInfo {
+  uint64 id = 1 ;
+  string createAt = 2 ;
+  string updateAt = 3 ;
+  string deviceSite = 4;
+  string deviceNum = 5;
+  string deviceName = 6;
+  uint64 userNum = 7;
+  repeated ClockUserRel data = 8 ;
+}
+
+message ClockDeviceInfoResponse{
+  uint64 count = 1;
+  repeated ClockUserRel data = 2 ;
+}
+message ClockUserRel {
+  uint64    id = 1 ;
+  string    createAt = 2 ;
+  string    updateAt = 3;
+  string    nickName = 4 ;
+  string    jobNum = 5 ;
+  string icNum = 6;
+}
+message ClockDeviceInfoRequest{
+  uint64 id = 1;
+  uint64 page = 2 ;
+  uint64 pageSize = 3 ;
+}
+message ClockBatchBindRequest{
+  uint64 id = 1;
+  repeated uint64 userId = 2;
+  repeated uint64 deviceId =3;
+}
+message ClockBatchListResponse{
+ repeated ClockUserDeviceBatch data = 1;
+}
+message ClockUserDeviceBatch{
+  uint64 userId = 1;
+  uint64 deviceId = 2;
+  string JobNum = 3;
+  string deviceNum = 4;
+  string deviceName = 5;
+  string workStatus = 6;
+}
+message ClockLogInfo{
+  uint64 id = 1;
+  string sn = 2;
+  string userId =3;
+  string recogType =4;
+  string recogTime =5;
+  float gender =6;
+  string photo =7;
+  float passStatus =8;
+  string userName =9;
+  float userType =10;
+  string confidence =11;
+  float reflectivity =12;
+  string cardNumber =13;
+  string passWord =14;
+  string qrCode =15;
+  string tel = 16;
+  string reasonVisit = 17;
+  string receiverTel = 18;
+  uint64 numOfPeople = 19;
+}
+message ClockLogReq{
+  uint64 id = 1;
+  uint64 page = 2;
+  uint64 pageSize = 3;
+  string userName = 4;
+  string recogType = 5;
+  string deviceNum = 6;
+  string recogDate = 7;
+  uint64 userId = 8;
+}
+message ClockLogListResponse{
+  repeated ClockLogInfo data =1;
+  uint64 count = 2;
+}
+
+message SendNationMsgRequest {
+  string Domain   = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  string TelNum   = 2 [json_name = "telNum",(validator.field) = {string_not_empty: true,human_error: "70001"}];
+  string Project  = 3 [json_name = "project"];
+  uint32 signNo  = 4;
+  uint32 mId  = 5;
+  string scope  = 6;//标记模块
+}
+
+message UpdateLanguageRequest {
+  string domain = 1 [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint64 ID = 2;
+  string language = 3;
+}
+
+message UpdateLanguageResponse {
+  uint64 ID = 1;
+  string telNum = 2;
+  string language = 3;
+}
+
+message GenerateSliderCaptchaRequest {
+  uint64 canvasWidth = 1;
+  uint64 canvasHeight = 2;
+  uint64 blockWidth = 3;
+  uint64 blockHeight = 4;
+  uint64 blockRadius = 5;
+  uint64 place = 6;
+}
+
+message GenerateSliderCaptchaResponse {
+  string nonceStr = 1;
+  string canvasSrc = 2;
+  string blockSrc = 3;
+  uint64 blockY = 4;
+  uint64 faceY = 5;
+  uint64 blockX = 6;
+}
+
+message VerifySliderCaptchaRequest {
+  string nonceStr = 1;
+  float blockX = 2;
+}
+
+message VerifySliderCaptchaResponse {
+  string nonceStr = 1;
+}
+
+message VerifySliderStatusRequest {
+  string nonceStr = 1;
+}
+
+message VerifySliderStatusResponse {
+  string nonceStr = 1;
+  int32 status = 2;
+}
+
+message ValidateCodeReq{
+  string code=1;
+  string domain=2;
+  string telNum=3;
+}
+message ValidateCodeResp{
+  string msg =1;
+}
+
+//  seller
+message SellerCustomerRelation {
+  uint32 id = 1;
+  uint64 customerId = 2;
+  string customerName = 3;
+  string customerTel = 12;
+  uint64 customerSex = 13;
+  string customerBirthDate = 14;
+  uint64 sellerId = 4;
+  string sellerName = 5;
+  string sellerTel = 15;
+  string sellerPosition = 16;
+  string sellerSite = 17;
+  uint64 operatorId = 6;
+  string operatorName = 7;
+  string remark = 8;
+  uint32 status = 9;
+  string bindTime = 10;
+  string unbindTime = 11;
+  string updatedAt = 18;
+  string leftStatus = 19;
+  uint32 departmentId = 20;
+  string departmentName = 21;
+}
+
+
+message SellerCustomerRelationsRequest {
+  uint64 customerId = 1;
+  uint64 sellerId = 2;
+  uint64 operatorId = 3;
+  string operatorName = 4;
+  string remark = 5;
+  uint32 departmentId   = 6 ;
+}
+
+message SellerCustomerRelationsResponse {
+  string msg = 1;
+}
+
+message SellerCustomerRelationsListRequest {
+  uint64 customerId = 1;
+  string customerName = 6;
+  uint64 sellerId = 2;
+  string sellerName = 7;
+  uint32 status = 3;
+  uint32 page = 4;
+  uint32 pageSize = 5;
+  string leftStatus = 8;
+  repeated uint64 sellerIds = 9;
+}
+
+message SellerCustomerRelationsListResponse {
+  repeated SellerCustomerRelation data = 1;
+  uint32 count = 2;
+}
+
+message SellerCustomerCountRequest {
+  repeated  uint64 sellerId = 1;
+}
+
+message SellerCustomerCountResponse {
+  message  CustomerCount {
+    uint64 SellerId = 1;
+    uint64 Count = 2;
+  }
+  repeated CustomerCount  customers  = 1 ;
+}

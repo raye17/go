@@ -1,0 +1,51 @@
+dubbo:
+  registries:
+    demoZK:
+      protocol: zookeeper
+      timeout: 30s
+      address: 127.0.0.1:2181
+  consumer:
+    references:
+      AccountClientImpl:
+        protocol: tri
+        interface: com.fontree.microservices.common.Account
+        filter: cshutdown,sign,fonDomainFilter,fonValidateFilter
+        params:
+          .accessKeyId: "Accountksl"
+          .secretAccessKey: "BSDY-FDF1-Fontree_account"
+        methods:
+          - name: "Login"
+            retries: 0
+      DepartmentClientImpl:
+        interface: com.fontree.microservices.common.Department # must be compatible with grpc or dubbo-java
+        filter: cshutdown,sign,fonDomainFilter,fonValidateFilter
+        params:
+          .accessKeyId: "SYD8-23DF"
+          .secretAccessKey: "BSDY-FDF1"
+      PositionClientImpl:
+        interface: com.fontree.microservices.common.Position # must be compatible with grpc or dubbo-java
+        filter: cshutdown,sign,fonDomainFilter,fonValidateFilter
+        params:
+          .accessKeyId: "SYD8-23DF"
+          .secretAccessKey: "BSDY-FDF1"
+        methods:
+          - name: "Update"
+            retries: 0
+      RuleClientImpl:
+        timeout: 15s
+        interface: com.fontree.microservices.common.Rule # must be compatible with grpc or dubbo-java
+        filter: cshutdown,sign,fonDomainFilter,fonValidateFilter
+        params:
+          .accessKeyId: "SYD8-23DF"
+          .secretAccessKey: "BSDY-FDF1"
+        methods:
+          - name: "Create"
+            retries: 0
+      OrderClientImpl:
+        timeout: 15s
+        protocol: tri
+        interface: com.fontree.microservices.common.order # must be compatible with grpc or dubbo-java
+        filter: cshutdown,sign,fonDomainFilter,fonValidateFilter
+        params:
+          .accessKeyId: "SYD8-order-04"
+          .secretAccessKey: "Al-order-FDF112"

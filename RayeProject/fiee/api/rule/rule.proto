@@ -1,0 +1,254 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+package rule;
+import "github.com/mwitkow/go-proto-validators@v0.3.2/validator.proto";
+
+option go_package = "./;rule";
+
+service Rule {
+  rpc Create (CreateRequest) returns (CreateResponse) ;
+  rpc Remove (RemoveRequest) returns (RemoveResponse) ;
+  rpc Detail(DetailRequest) returns(DetailResponse);
+  rpc Update(UpdateRequest) returns(UpdateResponse);
+  rpc List(ListRequest) returns(ListResponse);
+  rpc Rules(RulesRequest) returns(RulesResponse);
+  rpc UserInfo(RulesRequest) returns(UserInfoResponse);
+  rpc RuleByUrl(RuleByUrlRequest) returns(RuleByUrlResponse);
+  rpc FindUserRule(FindRuleByUrlRequest) returns(RuleByUrlResponse);
+  rpc FindByUrl(FindByUrlRequest) returns(DetailResponse);
+  rpc FindUsersByUrl(FindByUrlRequest) returns(UserInfos);//查找有某权限的人
+  rpc PositionUserList(PositionUserListRequest) returns(PositionUserListResponse);//查账是否有某个权限
+}
+
+message UserInfo {
+  uint64 UserId =1 [json_name = "userId"];
+  string UserName =2 [json_name = "userName"];
+}
+
+message UserInfos {
+  repeated UserInfo List = 1 [json_name = "list"];
+}
+
+message PositionUserListResponse {
+  uint64 Count = 1 [json_name = "count"];
+  repeated PositionUser Data = 2 [json_name = "data"];
+}
+
+message PositionUserListRequest {
+  string Domain =1 [json_name = "domain"];
+  uint64 DepartmentId =2 [json_name = "departmentId"];
+  uint64 PositionId   =3 [json_name = "positionId"];
+  repeated string siteUidS = 4;
+}
+
+//数据权限
+message RuleData {
+  repeated string DataField   = 1 [json_name = "dataField"];
+  string Name                 = 2 [json_name = "name"];
+  uint64 ID                   = 3 [json_name = "ID"];
+}
+
+message CreateRequest {
+  uint64            ID            = 1     [json_name = "ID"];
+  string            Type          = 2     [json_name = "type"];
+  uint64            Pid           = 3     [json_name = "pid"];
+  string            Title         = 4     [json_name = "title",(validator.field) = {string_not_empty: true,human_error: "70013"} ];
+  string            Icon          = 5     [json_name = "icon"];
+  string            Url           = 6     [json_name = "url"];
+  string            Method        = 7     [json_name = "method",(validator.field) = {string_not_empty: true,human_error: "70015"} ];
+  uint64            Weigh         = 8     [json_name = "weigh"];
+  string            Status        = 9     [json_name = "status"];
+  string            Remark        = 10    [json_name = "remark"];
+  string            Extend        = 11    [json_name = "extend"];
+  string            Domain        = 13    [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  bool              DataOpen      = 14    [json_name = "dataOpen"];
+  repeated RuleData RuleData      = 12    [json_name = "ruleData"];
+  uint32            CanJump       = 15    [json_name = "canJump"];
+  string            MenuType      = 16    [json_name = "menuType"];
+}
+
+message FindByUrlRequest {
+  string Url          = 1 [json_name = "Url"];
+  string Domain       = 2 [json_name = "domain"];
+  string Method       = 3 [json_name = "Method"];
+  repeated uint64 DepartmentIds = 4 [json_name = "DepartmentIds"];
+}
+
+
+message FindRuleByUrlRequest {
+  uint64 AccountID    = 1 [json_name = "AccountID"];
+  string Domain       = 2 [json_name = "domain"];
+  string Method       = 3 [json_name = "Method"];
+  string Url          = 4 [json_name = "Url"];
+  string Type         = 5 [json_name = "type"];
+}
+
+message RuleByUrlRequest {
+  uint64 AccountID    = 1 [json_name = "AccountID"];
+  string Domain       = 2 [json_name = "domain"];
+  string Method       = 3 [json_name = "Method"];
+  string Url          = 4 [json_name = "Url"];
+}
+
+message RuleByUrlResponse {
+  bool IsPass                   = 1 [json_name = "isPass"];
+  bool IsAdmin                  = 2 [json_name = "isAdmin"];
+  uint64 ID                     = 3 [json_name = "ID"];
+  bool DataOpen                 = 4 [json_name = "dataOpen"];
+  repeated string DataField     = 5 [json_name = "dataField"];
+  string Extend                 = 6 [json_name = "extend"];
+  bool Exist                    = 7 [json_name = "exist"];
+}
+
+message CreateResponse {
+  uint64 ID = 1 [json_name = "ID"];
+}
+
+message RemoveRequest {
+  uint64    ID = 1;
+  string    Domain  = 2    [json_name = "domain"];
+}
+
+message RemoveResponse {
+}
+
+message DetailRequest {
+  int64     ID      = 1;
+  string    Domain  = 2    [json_name = "domain"];
+}
+
+message DetailResponse {
+  uint64                  ID            = 1     [json_name = "ID"];
+  string                  Type          = 2     [json_name = "type"];
+  uint64                  Pid           = 3     [json_name = "pid"];
+  string                  Title         = 4     [json_name = "title"];
+  string                  Icon          = 5     [json_name = "icon"];
+  string                  Url           = 6     [json_name = "url"];
+  string                  Method        = 7     [json_name = "method"];
+  uint64                  Weigh         = 8     [json_name = "weigh"];
+  string                  Status        = 9     [json_name = "status"];
+  string                  Remark        = 10    [json_name = "remark"];
+  string                  Extend        = 11    [json_name = "extend"];
+  repeated RuleData       RuleData      = 12    [json_name = "ruleData"];
+  repeated DetailResponse Son           = 13    [json_name = "rules"];
+  uint32            CanJump       = 15    [json_name = "canJump"];
+  string            MenuType      = 16    [json_name = "menuType"];
+}
+
+message Leader {
+  int64 ID     = 1 [json_name = "id"];
+  string Name   = 2 [json_name = "name"];
+}
+
+//更新
+message UpdateRequest {
+  uint64            ID            = 1     [json_name = "id"];
+  string            Type          = 2     [json_name = "type"];
+  uint64            Pid           = 3     [json_name = "pid"];
+  string            Title         = 4     [json_name = "title",(validator.field) = {string_not_empty: true,human_error: "70013"} ];
+  string            Icon          = 5     [json_name = "icon"];
+  string            Url           = 6     [json_name = "url"];
+  string            Method        = 7     [json_name = "method",(validator.field) = {string_not_empty: true,human_error: "70015"} ];
+  uint64            Weigh         = 8     [json_name = "weigh"];
+  string            Status        = 9     [json_name = "status"];
+  string            Remark        = 10    [json_name = "remark"];
+  string            Extend        = 11    [json_name = "extend"];
+  repeated RuleData RuleData      = 12    [json_name = "ruleData"];
+  string            Domain        = 13    [json_name = "domain",(validator.field) = {string_not_empty: true,human_error: "70001"} ];
+  uint32            CanJump       = 15    [json_name = "canJump"];
+  string            MenuType      = 16    [json_name = "menuType"];
+}
+
+message UpdateResponse {
+
+}
+
+message ListRequest {
+  string Domain       = 1 [json_name = "domain"];
+  uint64 PageSize     = 2 [json_name = "pageSize"];
+  uint64 Page         = 3 [json_name = "page"];
+  uint64 Pid          = 4 [json_name = "pid"];
+  string Type         = 5 [json_name = "type"];
+  string Title        = 6 [json_name = "title"];
+  bool   IsNotJumpTop = 8 [json_name = "isNotJumpTop"];
+  repeated string Urls  = 9 [json_name = "urls"];
+}
+
+message ListResponse {
+  uint64 Count                  = 1;
+  repeated DetailResponse data  = 3;
+}
+
+message RulesRequest {
+  string Domain       = 1;
+  uint64 AccountID    = 2;
+}
+
+message RuleResponse {
+  uint64            ID            = 1     [json_name = "ID"];
+  string            Type          = 2     [json_name = "type"];
+  uint64            Pid           = 3     [json_name = "pid"];
+  string            Title         = 4     [json_name = "title"];
+  string            Icon          = 5     [json_name = "icon"];
+  string            Url           = 6     [json_name = "url"];
+  string            Method        = 7     [json_name = "method"];
+  uint64            Weigh         = 8     [json_name = "weigh"];
+  string            Status        = 9     [json_name = "status"];
+  string            Remark        = 10    [json_name = "remark"];
+  string            Extend        = 11    [json_name = "extend"];
+  RuleData          RuleDatum     = 12    [json_name = "ruleDatum"];
+}
+
+message PositionUser {
+  uint64            PositionID          = 1     [json_name = "positionID"];
+  string            PositionName        = 2     [json_name = "positionName"];
+  uint64            DepartmentId        = 3     [json_name = "departmentId"];
+  string            DepartmentCode      = 4     [json_name = "departmentCode"];
+  string            DepartmentName      = 5     [json_name = "departmentName"];
+  uint64            UserId              = 6     [json_name = "userId"];
+  string            UserName            = 7     [json_name = "userName"];
+  string            syncId              = 8;
+}
+
+message DepartmentLeader {
+  uint64            DepartmentId        = 1     [json_name = "departmentId"];
+  string            DepartmentCode      = 2     [json_name = "departmentCode"];
+  string            DepartmentName      = 3     [json_name = "departmentName"];
+}
+
+message RulesResponse {
+  repeated DetailResponse   AllMenus                = 1;
+  repeated DetailResponse   AllRules                = 10;
+  repeated DetailResponse   AllInterfaceRules       = 11;
+  repeated DetailResponse   MyMenuAuths             = 2;
+  repeated DetailResponse   MyRules                 = 3;
+  repeated DetailResponse   MyButtonAuths           = 4;
+  repeated DetailResponse   MyInterFaceAuths        = 5;
+  repeated PositionUser     PositionUsers           = 6;
+  repeated DepartmentLeader DepartmentLeaders       = 7;
+  repeated DetailResponse   AllTreeRule             = 8;
+  repeated DetailResponse   MyTreeRule              = 9;
+  repeated DetailResponse   MySecondRule            = 12;
+}
+
+message UserInfoResponse {
+  repeated PositionUser     PositionUsers       = 1;
+  repeated DepartmentLeader DepartmentLeaders   = 2;
+  bool                                IsAdmin   = 3;
+}

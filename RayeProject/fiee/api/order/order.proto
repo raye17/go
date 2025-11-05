@@ -1,0 +1,2413 @@
+syntax = "proto3";
+package order;
+
+option go_package = "./;order";
+
+// The order service definition.
+service Order {
+ //记录接受数据日志
+ rpc CreateLog(LogRequest) returns (CommonCreateResponse) {};
+
+ //订单
+ rpc OrderUpdate(OrderRequest) returns (OrderResponse) {};
+ rpc OrderUpdateByUid(OrderRequest) returns (OrderResponse) {};
+ rpc OrderUpdateKeys(OrderRequest) returns (OrderResponse) {};
+ rpc OrderBatchUpdate(OrderBatchUpdateRequest) returns (CommonCreateResponse) {};
+ rpc OrderExBatchUpdate(OrderBatchUpdateRequest) returns (CommonCreateResponse) {};
+ rpc OrderDelete(CommonRequest) returns (OrderRemove) {};
+ rpc GetTransactions(TransactionsRequest) returns (TransactionsResponse) {};//总监看到人员下的订单
+ rpc GetTransactionStage(TransactionStageRequest) returns (TransactionStageResponse) {};//根据uid查询订单流水
+ rpc GetBlankOrder(TransactionStageRequest) returns (BlankOrders) {};//根据uid查询订单流水
+ rpc GetBlankOrderByInfo(BlankOrderReq) returns (BlankOrders) {};//查询缺失信息订单
+ rpc GetSellerTransactions(TransactionsRequest) returns (TransactionsResponse) {};//总监看到人员下的订单
+ rpc GetTransaction(CommonRequest) returns (Transaction) {};//总监看到人员下的订单
+ rpc SaveTransactionSages(StageRequest) returns (CommonCreateResponse) {};//更新某个买家的订单流水
+ rpc GetOrders(OrderList) returns (OrderListResponse) {};
+ rpc GetOrder(CommonRequest) returns (OrderRequest) {};
+ rpc RandOrders(RandOrderRequest) returns (RandOrderResponse) {};
+ rpc UpdateOrderSellerId(UpdateSellerIdRequest) returns (CommonCreateResponse) {};
+ rpc UpDateOrderEntrusts(RandOrderRequest) returns (CommonCreateResponse) {};//从ms，或者委托单同步数据
+ rpc OrderCreate(OrderRequest) returns (OrderResponse) {};
+ rpc SetStatus(SetStatusRequest) returns (OrderResponse) {};
+ rpc OrderStatisticsInfo(OrderStatisticsInfoRequest) returns (OrderStatisticsInfoResponse) {}; //删除订单
+ rpc OrdersByArtworkNum(OrdersByArtworkNumRequest) returns (OrderBaseList) {}; //通过订单的画作编号获取订单
+ rpc OrderStageSetStatus(OrderStageSetStatusReq) returns (CommonResponse) {}; //对流水进行状态设置
+ rpc SynTransactionStage(CommonRequest) returns (CommonResponse) {}; //同步流水数据
+ rpc UpdateTransactionDate(UpdateTransactionDateReq) returns (CommonResponse) {}; //更新订单统计日期
+ rpc UpdateTransactionStage(UpdateTransactionStageReq) returns (CommonResponse) {}; //更新订单状态
+ rpc QueryStaffOrdersTotal(QueryStaffOrdersTotalReq)returns(QueryStaffOrdersTotalRes){};//批量查询员工订单总数，金额
+ rpc GetStaffOrderList(GetStaffOrderListRequest)returns(GetStaffOrderListResp){}   //查询单个员工订单列表，返回订单总数，金额
+ rpc QueryCustomerOrdersTotal(QueryCustomerOrdersTotalReq) returns (QueryCustomerOrdersTotalRes){};//查询客户订单/金额总数
+ rpc GetOrderByUid(CommonRequest) returns (OrderRequest) {};
+ //销售的统计数据
+ rpc GetReportUsers(ReportUserList) returns (ReportUserListResponse) {};
+ rpc GetReportUser(ReportUserDetail) returns (ReportUserRequest) {};
+
+ //周报
+ rpc GetReport(ReportDetail) returns (ReportRequest) {};
+ rpc ReportDelete(ReportDetail) returns (CommonCreateResponse) {};
+ rpc ReportCreate(ReportCreateRequest) returns (ReportResponse) {};
+ rpc ReportPublic(ReportDetail) returns (ReportLogRemove) {};
+ rpc GetReports(ReportList) returns (ReportListResponse) {};
+ rpc BeforeCreateUsers(ReportCreateRequest) returns (ReportUserListResponse) {};
+ rpc GetCheckSalesAmount(ReportCheckSales) returns (ResCheckSales);
+ rpc SetReportStatus(SetStatusRequest) returns (CommonCreateResponse) {};
+ rpc UpdateReportUsers(UpdateReportUserList) returns (CommonCreateResponse) {};
+ rpc GetReportQuery(ReportQueryRequest) returns(ReportQueryResponse){};
+ rpc GetReportQuerys(ReportQuerysRequest) returns(ReportQuerysResponse){};
+ rpc ReportRead(ReportReadRequest) returns(ReportResponse){};
+ rpc ReportRevoke(ReportRevokeReq) returns(ReportRevokeResponse) {};//撤销历史周报
+ rpc UpdatePerformanceStandard(UpdatePerformanceStandardReq) returns (UpdatePerformanceStandardResponse) {}; //更新，重置当期业绩标准
+ rpc PerformanceModifyRecord(PerformanceModifyRecordReq) returns(PerformanceModifyRecordResponse) {}; //业绩修改记录
+ rpc GetStaffReportList(GetStaffReportListReq) returns(GetStaffReportListResponse) {}; //员工历史周报列表
+ rpc PerformanceModifyStandard(PerformanceModifyStandardReq) returns (PerformanceModifyStandardResponse) {}; //业绩修改后的标准
+ rpc StaffPerformanceDetail(StaffPerformanceDetailReq) returns(StaffPerformanceDetailResponse) {}; //员工业绩和基数详情
+
+
+
+
+
+ //业绩部分
+ rpc Result(ResultRequest) returns (SellerResponse) {};
+ rpc Results(ResultsRequest) returns (ResultsResponse) {};
+ //汇报
+ rpc CreateWeekly(WeeklyRequest) returns (WeeklyResponse) {};//创建汇报记录
+ rpc UpdateWeekly(WeeklyRequest) returns (WeeklyResponse) {};//更新汇报记录
+ rpc DetermineCanCreateWeekly(CanWeeklyRequest) returns(WeeklyResponse) {};//是否可以提交汇报
+ rpc WeeklyList(WeeklyListRequest) returns(WeeklyResponseList){}; //查询汇报列表
+ rpc WeeklyInfo(WeeklyInfoRequest) returns(WeeklyRequest){}; //查询汇报详情
+ rpc WeeklyOaInfo(WeeklyInfoRequest) returns(WeeklyInfoResponse){}; //查询汇报详情
+ rpc WeeklyRead(WeeklyReadRequest) returns(WeeklyResponse){}; //汇报已读
+ rpc WeeklyModifiedNotCommitted(WeeklyResponse) returns(WeeklyResponseList){}; //修改保存->未提交状态
+ rpc GetSmsConfig(SmsConfigRequest) returns(SmsConfigResponse){}; //获取boss手机号
+ rpc CreateWeeklyComment(WeeklyCommentRequest) returns(ReportResponse){}; //创建汇报评论
+ rpc GetWeeklyComment(GetWeeklyCommentRequest) returns(WeeklyCommentResponse){}; //查看汇报评论
+ rpc RevokeWeekly(RevokeWeeklyRequest) returns(CommonResponse){}; //撤销汇报
+
+
+ rpc CreateStaffWeekly(StaffWeeklyReq) returns(ReportResponse){};//员工创建汇报
+ rpc UpdateStaffWeekly(StaffWeeklyReq) returns (ReportResponse) {};//更新汇报记录
+ rpc DetermineCanStaffWeekly(CanWeeklyRequest) returns(StaffWeeklyReq){};//员工是否可以提交汇报
+ rpc StaffWeeklyList(StaffWeeklyListRequest) returns(StaffWeeklyResponseList){}; //员工查询汇报列表
+ rpc StaffWeeklyInfo(ReportUserDetail) returns(StaffWeeklyReq){}; //查询汇报详情
+ //委托业绩
+ rpc GetEntrust(CommonRequest) returns (EntrustRequest) {}; //获取
+ rpc EntrustDelete(CommonRequest) returns (CommonCreateResponse) {}; //删除
+ rpc EntrustBatchDelete(UpDateOrderEntrustsRequest) returns (CommonCreateResponse) {}; //批量删除
+ rpc EntrustCreate(EntrustRequest) returns (CommonCreateResponse) {}; //增加或者删除
+ rpc EntrustCreates(EntrustListResponse) returns (UpdateEntrustKeysResponse) {}; //增加或者删除
+ rpc GetEntrusts(EntrustList) returns (EntrustListResponse) {}; //列表
+ rpc UpdateEntrustKeys(EntrustListResponse) returns (UpdateEntrustKeysResponse) {}; //修改
+
+ //支付订单部分
+ rpc PayCreateFirstCache(PayCreateCacheRequest) returns (CommonCreateResponse) {}; //获取创建订单缓存
+ rpc PaySetCash(PaySetCashRequest) returns (CommonResponse) {}; //标记nft已经铸造成功
+ rpc PayCreate(PayCreateRequest) returns (CommonCreateResponse) {}; //提交订单
+ rpc PayComplete(PayCompleteRequest) returns (PayCreateRequest) {}; //完成支付
+ rpc PaySellerSure(PaySellerSureRequest) returns (PayCreateRequest) {}; //销售确认
+ rpc PayCancelByOutTradeNo(PaySellerSureRequest) returns (PayCreateRequest) {}; //完成支付
+ rpc PayInfoByCode(PaySellerSureRequest) returns (PayCreateRequest) {}; //销售确认
+ rpc PayFail(PayCompleteRequest) returns (CommonCreateResponse) {}; //完成支付
+ rpc PayDetail(PayDetailRequest) returns (PayCreateRequest) {}; //查看订单详情
+ rpc PayDelete(CommonRequest) returns (CommonResponse) {}; //删除订单
+ rpc PayList(PayListRequest) returns (PayListResponse) {}; //订单列表
+ rpc PaySetExpress(PaySetExpressRequest) returns (CommonResponse) {}; //申请快递Info
+ rpc PaySetExpressRemark(PaySetExpressRequest) returns (CommonResponse) {}; //申请快递Info
+ rpc PaySynSeriesData(PaySynSeriesDataRequest) returns (CommonResponse) {}; //同步销售数据
+ rpc PaySeriesDataList(PaySeriesDataListRequest) returns (PaySeriesDataListResponse) {}; //销售概况系列汇总
+ rpc PayCollectionsDataList(PayCollectionsDataListRequest) returns (PayCollectionsDataListResponse) {}; //销售概况系列详情列表,藏品列表
+ rpc PayCronSynFail(PayCronSynFailRequest) returns (PayListResponse) {}; //获取超时支付订单列表
+ rpc PayCronSynSuccess(PayCronSynFailRequest) returns (PayListResponse) {}; //获取支付成功订单列表
+ rpc PayRefund(PayDetailRequest) returns (PayCreateRequest) {}; //退款
+ rpc PayGiveExist(PayGiveExistRequest) returns (CommonResponse) {}; //
+ rpc PayStaticIds(CommonRequest) returns (PayStaticIdResponse) {}; //
+ rpc SetPayCheck(SetPayCheckRequest) returns (CommonResponse) {}; //设置核验过
+ rpc GetWipedOutCheckedNum(CommonRequest) returns (GetWipedOutCheckedNumResponse) {}; //获取核验的数据
+
+ //以下是微信jsapi和App和Native支付与退款
+ rpc WechatJsApiPay(WechatJsApiPayRequest) returns (WechatJsApiPayResponse) {}; // jsapi 本地支付订单保存+微信支付平台预支付订单生成
+ rpc WechatJsApiQueryByOutTradeNo(WechatJsApiQueryByOutTradeNoRequest) returns (WechatJsApiQueryByOutTradeNoResponse) {}; // 通过outTrandeNo 获取 微信 jsapi 支付订单状态
+ rpc GetPayByOutTradeNo(GetPayByOutTradeNoRequest) returns (GetPayByOutTradeNoResponse) {}; // 通过outTrandeNo 查询支付的id
+ rpc WechatJsApiRefunds(WechatJsApiRefundsRequest) returns (WechatJsApiRefundsResponse) {}; //
+ rpc SetPayOk(WechatPayOkRequest) returns (CommonResponse) {}; //
+ rpc WechatAppPay(WechatAppPayRequest) returns (WechatAppPayResponse) {}; // app 本地支付订单保存+微信支付平台预支付订单生成
+ rpc WechatAppQueryByOutTradeNo(WechatAppQueryByOutTradeNoRequest) returns (WechatAppQueryByOutTradeNoResponse) {}; // 通过outTrandeNo 获取 微信 App 支付订单状态
+ rpc WechatNativePay(WechatNativePayRequest) returns (WechatNativePayResponse) {}; // native 本地支付订单保存+微信付款链接生成
+ rpc WechatNativeQueryByOutTradeNo(WechatNativeQueryByOutTradeNoRequest) returns (WechatNativeQueryByOutTradeNoResponse) {}; // 通过outTrandeNo 获取 微信 App 支付订单状态
+ rpc WechatRefundQueryByOutRefundNo(WechatRefundQueryByOutRefundNoRequest) returns (WechatRefundQueryByOutRefundNoResponse) {}; // wx查询退款订单
+ rpc WechatH5Pay(WechatH5PayRequest) returns (WechatH5PayResponse) {}; // H5 本地支付订单保存+微信支付平台预支付订单生成
+ rpc WechatH5QueryByOutTradeNo(WechatH5QueryByOutTradeNoRequest) returns (WechatH5QueryByOutTradeNoResponse) {}; // 通过outTrandeNo 获取 微信 H5 支付订单状态
+
+
+ // 以下是支付宝网页和App支付与退款
+ rpc AliWapPay(AliWapPayRequest) returns (AliWapPayResponse) {}; // ali网页支付
+ rpc AliAppPay(AliAppPayRequest) returns (AliAppPayResponse) {}; // aliApp支付
+ rpc AliNativePay(AliNativePayRequest) returns (AliNativePayResponse) {}; // aliApp当面支付
+ rpc AliPcWabPay(AliPcWabPayRequest) returns (AliPcWabPayResponse) {}; // ali电脑网页支付
+ rpc AliReFund(AliReFundRequest) returns (AliReFundResponse) {}; // ali退款
+ rpc AliNotify(AliNotifyRequest) returns (AliNotifyResponse) {}; // ali回调
+ rpc AliQueryByOutTradeNo(AliQueryByOutTradeNoRequest) returns (AliQueryByOutTradeNoResponse) {}; // ali查询订单
+ rpc AliRefundQueryByOutTradeNo(AliRefundQueryByOutTradeNoRequest) returns (AliRefundQueryByOutTradeNoResponse) {}; // ali查询退款订单
+
+
+
+ //以下是商城1.2版本的接口
+ rpc Bestow(BestowRequest) returns (BestowResponse) {}; //赠送
+ rpc ReceiveGift(ReceiveGiftRequest) returns (ReceiveGiftResponse) {}; //领取别人赠送
+ rpc ApplyBlockchainAddress(ApplyBlockchainAddressRequest) returns (ApplyBlockchainAddressResponse) {}; //判断是否申请过区块链地址以及申请区块链地址
+ rpc ApplyCertificate(ApplyCertificateRequest) returns (ApplyCertificateResponse) {}; //个人已购买的物品申请证书
+ rpc CancelBestow(CancelBestowRequest) returns (CancelBestowResponse) {}; //取消赠送
+ rpc GetBestowInfo(GetBestowInfoRequest) returns (GetBestowInfoResponse) {}; //获取兑换码对应的赠送人信息和商品信息
+ rpc InputPersonalBlockchain(InputPersonalBlockchainRequest) returns (InputPersonalBlockchainResponse) {}; //将商城已注册的用户信息录入用户个人区块链表
+
+ rpc ShipAddressCreate(ShipAddressCreateRequest) returns (ShipAddressCreateResponse) {}; //新增收货地址
+ rpc ShipAddressDelete(ShipAddressDeleteRequest) returns (ShipAddressDeleteResponse) {}; //删除收货地址
+ rpc ShipAddressList(ShipAddressListRequest) returns (ShipAddressListResponse) {}; //个人收货地址列表
+ rpc ShipAddressDefault(ShipAddressDefaultRequest) returns (ShipAddressDefaultResponse) {}; //设置默认收货地址
+ rpc GetAddressInfoById(GetAddressInfoByIdRequest) returns (GetAddressInfoByIdResponse) {}; //根据收货地址id获取地址信息
+ rpc LogisticsTracking(LogisticsTrackingRequest) returns (LogisticsTrackingResponse) {}; //物流追踪
+ rpc AddTrackingNumber(AddTrackingNumberRequest) returns (AddTrackingNumberResponse) {}; //物流追踪
+ rpc RecordNotify(RecordNotifyRequest) returns (CommonResponse) {}; //支付流水。
+
+ // 境外支付 stripe
+ rpc CreateStripeCheckoutSession(CreateStripeCheckoutSessionRequest) returns (CreateStripeCheckoutSessionResponse){}; // 创建境外支付会话
+ rpc GetStripePaymentIntentInfo(GetStripePaymentIntentInfoRequest) returns(GetStripePaymentIntentInfoResponse){};// 查询支付会话情况
+ rpc CreateStripeRefund(CreateStripeRefundRequest) returns(CreateStripeRefundResponse){};// 境外支付申请退款
+ rpc GetRefundInfo(GetRefundInfoRequest) returns(GetRefundInfoResponse){};// 查询退款情况
+ rpc GetCheckoutWebhook(GetCheckoutWebhookRequest) returns(GetCheckoutWebhookResponse){};// 支付回调
+ rpc CommonCheckoutWebhook(GetCheckoutWebhookRequest) returns(GetCheckoutWebhookResponse){};// 支付回调,通用
+ rpc QueryStripeInfoByCheckSessionIds(QueryStripeInfoRequest) returns(QueryStripeInfoResponse){}; // 通过checkoutSessionIds查询stripe信息
+
+ // stripe改版，用内嵌窗口，自定义前端，不用checkoutsessionid
+ rpc CreateStripePaymentIntent(CreateStripePaymentIntentRequest) returns (CreateStripePaymentIntentResponse){}; // 创建支付意向，stripe payment intent
+ rpc CommonStripePayemntIntentWebhook(GetCheckoutWebhookRequest) returns (GetCheckoutWebhookResponse){}; // 监听支付回调，功能，监听事件payment_intent.succeeded
+
+ rpc GetOrderMonthTotal(GetOrderMonthTotalRequest) returns (GetOrderMonthTotalResponse) {}; //获取用户订单月统计
+ rpc GetOrderGroupByDepartmentTotal(GetOrderMonthTotalRequest) returns (GetOrderDepartmentTotalResponse) {}; //获取用户订单月统计
+ rpc GetOrderGroupByUserList(GetOrderMonthTotalRequest) returns (GetOrderDepartmentTotalResponse) {}; //获取用户订单月统计
+
+}
+
+
+message GetOrderDepartmentTotalResponse{
+  repeated GetOrderMonthTotalResponse List = 1;
+}
+message GetOrderMonthTotalRequest{
+  string year = 1;
+  repeated string siteIds = 2;
+  string periodType = 3;
+  int32 interval = 4;
+}
+message GetOrderMonthTotalResponse{
+  repeated OrderMonthTotalInfo year = 1;
+  repeated OrderMonthTotalInfo lastYear = 2;
+  string uid = 3;
+}
+message OrderMonthTotalInfo{
+  string month = 1;
+  string amountTotal = 2;
+  uint64 orderNum = 3;
+}
+message QueryCustomerOrdersTotalRes{
+ repeated QueryCustomerOrdersTotalInfo info = 1;
+}
+message QueryCustomerOrdersTotalReq{
+ repeated uint64 customerIds = 1;
+ uint64 departmentId = 2;
+}
+
+message QueryCustomerOrdersTotalInfo{
+ uint64 customerId = 1;
+ string amountTotal = 2;
+ uint64 orderNum = 3;
+}
+message WeeklyCommentResponse{
+ repeated WeeklyCommentRequest commentList = 2;
+}
+message GetWeeklyCommentRequest{
+  uint64 weeklyId = 1;
+}
+message WeeklyInfoResponse{
+ WeeklyRequest weeklyInfo = 1;
+ repeated WeeklyCommentRequest commentList = 2;
+}
+message WeeklyCommentRequest{
+  uint64 weeklyId = 1;
+  uint64 userId = 2;
+  string userName = 3;
+  string reportTime = 4;
+  string content = 5;
+}
+message UpdateTransactionDateReq{
+  uint64 id = 1;
+  string statisticalDate= 2;
+}
+message UpdateTransactionStageReq{
+  repeated uint64 ids = 1;
+  int32 status= 2;
+}
+message GetWipedOutCheckedNumResponse {
+ uint64  num  = 2;
+}
+
+
+message SetPayCheckRequest {
+ uint64 ID       = 1 ;
+ string  domain  = 2;
+}
+
+message RecordNotifyRequest {
+ string  domain         = 1;
+ string  transaction  = 2;
+ string  platform     = 3;
+}
+
+message WechatPayOkRequest {
+ string outTradeNo    = 1 ;
+ string body    = 2 ;
+}
+
+message GetPayByOutTradeNoRequest {
+ string OutTradeNo              = 4 [json_name = "OutTradeNo"];
+}
+
+message GetPayByOutTradeNoResponse {
+ string outTradeNo        = 1 ;
+ uint32 recordId          = 2 ;
+ string cent              = 3 ;
+ string platform          = 4 ;
+ string domain            = 5 ;
+ string scene             = 6 ;
+}
+
+message WechatJsApiRefundsResponse {
+    string RefundId                = 1 [json_name = "RefundId"];
+    string OutRefundNo             = 2 [json_name = "OutRefundNo"];
+    string TransactionId           = 3 [json_name = "TransactionId"];
+    string OutTradeNo              = 4 [json_name = "OutTradeNo"];
+    string SuccessTime             = 5 [json_name = "SuccessTime"];
+    string CreateTime              = 6 [json_name = "CreateTime"];
+    string Status                  = 7 [json_name = "Status"];
+    string Amount                  = 8 [json_name = "Amount"];
+}
+
+message OrderStageSetStatusReq {
+ repeated uint64 IDs                = 1 [json_name = "IDs"];
+ bool  isPass                = 2 [json_name = "IsPass"];
+}
+
+message WechatJsApiPayResponse {
+ string Appid = 1 [json_name = "appid"];
+ string TimeStamp  = 2 [json_name = "timeStamp"];
+ string  Package        = 3 [json_name = "package"];
+ string SignType      = 4 [json_name = "signType"];
+ string NonceStr   = 5 [json_name = "nonceStr"];
+ string PaySign       = 6 [json_name = "paySign"];
+ string PrepayId       = 7 [json_name = "prepayId"];
+
+}
+
+message WechatAppPayResponse {
+ string Appid = 1 [json_name = "appid"];
+ string TimeStamp  = 2 [json_name = "timeStamp"];
+ string  Package        = 3 [json_name = "package"];
+ string SignType      = 4 [json_name = "signType"];
+ string NonceStr   = 5 [json_name = "nonceStr"];
+ string PaySign       = 6 [json_name = "paySign"];
+ string PrepayId       = 7 [json_name = "prepayId"];
+ string PartnerId       = 8 [json_name = "partnerId"];
+ string msg = 9 [json_name="msg"];
+}
+
+message WechatJsApiQueryByOutTradeNoRequest {
+ string outTradeNo  = 1 [json_name = "outTradeNo"];
+}
+
+message WechatJsApiQueryByOutTradeNoResponse {
+ string appID = 1 [json_name = "appID"];
+ string mchID = 2 [json_name = "mch_id"];
+ string outTradeNo = 3 [json_name = "out_trade_no"];
+ string transactionId = 4 [json_name = "transaction_id"];
+ string tradeType = 5 [json_name = "trade_type"];
+ string tradeState = 6 [json_name = "trade_state"];
+ string bankType = 7 [json_name = "bank_ype"];
+ string successTime = 8 [json_name = "success_time"];
+ string openID = 9 [json_name = "open_id"];
+ int32 total = 10 [json_name = "total"];
+}
+
+message WechatAppQueryByOutTradeNoRequest {
+ string outTradeNo  = 1 [json_name = "outTradeNo"];
+}
+
+
+message WechatAppQueryByOutTradeNoResponse {
+ string appID = 1 [json_name = "appID"];// 服务提供商的应用ID
+ string mchID = 2 [json_name = "mch_id"];// 服务商商户ID
+ //  string subAppId = 3 [json_name = "sub_appid"]; // 子应用ID
+ //  string subMchId = 4 [json_name = "sub_mchid"];// 子商户ID
+ string outTradeNo = 5 [json_name = "out_trade_no"];// 订单号
+ string transactionId = 6 [json_name = "transaction_id"];// 微信交易ID
+ string tradeType = 7 [json_name = "trade_type"];// 交易类型
+ string tradeState = 8 [json_name = "trade_state"];// 交易状态
+ string tradeStateDesc = 9 [json_name = "trade_state_desc"]; // 交易状态描述
+ string bankType = 10 [json_name = "bank_type"]; // 银行类型
+ string attach = 11 [json_name = "attach"]; // 附加数据
+ string successTime = 12 [json_name = "success_time"];// 支付成功时间
+
+ message Payer {// 付款人信息
+  string openid = 1 [json_name = "openid"];
+ }
+
+ message Amount {// 金额信息
+  int64 total = 1 [json_name = "total"];// 总金额
+  int64 payerTotal = 2 [json_name = "payer_total"];// 付款人支付的金额
+  string currency = 3 [json_name = "currency"];// 货币类型
+  string payerCurrency = 4 [json_name = "payer_currency"];// 付款人货币类型
+ }
+
+ message PromotionDetail {// 促销详情
+  string couponId = 1 [json_name = "coupon_id"];// 优惠券ID
+  string name = 2 [json_name = "name"];// 名称
+  string scope = 3 [json_name = "scope"];// 范围
+  string type = 4 [json_name = "type"];// 类型
+  int64 amount = 5 [json_name = "amount"];// 金额
+  string stockId = 6 [json_name = "stock_id"];// 库存ID
+  int64 wechatpayContribute = 7 [json_name = "wechatpay_contribute"];// 微信支付贡献的金额
+  int64 merchantContribute = 8 [json_name = "merchant_contribute"];// 商户贡献的金额
+  int64 otherContribute = 9 [json_name = "other_contribute"];// 其他贡献的金额
+  string currency = 10 [json_name = "currency"];// 货币类型
+ }
+ // 包含促销详情列表
+ repeated PromotionDetail promotionDetail = 13 [json_name = "promotion_detail"];
+ // 付款人信息
+ Payer payer = 14;
+ // 金额信息
+ Amount amount = 15;
+}
+
+message WechatJsApiPayRequest {
+ string Description = 1 [json_name = "description"];
+ string OutTradeNo  = 2 [json_name = "outTradeNo"];
+ int64  Cent        = 3 [json_name = "cent"];
+ string OpenID      = 4 [json_name = "openID"];
+ string NotifyUrl   = 5 [json_name = "notifyUrl"];
+ string AppID       = 6 [json_name = "appID"];
+ string ClientIP    = 7 [json_name = "ClientIP"];
+ uint32 recordId                = 9 ;
+ string domain                  = 10 ;
+ string platform                = 11 ;
+ string scene             = 12 ;
+ int32 timeExpire = 13 [json_name = "time_expire"];
+ string mchID = 14 [json_name = "mchID"];
+}
+
+message AliWapPayRequest {
+ string  subject = 1 [json_name = "subject"];
+ string  productCode = 2 [json_name = "product_code"];
+ string  outTradeNo = 3 [json_name = "out_trade_no"];
+ string  quitUrl = 4 [json_name = "quit_url"];
+ string  notifyUrl = 5 [json_name = "notify_url"];
+ string  returnUrl = 6 [json_name = "return_url"];
+ int32  totalAmount = 7 [json_name = "total_amount"];
+ int32 timeExpire = 8 [json_name = "time_expire"];
+ string domain                  = 9 ;
+ string platform                = 10 ;
+}
+
+message AliWapPayResponse {
+ string url = 1 [json_name = "url"];
+ string logRecordID = 2 [json_name = "log_record_ID"];
+ string msg = 3 [json_name="msg"];
+}
+
+message AliAppPayRequest {
+ string  subject = 1 [json_name = "subject"];
+ string  productCode = 2 [json_name = "product_code"];
+ string  outTradeNo = 3 [json_name = "out_trade_no"];
+ string  quitUrl = 4 [json_name = "quit_url"];
+ string  notifyUrl = 5 [json_name = "notify_url"];
+ string  returnUrl = 6 [json_name = "return_url"];
+ string  totalAmount = 7 [json_name = "total_amount"];
+ int32  timeExpire = 8 [json_name = "time_expire"];
+ string domain                  = 9 ;
+ string platform                = 10 ;
+ int32 payType                = 11 ;
+}
+
+message AliAppPayResponse {
+ string url = 1 [json_name = "url"];
+ string logRecordID = 2 [json_name = "log_record_ID"];
+ string msg = 3 [json_name="msg"];
+}
+
+message AliNativePayRequest {
+ string  subject = 1 [json_name = "subject"];
+ string  outTradeNo = 2 [json_name = "out_trade_no"];
+ string  notifyUrl = 3 [json_name = "notify_url"];
+ int32  totalAmount = 4 [json_name = "total_amount"];
+ int32  timeExpire = 5 [json_name = "time_expire"];
+ string domain = 6 [json_name = "domain"];
+ string platform = 7 [json_name = "platform"];
+}
+
+message AliNativePayResponse {
+ string url = 1 [json_name = "url"];
+ string msg = 2 [json_name="msg"];
+}
+
+message AliPcWabPayRequest {
+ string  subject = 1 [json_name = "subject"];
+ string  outTradeNo = 2 [json_name = "out_trade_no"];
+ string  notifyUrl = 3 [json_name = "notify_url"];
+ int32  totalAmount = 4 [json_name = "total_amount"];
+ int32  timeExpire = 5 [json_name = "time_expire"];
+ string domain = 6 [json_name = "domain"];
+ string platform = 7 [json_name = "platform"];
+ string  quitUrl = 8 [json_name = "quit_url"];
+ string  returnUrl = 9 [json_name = "return_url"];
+}
+
+message AliPcWabPayResponse {
+ string pageRedirectionData = 1 [json_name = "page_redirection_data"];
+ string msg = 2 [json_name="msg"];
+}
+
+message AliReFundRequest {
+ string outTradeNo = 1 [json_name = "out_trade_no"];
+ int32  totalAmount = 2 [json_name = "total_amount"];
+}
+
+message AliReFundResponse {
+ string tradeNo = 1 [json_name = "trade_no"];
+ string outTradeNo = 2 [json_name = "out_trade_no"];
+ string buyer_logon_id = 3 [json_name = "buyer_logon_id"];
+ string refund_fee = 4 [json_name = "refund_fee"];
+ string msg = 5 [json_name="msg"];
+}
+
+message AliNotifyRequest {
+ string  rawQuery = 1 [json_name="raw_query"];
+}
+
+message AliNotifyResponse {
+ string  notifyTime = 1 [json_name="notify_time"];
+ string  notifyType = 2 [json_name="notify_type"];
+ string  notifyId = 3 [json_name="notify_id"];
+ string  appId = 4 [json_name="app_id"];
+ string  version = 5 [json_name="version"];
+ string  signType = 6 [json_name="sign_type"];
+ string  sign = 7 [json_name="sign"];
+ string  tradeNo = 8 [json_name="trade_no"];
+ string  outTradeNo = 9 [json_name="out_trade_no"]    ;
+ string  buyerLogonId = 10 [json_name="buyer_logon_id"]  ;
+ string  buyerId = 11 [json_name="buyer_id"] ;
+ string  tradeStatus = 12 [json_name="trade_status"] ;
+}
+
+message AliQueryByOutTradeNoRequest {
+ string outTradeNo  = 1 [json_name = "outTradeNo"];
+}
+
+message AliQueryByOutTradeNoResponse {
+ string tradeNo = 1 [json_name = "trade_no"];
+ string outTradeNo = 2 [json_name = "out_trade_no"];
+ string buyerLogonId = 3 [json_name = "buyer_logon_id"];
+ string tradeStatus = 4 [json_name = "trade_status"];
+ string totalAmount = 5 [json_name = "total_amount"];
+ string buyerUserID = 6 [json_name = "buyer_user_id"];
+}
+
+message AliRefundQueryByOutTradeNoRequest {
+ string outTradeNo  = 1 [json_name = "outTradeNo"];
+}
+
+message AliRefundQueryByOutTradeNoResponse {
+ string tradeNo = 1 [json_name = "trade_no"];
+ string outTradeNo = 2 [json_name = "out_trade_no"];
+ string out_request_no = 3 [json_name = "out_request_no"];
+ string total_amount = 4 [json_name = "total_amount"];
+ string refund_amount = 5 [json_name = "refund_amount"];
+ string refund_status = 6 [json_name = "refund_status"];
+}
+
+
+message WechatJsApiRefundsResponseOld {
+ string Description = 1 [json_name = "description"];
+ string OutTradeNo  = 2 [json_name = "outTradeNo"];
+ int64  Cent        = 3 [json_name = "cent"];
+ string OpenID      = 4 [json_name = "openID"];
+ string NotifyUrl   = 5 [json_name = "notifyUrl"];
+ string AppID       = 6 [json_name = "appID"];
+ string ClientIP    = 7 [json_name = "ClientIP"];
+}
+
+message WechatNativePayRequest {
+ string description = 1 [json_name = "description"];
+ string outTradeNo  = 2 [json_name = "outTradeNo"];
+ int32  cent        = 3 [json_name = "cent"];
+ string notifyUrl   = 5 [json_name = "notifyUrl"];
+ string appID       = 6 [json_name = "appID"];
+ string clientIP    = 7 [json_name = "ClientIP"];
+ uint32 recordId                = 8 ;
+ string domain                  = 9 ;
+ string platform                = 10 ;
+ string scene             = 11 ;
+ int32 timeExpire = 12 [json_name = "time_expire"];
+}
+
+message WechatNativePayResponse {
+ string codeUrl = 1 [json_name = "code_url"];
+}
+
+message WechatNativeQueryByOutTradeNoRequest {
+ string outTradeNo  = 1 [json_name = "outTradeNo"];
+}
+
+message WechatRefundQueryByOutRefundNoRequest {
+ string outRefundNo = 1 [json_name = "out_refund_no"];
+}
+
+message WechatRefundQueryByOutRefundNoResponse {
+ string refundId = 1 [json_name = "refund_id"];
+ string outRefundNo = 2 [json_name = "out_refund_no"];
+ string transactionId = 3 [json_name = "transaction_id"];
+ string outTradeNo = 4 [json_name = "out_trade_no"];
+ string channel = 5 [json_name = "channel"];
+ string userReceivedAccount = 6 [json_name = "user_received_account"];
+ string successTime = 7 [json_name = "success_time"];
+ string createTime = 8 [json_name = "create_time"];
+ string status = 9 [json_name = "status"];
+ int32 total = 10 [json_name = "total"];
+}
+
+message WechatNativeQueryByOutTradeNoResponse {
+ string appID = 1 [json_name = "appID"];
+ string mchID = 2 [json_name = "mch_id"];
+ string outTradeNo = 3 [json_name = "out_trade_no"];
+ string transactionId = 4 [json_name = "transaction_id"];
+ string tradeType = 5 [json_name = "trade_type"];
+ string tradeState = 6 [json_name = "trade_state"];
+ string bankType = 7 [json_name = "bank_ype"];
+ string successTime = 8 [json_name = "success_time"];
+ string openID = 9 [json_name = "open_id"];
+ int32 total = 10 [json_name = "total"];
+}
+
+message WechatAppPayRequest {
+ string Description = 1 [json_name = "description"];
+ string OutTradeNo  = 2 [json_name = "outTradeNo"];
+ int64  Cent        = 3 [json_name = "cent"];
+ string OpenID      = 4 [json_name = "openID"];
+ string NotifyUrl   = 5 [json_name = "notifyUrl"];
+ string AppID       = 6 [json_name = "appID"];
+ string ClientIP    = 7 [json_name = "ClientIP"];
+ uint32 recordId                = 9 ;
+ string domain                  = 10 ;
+ string platform                = 11 ;
+ string scene             = 12 ;
+ int32 timeExpire = 13 [json_name = "time_expire"];
+}
+
+message WechatJsApiRefundsRequest {
+ string Reason = 1 [json_name = "Reason"];
+ string OutTradeNo = 2 [json_name = "OutTradeNo"];
+ string OutRefundNo = 3 [json_name = "OutRefundNo"];
+ string NotifyUrl = 4 [json_name = "NotifyUrl"];
+ int64  Cent = 5 [json_name = "Cent"];
+ string OpenID = 6 [json_name = "OpenID"];
+ int64  Total =7[json_name = "Total"];
+}
+
+message WechatH5PayRequest {
+ string Description = 1 [json_name = "description"];
+ string OutTradeNo  = 2 [json_name = "outTradeNo"];
+ int64  Cent        = 3 [json_name = "cent"];
+ string OpenID      = 4 [json_name = "openID"];
+ string NotifyUrl   = 5 [json_name = "notifyUrl"];
+ string AppID       = 6 [json_name = "appID"];
+ string ClientIP    = 7 [json_name = "ClientIP"];
+ uint32 recordId                = 9 ;
+ string domain                  = 10 ;
+ string platform                = 11 ;
+ string scene             = 12 ;
+ int32 timeExpire = 13 [json_name = "time_expire"];
+}
+
+message WechatH5PayResponse {
+ string h5Url = 1 [json_name = "h5_url"];
+}
+
+message WechatH5QueryByOutTradeNoRequest {
+ string outTradeNo  = 1 [json_name = "outTradeNo"];
+}
+
+message WechatH5QueryByOutTradeNoResponse {
+ string appID = 1 [json_name = "appID"];
+ string mchID = 2 [json_name = "mch_id"];
+ string outTradeNo = 3 [json_name = "out_trade_no"];
+ string transactionId = 4 [json_name = "transaction_id"];
+ string tradeType = 5 [json_name = "trade_type"];
+ string tradeState = 6 [json_name = "trade_state"];
+ string tradeStateDesc = 7 [json_name = "trade_state_desc"];
+ string bankType = 8 [json_name = "bank_ype"];
+ string successTime = 9 [json_name = "success_time"];
+ string openID = 10 [json_name = "open_id"];
+ int32 total = 11 [json_name = "total"];
+}
+
+
+message OrdersByArtworkNumRequest {
+ repeated string ArtworkNums = 1 [json_name = "artworkNums"];
+ string Domain = 2 [json_name = "domain"];
+}
+
+message OrderBaseInfo {
+ uint64 ID = 1 [json_name = "ID"];
+ string SellerName = 2 [json_name = "sellerName"];
+ uint64 sellerID = 3 [json_name = "sellerID"];
+ uint64 BuyerID = 4 [json_name = "buyerID"];
+ string BuyerName = 5 [json_name = "buyerName"];
+ string ArtworkNum = 6 [json_name = "artworkNum"];
+}
+
+message OrderBaseList {
+ repeated OrderBaseInfo Bases = 1 [json_name = "bases"];
+}
+
+message PayStaticIdResponse {
+ repeated string CollectionUid = 1 [json_name = "collectionUid"];
+ repeated string SeriesUid = 2 [json_name = "seriesUid"];
+}
+
+message OrderStatisticsInfoRequest {
+ repeated uint64 IDs = 1 [json_name = "IDs"];
+ string StartArrivalDate = 2 [json_name = "startArrivalDate"];
+ string EndArrivalDate = 3 [json_name = "endArrivalDate"];
+}
+
+message  DateInfo{
+ string DateTime = 1 [json_name = "dateTime"];
+ string Bank = 2 [json_name = "bank"];
+ string Price = 3 [json_name = "Price"];
+ repeated uint64 IDs  = 4 [json_name = "IDs"];
+}
+
+message OrderStatisticsInfo {
+ repeated DateInfo Infos = 1 [json_name = "infos"];
+ string  DateTime = 2 [json_name = "dateTime"];
+ repeated uint64 IDs  = 3 [json_name = "IDs"];
+}
+
+message OrderStatisticsInfoResponse {
+ string TotalPrice = 1 [json_name = "totalPrice"];
+ repeated OrderStatisticsInfo List = 4 [json_name = "list"];
+}
+
+message PayGiveExistRequest {
+ string Domain = 1 [json_name = "domain"];
+ string CollectionsUid = 2 [json_name = "collectionsUid"];
+ uint64 BuyerId = 3 [json_name = "buyerId"];
+ string UserAirdropUuid = 4 [json_name = "UserAirdropUuid"];
+}
+
+message PaySetCashRequest {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+ string TransactionHash = 3 [json_name = "transaction_hash"];
+}
+
+message PayCreateCacheRequest {
+ string Domain = 1 [json_name = "domain"];
+ string CollectionsUid = 2 [json_name = "collectionsUid"];
+ uint64 UserId = 3 [json_name = "userId"];
+ string PayMethodType = 4 [json_name = "payMethodType"];
+}
+
+message PayCronSynFailRequest {
+ string Domain = 1 [json_name = "domain"];
+ uint64 Num = 2 [json_name = "num"];
+}
+
+message PaySeriesDataRequest{
+ string SeriesName        =7  [json_name="seriesName"];//系列名称 1
+ uint64 SeriesStatus      =8  [json_name="seriesStatus"];//系列状态 1
+ string SeriesBrandName   =9  [json_name="seriesBrandName"];//品牌方名称 1
+ string SeriesTotal       =10 [json_name="seriesTotal"];//品牌方名称 系列销量
+ string SeriesUid         =13 [json_name="seriesUid"];//系列uid
+ string LaunchStartTime   =15  [json_name="launchStartTime"];//品牌方名称 1
+ string LaunchEndTime     =16  [json_name="launchEndTime"];//品牌方名称 1
+ uint64 SeriesUidPushNum  =17  [json_name="seriesUidPushNum"];//空投数量
+}
+
+message PayCollectionDataRequest{
+ string Name              =1  [json_name="seriesName"];//藏品名称 1
+ string Level             =2  [json_name="level"];//藏品等级 1
+ uint64 Total             =3  [json_name="total"];;//藏品总量 1
+ string Price             =4  [json_name="price"];//藏品单价 1
+ string SalesVolume       =5  [json_name="salesVolume"];//藏品销售销额
+ string SalesAmount       =11 [json_name="salesAmount"];//藏品销售销量
+ uint64 StockAmount       =6  [json_name="stockAmount"];//藏品库存 1
+ string Uid               =12 [json_name="uid"];//商品uid  1
+ string SeriesUid         =13 [json_name="seriesUid"];//系列uid
+ string Img               =14  [json_name="Img"];//藏品名称 1
+ uint64 CollectionPushNum =17  [json_name="collectionPushNum"];//藏品推送数量
+}
+
+message PaySynSeriesDataRequest{
+ PayCollectionDataRequest Collection  = 1 [json_name="launchEndTime"];//品牌方名称 1
+ PaySeriesDataRequest Series = 2 [json_name="PaySeriesDataRequest"];//品牌方名称 1
+ bool IsInsert = 3 [json_name="IsInsert"];//是否强制新增
+}
+
+message Collections{
+ string Name           =1 [json_name="name"];//系列名称
+ string Level          =2 [json_name="level"];//系列名称
+ uint64 Total          =3 [json_name="total"];//总量
+ string Price          =4 [json_name="price"];//单价
+ string SalesVolume    =5 [json_name="salesVolume"];//系列名称
+ uint64 SalesAmount    =6 [json_name="salesAmount"];//系列名称
+ int64 StockAmount    =7 [json_name="stockAmount"];//系列名称
+ repeated PayCreateRequest PayInfo    =8 [json_name="payInfo"];//订单信息
+ string Img          =9 [json_name="img"];//图片
+ string Uid          =10 [json_name="uid"];//图片
+}
+
+message PaySeriesData{
+ string SeriesName      =1 [json_name="seriesName"];//系列名称
+ uint64 SeriesStatus    =2 [json_name="seriesStatus"];//系列状态
+ string SeriesBrandName =3 [json_name="seriesBrandName"];//品牌方名称
+ string SeriesVolume     =4 [json_name="seriesTotal"];//总销售额
+ uint64 SeriesAmount     =5 ;//总销售量
+ string SeriesUid     =7 [json_name="seriesUid"];//总销售量
+ repeated Collections Collections   =6 [json_name="collections"];
+ uint64 SeriesShelfStatus    =8 [json_name="seriesShelfStatus"];//系列状态
+ string LaunchStartTime    =9 [json_name="launchStartTime"];//系列状态
+ string LaunchEndTime    =10 [json_name="launchEndTime"];//系列状态
+}
+
+message PaySeriesDataListResponse {
+ uint64  Count                   = 1 [json_name="count"];
+ repeated PaySeriesData Data  = 2 [json_name="data"];
+}
+
+message PaySeriesDataListRequest {
+ string  Keys             = 1 [json_name="keys"];
+ string  OrderKey         = 2 [json_name="OrderKey"];
+ string  Domain           = 3 [json_name="domain"];
+ uint64  Page             = 4 [json_name="page"];
+ uint64  PageSize         = 5 [json_name="pageSize"];
+}
+
+message PayCollectionsDataListRequest {
+ string  Domain         = 1 [json_name="domain"];
+ string  SeriesUid      = 2 [json_name="seriesUid"];
+ uint64  Page           = 3 [json_name="page"];
+ uint64  PageSize       = 4 [json_name="pageSize"];
+ string  Uid            = 5 [json_name="uid"];
+ string  Name           = 6 [json_name="Name"];
+}
+
+message PayCollectionsDataListResponse {
+ uint64  Count         = 1 [json_name="count"];
+ PaySeriesData  SeriesData      = 2 [json_name="seriesData"];//系列详情
+ repeated Collections Data      = 3 [json_name="data"];//产品详情列表
+}
+
+message PaySetExpressRequest {
+ uint64  ID             = 1 [json_name="ID"];
+ Express  Express        = 2 [json_name="express"];
+ string  Remark             = 3 [json_name="remark"];
+}
+
+message PayDetailRequest {
+ uint64  ID             = 1 [json_name="ID"];
+ string  Domain         = 2 [json_name="domain"];
+ string  OutTradeNo        = 4 [json_name="outTradeNo"];
+}
+
+message PayListResponse {
+ uint64  Count                   = 1 [json_name="count"];
+ repeated PayCreateRequest Data  = 2 [json_name="data"];
+}
+
+message PayListRequest {
+ uint64  ID                = 1 [json_name="ID"];
+ string  Domain            = 2 [json_name="domain"];
+ string  Keys              = 3 [json_name="keys"];
+ uint64  BuyerId           = 4 [json_name="buyerId"];
+ repeated uint64  Status   = 5 [json_name="status"];
+ uint64  SellerId          = 6 [json_name="sellerId"];
+ string  StartCreatedAt    = 7 [json_name="startCreatedAt"];
+ string  EndCreatedAt      = 8 [json_name="endCreatedAt"];
+ uint64  PayType           = 9 [json_name="payType"];
+ uint64  Page              = 10 [json_name="page"];
+ uint64  PageSize          = 11 [json_name="pageSize"];
+ string  hash              = 12 [json_name="hash"];
+}
+
+message PayFailRequest {
+ uint64  ID             = 1 [json_name="ID"];
+ string  Domain         = 2 [json_name="domain"];
+}
+
+message PaySellerSureRequest {
+ string  Domain      = 1 [json_name="domain"];
+ string  Code        = 2 [json_name="code"];
+ SellerInfo  Seller  = 3 [json_name="seller"];
+}
+
+message PayCompleteRequest {
+ uint64  ID             = 1 [json_name="ID"];
+ string  Domain         = 2 [json_name="Domain"];
+ string  TotalAmount    = 3 [json_name="totalAmount"];
+ string  TradeStatus    = 4 [json_name="tradeStatus"];
+ string  TradeNo        = 5 [json_name="tradeNo"];
+ string  OutTradeNo     = 6 [json_name="outTradeNo"];
+ string  RawQuery     = 7 [json_name="rawQuery"];
+}
+
+message PayCreateRequest {
+ uint64  ID             = 1 [json_name="ID"];
+ string  Domain         = 2 [json_name="domain"];
+ string  CreatedAt      = 3 [json_name="createdAt"];
+ uint64  Status         = 4 [json_name="status"];
+ string  ArtworkName    = 5 [json_name="artworkName"];
+ string  ArtworkNum     = 6 [json_name="artworkNum"];
+ string  ArtworkImg     = 7 [json_name="artworkImg"];
+ uint64  ArtworkType    = 8 [json_name="artworkType"];
+ string  ArtworkSize    = 9 [json_name="artworkSize"];
+ string  ArtworkHash    = 10 [json_name="artworkHash"];
+ string  ArtistName     = 11 [json_name="artistName"];
+ string  ArtistTel      = 12 [json_name="artistTel"];
+ string  BuyerName      = 13 [json_name="buyerName"];
+ string  BuyerTel       = 14 [json_name="buyerTel"];
+ string  BuyerIdNum     = 15 [json_name="buyerIdNum"];
+ string  BuyerAddress   = 16 [json_name="buyerAddress"];
+ string  Price          = 17 [json_name="price"];
+ string  GmtPayment       = 18 [json_name="gmtPayment"];
+ string  Remark         = 19 [json_name="remark"];
+ string  OrderNum       = 20 [json_name="orderNum"];
+ uint64  PayType        = 21 [json_name="payType"];
+ string  TradeNo          = 22 [json_name="tradeNo"];
+ string  PayInfo        = 23 [json_name="payInfo"];
+ string  SeriesUid        = 24 [json_name="seriesUid"];
+ string  ArtworkId        = 25 [json_name="artworkId"];
+ Express  Express        = 26 [json_name="express"];//快递信息
+ repeated Flow  Flows        = 27 [json_name="flows"];//流转信息
+ uint64  BuyerId      = 28 [json_name="buyerId"];
+ string  ArtworkUid      = 29 [json_name="artworkUid"];
+ string  ArtworkLevel    = 30 [json_name="artworkLevel"];
+ string  OutTradeNo    = 31 [json_name="OutTradeNo"];
+ uint64  CollectionNum    = 32 [json_name="collectionNum"];
+ uint64  SalesMethod     = 33 [json_name="salesMethod"];
+ string  ApprovalDate    = 34 [json_name="approvalDate"];
+ string  BrandUid        = 35 [json_name="brand_uid"];
+ string  BrandName       = 36 [json_name="brand_name"];
+ string  BrandAddress    = 37 [json_name="brand_address"];
+ string  BrandMem        = 38 [json_name="brand_mem"];
+ string  BrandNumber     = 39 [json_name="brandNumber"];
+ string  SeriesName      = 40 [json_name="seriesName"];
+ string  Hash            = 41 [json_name="hash"];
+ string  PayMethodType   = 42 [json_name="payMethodType"];
+ string  SellPrice       = 43 [json_name="sellerPrice"];
+ string UserAirdropUuid  = 44 [json_name = "userAirdropUuid"];
+ string  PayTypeName    = 45 [json_name="payTypeName"];
+ repeated string  PayImages        = 46 [json_name="payImages"];
+ SellerInfo  SellerInfo    = 47 [json_name="sellerInfo"];
+ string  CoverImg    = 48 [json_name="coverImg"];
+ string  PayNum    = 49 [json_name="payNum"];
+ string  TransactionHash    = 50 [json_name="transactionHash"];
+ string  RealHash    = 51 [json_name="realHash"];
+ string  uniqueKey    = 52 ;
+ string logisticsStatus = 53 [json_name="logistics_status"];
+ uint64 addressId = 54 [json_name="address_id"];
+ string shipAddressName = 55 [json_name="ship_address_name"];
+ string shipAddressTel = 56 [json_name="ship_address_tel"];
+ string shipAddress = 57 [json_name="ship_address"];
+ string trackingNumber = 58 [json_name="tracking_number"];
+ uint64 h5OrApp = 59 [json_name="h5_or_app"];
+ uint64 isCheck = 60 [json_name="isCheck"];
+ string saleType = 61 [json_name="saleType"];
+ string sealHash = 62 ;
+ string currencyCode = 63 [json_name="currency_code"];
+ uint64 appType = 64 [json_name="app_type"];
+}
+
+message Flow{
+ string HoldName               = 1 [json_name="holdName"];//持有人姓名
+ uint64 Status                 = 2 [json_name="status"];//藏品状态
+ uint64 Type                   = 3 [json_name="type"];//流转类型
+ string CreatedAt              = 4 [json_name="createdAt"];//流转时间
+ string FlowHash               = 5 [json_name="flowHash"];//交易hash
+ string Remark                 = 6 [json_name="remark"];//交易hash
+}
+
+message Express {
+ string Address               = 1 [json_name="address"];
+ string Name               = 2 [json_name="name"];
+ string TelNum               = 3 [json_name="telNum"];
+ string ApprovalDate               = 4 [json_name="approvalDate"];
+}
+
+message UpDateOrderEntrustsRequest {
+ repeated uint64 IDs               = 1 [json_name="IDs"];
+}
+
+message UpdateEntrustKeysResponse {
+ bool Success             = 1 [json_name="success"];
+ string Msg               = 2 [json_name="msg"];
+}
+
+message EntrustList {
+ string Domain             =1 [json_name="domain"];
+ uint64 PageSize           =2 [json_name="pageSize"];
+ uint64 Page               =3 [json_name="page"];
+ string ClientName         =4 [json_name="clientName"];
+ string ArtworkName        =5 [json_name="artworkName"];
+ string Key                =6 [json_name="key"];
+ string ArtworkNum         =7 [json_name="artworkNum"];
+ string SellerName         =8 [json_name="sellerName"];
+ string StartEntrustDate   =9 [json_name="startEntrustDate"];
+ string EndEntrustDate     =10[json_name="endEntrustDate"];
+}
+
+message EntrustListResponse {
+ uint64 Count                 =1 [json_name="count"];
+ repeated EntrustRequest Data             =2 [json_name="data"];
+ string Domain                 =3 [json_name="domain"];
+}
+
+message EntrustRequest {
+ uint64 ID                 =1 [json_name="ID"];
+ string Domain             =2 [json_name="domain"];
+ string Index              =3 [json_name="index"];
+ string ClientName         =4 [json_name="clientName"];
+ string ServiceCode        =5 [json_name="serviceCode"];
+ string AssociatedEmployee =6 [json_name="associatedEmployee"];
+ string ClientId           =7 [json_name="clientId"];
+ string ClientTel          =8 [json_name="clientTel"];
+ string Bank               =9 [json_name="bank"];
+ string BankNo             =10 [json_name="bankNo"];
+ string EntrustNo          =11 [json_name="entrustNo"];
+ string ArtistName         =12 [json_name="artistName"];
+ string ArtworkNum         =13 [json_name="artworkNum"];
+ string ArtworkName        =14 [json_name="artworkName"];
+ string ArtworkSize        =15 [json_name="artworkSize"];
+ string Price              =16 [json_name="price"];
+ string EntrustPriceLow    =17 [json_name="entrustPriceLow"];
+ string EntrustPrice       =18 [json_name="entrustPrice"];
+ string ServiceChargeLow   =19 [json_name="serviceChargeLow"];
+ string ServiceCharge      =20 [json_name="serviceCharge"];
+ string PersonTaxLow       =21 [json_name="personTaxLow"];
+ string PersonTax          =22 [json_name="personTax"];
+ string RealPayLow         =23 [json_name="realPayLow"];
+ string RealPay            =24 [json_name="realPay"];
+ string RealProve          =25 [json_name="realProve"];
+ string SaleSite           =26 [json_name="saleSite"];
+ string SellerName         =27 [json_name="sellerName"];
+ string OptionDate         =28 [json_name="optionDate"];
+ string OptionStartDate    =29 [json_name="optionStartDate"];
+ string OptionEndDate      =30 [json_name="optionEndDate"];
+ string EntrustDate        =31 [json_name="entrustDate"];
+ string Brokerage          =32 [json_name="brokerage"];
+ string Remark             =33 [json_name="remark"];
+ uint64 IsCopyright        =34 [json_name="isCopyright"];
+ string CreatedAt          =35 [json_name="createdAt"];
+ string UpdatedAt          =36 [json_name="updatedAt"];
+ string isLong             =37 [json_name="isLong"];
+ string Mistake = 38 [json_name="mistake"];
+ bool DuplicateName = 39 [json_name="duplicateName"];
+}
+
+message SellerInfo {
+ uint64 SellerId            = 1 [json_name = "sellerId"];
+ string Name                = 2 [json_name = "name"];
+ string Avatar              = 3 [json_name = "avatar"];
+ double Amount              = 4 [json_name = "amount"];
+ repeated OrderBase Orders  = 5 [json_name = "orders"];
+ string telNum              = 6 ;
+}
+
+message SellerResponse {
+ uint64 Count             = 1 [json_name = "count"];
+ repeated OrderBase Data  = 2 [json_name = "data"];
+ SellerInfo Seller        = 3 [json_name = "seller"];
+}
+
+
+message RandOrderRequest {
+ string SaleSite           = 1 [json_name = "saleSite"];
+ string Domain             = 2 [json_name = "domain"];
+ uint64 Limit              = 3 [json_name = "limit"];
+}
+
+message UpdateSellerId{
+ uint64 ID            = 1 [json_name = "ID"];
+ uint64 SellerId      = 2 [json_name = "SellerId"];
+}
+
+message  UpdateSellerIdRequest{
+ repeated UpdateSellerId Infos = 1 [json_name="infos"];
+}
+
+message BaseInfo {
+ uint64 ID = 1 [json_name = "ID"];
+
+ string SaleSite = 13 [json_name = "saleSite"];
+ string SellerName = 14 [json_name = "sellerName"];
+ string SellerTel = 21 [json_name = "sellerTel"];
+ uint64 SellerId = 22 [json_name = "sellerId"];
+ string Domain = 29 [json_name = "domain"];
+}
+
+message RandOrderResponse {
+ repeated BaseInfo Orders  = 1 [json_name = "orders"];
+}
+
+message ResultResponse {
+ uint64 SellerId                  = 1 [json_name = "SellerId"];
+ string Name                = 2 [json_name = "name"];
+ string Avatar              = 3 [json_name = "avatar"];
+ string Amount              = 4 [json_name = "amount"];
+ repeated OrderBase Orders  = 5 [json_name = "orders"];
+}
+
+message OrderBase {
+ uint64 ID             = 1 [json_name = "ID"];
+ string ArtworkNum     = 2 [json_name = "artworkNum"];
+ string ArtworkName    = 3 [json_name = "artworkName"];
+ string SellTime       = 4 [json_name = "sellTime"];
+ string Price          = 5 [json_name = "price"];
+ string BuyerName      = 6 [json_name = "buyerName"];
+}
+
+message ResultRequest {
+ string Domain     = 1 [json_name = "domain"];
+ string StartDate  = 2 [json_name = "startDate"];
+ string SaleSite   = 3 [json_name = "saleSite"];
+ uint64 UserId     = 4 [json_name = "userId"];
+ uint64 Page       = 5 [json_name = "page"];
+ uint64 PageSize   = 6 [json_name = "pageSize"];
+ string EndDate    = 7 [json_name = "endDate"];
+ uint64 SiteID     = 8 [json_name = "siteId"];
+}
+
+message ResultsRequest {
+ string Domain     = 1 [json_name = "Domain"];
+ uint64 ID         = 2 [json_name = "ID"];
+ string SaleSite   = 3 [json_name = "saleSite"];
+ string StartDate  = 4 [json_name = "startDate"];
+ repeated uint64  UserIds = 5  [json_name = "userIds"];
+ uint64 SellerId   = 6 [json_name = "sellerId"];
+ uint64 Page   = 7 [json_name = "page"];
+ uint64 PageSize   = 8 [json_name = "pageSize"];
+ string EndDate    = 9 [json_name = "endDate"];
+}
+
+message ResultsResponse {
+ repeated ResultResponse Data   = 2 [json_name = "Data"];
+}
+
+message Staff {
+ uint64 ID       = 1 [json_name = "ID"];
+ string Name     = 2 [json_name = "name"];
+ string JobNum   = 3 [json_name = "jobNum"];
+ string Status   = 4 [json_name = "status"];
+}
+message Leader {
+  uint64 leaderId = 1 [json_name = "leaderId"];
+  string leaderName = 2 [json_name = "leaderName"];
+}
+
+message ReportCreateRequest {
+ string Domain          = 1 [json_name = "domain"];
+ string SaleSite        = 2 [json_name = "saleSite"];
+ uint64 Status          = 3 [json_name = "Status"];
+ string StartDate       = 4 [json_name = "startDate"];
+ string EndDate         = 5 [json_name = "endDate"];
+ repeated Staff Staffs  = 6 [json_name = "staffs"];
+ uint64 leaderId        = 7 [json_name = "leaderId"];
+ string leaderName      = 8;
+ uint64 departmentId    = 9;
+ string startDateDue    = 10;
+ string endDateDue      = 11;
+ string departmentName  = 12;
+ string siteUid = 13;
+ repeated Leader leaders = 14;
+ uint64 siteId = 15;
+ uint64 field = 16;//场期
+}
+
+message BeforeCreateUsersRequest {
+ string Domain          = 1 [json_name = "domain"];
+ string SaleSite        = 2 [json_name = "saleSite"];
+ string StartDate       = 4 [json_name = "startDate"];
+ string EndDate         = 5 [json_name = "endDate"];
+ repeated uint64 UserId  = 6 [json_name = "staffs"];
+}
+
+message SetStatusRequest {
+ string Domain = 1 [json_name = "domain"];
+ uint64 ID = 2 [json_name = "ID"];
+ uint64 Status = 3 [json_name = "Status"];
+ string Remark = 4 [json_name = "remark"];
+ uint64 EntrustDuration = 5 [json_name = "entrustDuration"];
+}
+
+message ReportLogRequest {
+ uint64 Iid = 1 [json_name = "iid"];
+ uint64 ID = 2 [json_name = "ID"];
+ string CreatedAt = 3 [json_name = "createdAt"];
+ string UpdatedAt = 4 [json_name = "updatedAt"];
+ uint64 DeletedAt = 5 [json_name = "deletedAt"];
+ string WeekTime = 6 [json_name = "weekTime"];
+ uint64 Status = 7 [json_name = "status"];
+ string Site = 8 [json_name = "site"];
+ uint64 LeaderID = 9 [json_name = "leaderID"];
+ string LeaderName = 10 [json_name = "leaderName"];
+ double SalesVolume = 11 [json_name = "salesVolume"];
+}
+
+message ReportLogDetail {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+
+}
+
+message ReportLogResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+
+}
+
+message ReportLogRemove {
+ bool Success = 1 [json_name = "success"];
+
+}
+
+message ReportLogList {
+ uint64 Page = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+
+}
+
+message ReportLogListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated ReportLogRequest Data = 2 [json_name = "data"];
+
+}
+
+message ReportUserRequest {
+ uint64 ID = 1 [json_name = "ID"];
+ string CreatedAt = 2 [json_name = "createdAt"];
+ string UpdatedAt = 3 [json_name = "updatedAt"];
+ uint64 DeletedAt = 4 [json_name = "deletedAt"];
+ uint64 SellerID = 5 [json_name = "sellerID"];
+ string SellerName = 6 [json_name = "sellerName"];
+ string SellerNum = 7 [json_name = "sellerNum"];
+ string Amount = 8 [json_name = "amount"];
+ string DueAmount = 9 [json_name = "dueAmount"];
+ string IncreaseAmount = 10 [json_name = "increaseAmount"];
+ string IncreaseRate = 11 [json_name = "increaseRate"];
+ string Growth = 12 [json_name = "growth"];
+ string Remark = 13 [json_name = "remark"];
+ uint64 ReportID = 14 [json_name = "reportID"];
+ string SellerAvatar = 15 [json_name = "sellerAvatar"];
+ string color = 16;
+ string MomRate = 18 [json_name = "momRate"];//业绩环比
+ bool IsColorModify = 17[json_name = "isColorModify"];//业绩健康码是否修改
+ string startDate = 19 [json_name = "startDate"];
+ string endDate = 20 [json_name = "endDate"];
+ uint64 siteId = 21 [json_name = "siteId"];
+ string site = 22 [json_name = "site"];
+ string startDateDue = 23 [json_name = "startDateDue"];
+ string endDateDue = 24 [json_name = "endDateDue"];
+ string momAmount = 25 [json_name = "momAmount"];//业绩环比金额
+ uint64 modifyType = 26 [json_name = "modifyType"];//业绩修改类型
+ string preAmount = 27 [json_name = "preAmount"];//记录上一周期业绩
+}
+
+message ReportUserDetail {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+
+}
+
+message ReportUserResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+
+}
+
+message ReportUserRemove {
+ bool Success = 1 [json_name = "success"];
+
+}
+
+message ReportUserList {
+ uint64 Page     = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+ uint64 ReportId = 3 [json_name = "reportId"];
+ string Domain   = 4 [json_name = "domain"];
+}
+
+message ReportUserListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated ReportUserRequest Data = 2 [json_name = "data"];
+}
+
+message UpdateReportUserList {
+ uint64 ID = 1 [json_name = "ID"];
+ repeated ReportUserRequest Data = 2 [json_name = "data"];
+}
+
+message ReportUserLogResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+
+}
+
+message ReportUserLogRemove {
+ bool Success = 1 [json_name = "success"];
+
+}
+
+message ReportUserLogList {
+ uint64 Page = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+
+}
+
+message ReportUserLogListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated ReportUserLogRequest Data = 2 [json_name = "data"];
+
+}
+
+message ReportUserLogRequest {
+ uint64 Iid = 1 [json_name = "iid"];
+ uint64 ID = 2 [json_name = "ID"];
+ string CreatedAt = 3 [json_name = "createdAt"];
+ string UpdatedAt = 4 [json_name = "updatedAt"];
+ uint64 DeletedAt = 5 [json_name = "deletedAt"];
+ uint64 SellerID = 6 [json_name = "sellerID"];
+ string SellerName = 7 [json_name = "sellerName"];
+ string SellerNum = 8 [json_name = "sellerNum"];
+ double Amount = 9 [json_name = "amount"];
+ double DueAmount = 10 [json_name = "dueAmount"];
+ double IncreaseAmount = 11 [json_name = "increaseAmount"];
+ double IncreaseRate = 12 [json_name = "increaseRate"];
+ string Growth = 13 [json_name = "growth"];
+ string Remark = 14 [json_name = "remark"];
+ uint64 ReportID = 15 [json_name = "reportID"];
+}
+
+message ReportUserLogDetail {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+
+}
+
+message LogRemove {
+ bool Success = 1 [json_name = "success"];
+
+}
+
+message LogList {
+ uint64 Page = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+
+}
+
+message LogListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated LogRequest Data = 2 [json_name = "data"];
+
+}
+
+message LogRequest {
+ string Domain = 1 [json_name = "domain"];
+ string Body = 2 [json_name = "body"];
+}
+
+message LogDetail {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+
+}
+
+message CommonCreateResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+ string Url = 3 [json_name = "url"];
+ string AppParams = 4 [json_name = "appParams"];
+ string Code = 5 [json_name = "code"];
+ string CodeSc = 6 [json_name = "codeSc"];
+ string outTradeNo = 7 [json_name = "out_trade_no"];
+ string artworkUid = 8 [json_name = "artwork_uid"];
+}
+
+message OrderList {
+ uint64 Page               = 1  [json_name = "page"];
+ uint64 PageSize           = 2  [json_name = "pageSize"];
+ string Domain             = 3  [json_name = "domain"];
+ string SaleSite           = 4  [json_name = "saleSite"];
+ uint64 SellerId           = 5  [json_name = "SellerId"];
+ repeated uint64 Status    = 6  [json_name = "status"];
+ string EndDate            = 7  [json_name = "endDate"];//sell_time
+ string StartDate          = 8  [json_name = "startDate"];//sell_time
+ string ArtworkName        = 9  [json_name = "artworkName"];
+ string StartPayDate       = 10 [json_name = "startPayDate"]; //开始付款时间
+ string EndPayDate         = 11 [json_name = "endPayDate"]; //结束付款时间
+ string StartArrivalDate   = 12 [json_name = "startArrivalDate"]; //开始到账时间
+ string EndArrivalDate     = 13 [json_name = "endArrivalDate"]; //结束到账时间
+ string Key                = 14 [json_name = "key"]; //开始付款时间
+ uint32 PayType            = 15 [json_name = "payType"]; //开始付款时间
+ repeated string ids       = 16 ; //开始付款时间
+ repeated string saleSites  = 17  ;
+ uint64 transactionId       = 18;
+ string siteId = 19;
+}
+
+message OrderListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated OrderRequest Data = 2 [json_name = "data"];
+ string SumPrice = 3 [json_name = "sumPrice"];
+}
+
+message SellerAndOrders {
+ uint64 SellerID = 1 [json_name = "SellerID"];
+ repeated OrderRequest Data = 2 [json_name = "data"];
+}
+
+message TransactionsRequest {
+ uint64 Page = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+ string Domain = 3 [json_name = "domain"];
+ string SaleSite = 4 [json_name = "saleSite"];
+ repeated uint64 Status = 5 [json_name = "status"];
+ uint64 SellerId = 6 [json_name = "sellerId"];
+ string BuyerName = 7 [json_name = "buyerName"];
+ string StartDate = 8 [json_name = "startDate"];
+ string EndDate = 9 [json_name = "endDate"];
+ string key = 10 ;
+ repeated string saleSites  = 11  ;
+ string saleSiteUid = 12;
+ repeated string saleSiteUidS = 13;
+ repeated uint64 sellerIds = 14;
+ string outOrderId = 15;
+ string orderStartDate = 16;
+ string orderEndDate = 17;
+}
+
+message TransactionsResponse {
+ uint64 Count  = 1 [json_name = "count"];
+ repeated Transaction Data = 2 [json_name = "data"];
+}
+
+message StageRequest {
+ uint64                ID                    = 1  [json_name = "ID"];
+ repeated TransactionStage TransactionStages = 2 [json_name = "transactionStage"];
+ string                Domain                = 3  [json_name = "domain"];
+}
+
+message Transaction {
+  uint64                ID                    = 1  [json_name = "ID"];
+  string                Domain                = 2  [json_name = "domain"];
+  string                BuyName               = 3  [json_name = "buyName"];
+  string                BuyTel                = 4  [json_name = "buyTel"];
+  string                BuyIdNum              = 5  [json_name = "buyIdNum"];
+  string                SaleSite              = 6  [json_name = "saleSite"];
+  uint64                Status                = 7  [json_name = "status"];
+  uint64                SellerId              = 8  [json_name = "sellerId"];
+  string                SellerName            = 9  [json_name = "sellerName"];
+  string                SellerTel             = 10 [json_name = "sellerTel"];
+  repeated OrderRequest Orders                = 11 [json_name = "orders"];
+  repeated TransactionStage TransactionStages = 12 [json_name = "transactionStage"];
+  string                StageFee              = 13 [json_name = "stageFee"];
+  string                OrderFee              = 14 [json_name = "orderFee"];
+  string                outOrderId            = 15 ;
+  string                saleSiteUid           = 16 ;
+  string                colour                = 17 ;
+  string statisticalDate = 18 ;
+  uint32 canItBeModified = 19 ;
+}
+
+message TransactionStage {
+ uint64                   ID             = 1 [json_name = "ID"];
+ string                   Domain         = 2 [json_name = "domain"];
+ string                   UpdatedAt      = 3 [json_name = "updatedAt"];
+ string                   CreatedAt      = 4 [json_name = "createdAt"];
+ uint64                   TransactionId  = 5 [json_name = "transactionId"];
+ string                   Fee            = 6 [json_name = "fee"];
+ string                   PayTime        = 7 [json_name = "payTime"];
+ uint64                   PayType        = 8 [json_name = "payType"];
+ string                   PayImg         = 9 [json_name = "payImg"];
+ string                   Bank           = 10 [json_name = "bank"];
+}
+
+message OrderRequest {
+ uint64 ID = 1 [json_name = "ID"];
+ uint64 DeletedAt = 2 [json_name = "deletedAt"];
+ string UpdatedAt = 3 [json_name = "updatedAt"];
+ string CreatedAt = 4 [json_name = "createdAt"];
+ uint64 Status = 5 [json_name = "status"];
+ string ArtworkName = 6 [json_name = "artworkName"];
+ string ArtworkNum = 7 [json_name = "artworkNum"];
+ string ArtworkImg = 8 [json_name = "artworkImg"];
+ string ArtistName = 9 [json_name = "artistName"];
+ string ArtistTel = 10 [json_name = "artistTel"];
+ string BuyerName = 11 [json_name = "buyerName"];
+ string BuyerTel = 12 [json_name = "buyerTel"];
+ string SaleSite = 13 [json_name = "saleSite"];
+ string SellerName = 14 [json_name = "sellerName"];
+ string SellerNum = 15 [json_name = "sellerNum"];
+ string SellerImg = 16 [json_name = "sellerImg"];
+ string Price = 17 [json_name = "price"];
+ string SellTime = 18 [json_name = "sellTime"];
+ uint64 LogID = 19 [json_name = "logID"];
+ string Remark = 20 [json_name = "remark"];
+ string SellerTel = 21 [json_name = "sellerTel"];
+ uint64 SellerId = 22 [json_name = "sellerId"];
+ string Uid = 23 [json_name = "uid"];
+ string ArtworkUid = 24 [json_name = "artworkUid"];
+ string BuyerUid = 25 [json_name = "buyerUid"];
+ string SellerUid = 26 [json_name = "sellerUid"];
+ string SaleSiteUid = 27 [json_name = "saleSiteUid"];
+ string ArtistUid = 28 [json_name = "ArtistUid"];
+ string Domain = 29 [json_name = "domain"];
+ string From = 30 [json_name = "from"];
+ string OwnerName = 31 [json_name = "ownerName"];
+ string OwnerTel = 32 [json_name = "ownerTel"];
+ uint64 TransactionId = 33 [json_name = "transactionId"];
+ Transaction Transaction = 34 [json_name = "transaction"];
+ string             ClientName   = 35 [json_name = "clientName"];
+ string             ClientIdNum= 36 [json_name = "clientIdNum"];
+ string             BuyerIdNum= 37 [json_name = "buyerIdNum"];
+ uint64             ArtworkType= 38 [json_name = "artworkType"];
+ string             OrderNum= 39 [json_name = "OrderNum"];
+ string             ArtworkSellNum= 40 [json_name = "artworkSellNum"];
+ string             ArtworkSize= 41 [json_name = "artworkSize"];
+ string             Gtv= 42 [json_name = "gtv"];
+ string             CopyrightFee= 43 [json_name = "copyrightFee"];
+ string             RecordCompany= 44 [json_name = "recordCompany"];
+ string             ShowName= 45 [json_name = "showName"];
+ uint64             IsOutSeller= 46 [json_name = "isOutSeller"];
+ string             ShowRegion= 47 [json_name = "showRegion"];
+ string             CompanyRegion= 48 [json_name = "companyRegion"];
+ string             MerchantNo= 49 [json_name = "merchantNo"];
+ string             EnterMoneyDate= 50 [json_name = "enterMoneyDate"];
+ string             EntrustPrice= 51 [json_name = "entrustPrice"];
+ string             PersonTax= 52 [json_name = "personTax"];
+ string             Commission= 53 [json_name = "commission"];
+ string             AfterTaxIncome= 54 [json_name = "afterTaxIncome"];
+ string             EntrustStartDate= 55 [json_name = "entrustStartDate"];
+ string             EntrustEndDate= 56 [json_name = "entrustEndDate"];
+ string             RetrievalStartDate= 57 [json_name = "retrievalStartDate"];
+ string             RetrievalEndDate= 58 [json_name = "retrievalEndDate"];
+ string             PayDate= 59 [json_name = "payDate"];
+ string             ArrivalDate= 60 [json_name = "arrivalDate"];
+ string             SignDate= 61 [json_name = "signDate"];
+ string             EntryYear= 62 [json_name = "entryYear"];
+ string             EntryMonth= 63 [json_name = "entryMonth"];
+ uint64             PayType= 64 [json_name = "payType"];
+ string             Bank= 65 [json_name = "bank"];
+ uint64             IsSure= 66 [json_name = "isSure"];//1-已经确认 2-未确认
+ uint64             EntrustDuration= 67 [json_name = "entrustDuration"];//
+ repeated string    UpdateFields= 68 [json_name = "updateFields"];//指定更新的字段
+ string ClientTel = 69[json_name = "clientTel"];
+ string ServiceCharge = 70[json_name = "serviceCharge"];
+ string RealPay = 71[json_name = "realPay"];
+ string EntrustDate = 72[json_name = "entrustDate"];
+ uint64 EntrustID = 73[json_name = "entrustID"];
+ string AliPayDate = 74[json_name = "aliPayDate"];
+ string payImage = 75;
+ string OutOrderId = 76;
+ repeated PayStage payStages = 77;
+ string statisticalDate= 78;
+ uint64 siteId= 79;//部门id--丰和使用
+ string deliveryTime = 80;//确认收货时间--丰和使用
+ repeated string payImages = 81;//支付附件--丰和使用
+ string payOperator = 82;//支付操作人--丰和使用
+ string PayOperationTime = 83;//支付操作时间--丰和使用
+}
+
+message PayStage {
+ string  orderId = 1 ;
+ string  payDate = 2 ;
+ string  payPrice = 3 ;
+ string  payment = 4 ;
+ string  recordBank = 5 ;
+}
+
+message OrderUpdateRequest {
+ uint64  ID = 1 [json_name = "ID"];
+ string  EnterMoneyDate  = 2 [json_name="enterMoneyDate"];//入账日期
+ string  EntrustPrice  = 3 [json_name="entrustPrice"];//一手画含税委托价
+ string  PersonTax  = 4 [json_name="personTax"];//代缴委托个人税
+ string  Commission = 5 [json_name="commission"];//代理收入
+ string  AfterTaxIncome = 6 [json_name="afterTaxIncome"]; //税后收入
+ string  EntrustStartDate = 7 [json_name="entrustStartDate"]; //委托开始时间
+ string  EntrustEndDate = 8 [json_name="entrustEndDate"]; //税后收入
+ string  RetrievalStartDate = 9 [json_name="retrievalStartDate"];//入库开始时间
+ string  RetrievalEndDate = 10 [json_name="retrievalEndDate"];//出库时间
+ string  Remark = 11 [json_name="remark"];//备注
+ string  arrivalDate = 12 ;//到账时间
+ string  PayDate = 13 ;//支付时间
+ string  SignDate = 14 [json_name="signDate"];//签收时间
+ string  Uid = 15 [json_name="uid"];//唯一标志
+ string  Bank = 16 [json_name="bank"];//唯一标志
+ string ArtistName = 17 [json_name = "artistName"];
+ string ArtistTel = 18 [json_name = "artistTel"];
+ string AliPayDate = 19 [json_name = "aliPayDate"];
+}
+
+message OrderBatchUpdateRequest {
+ repeated  OrderUpdateRequest Orders = 1 [json_name="orders"];
+}
+
+
+message CommonRequest {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+ string seriesUid = 3;
+}
+
+message OrderResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+}
+
+
+message CommonResponse {
+ bool Success = 1 [json_name = "success"];
+ uint32 ID = 2 ;
+}
+
+message OrderRemove {
+ bool Success = 1 [json_name = "success"];
+}
+
+message OrderLogRequest {
+ uint64 Iid = 1 [json_name = "iid"];
+ uint64 ID = 2 [json_name = "ID"];
+ uint64 DeletedAt = 3 [json_name = "deletedAt"];
+ string UpdatedAt = 4 [json_name = "updatedAt"];
+ string CreatedAt = 5 [json_name = "createdAt"];
+ uint64 Status = 6 [json_name = "status"];
+ string ArtworkName = 7 [json_name = "artworkName"];
+ string ArtworkNum = 8 [json_name = "artworkNum"];
+ string ArtworkImg = 9 [json_name = "artworkImg"];
+ string ArtistName = 10 [json_name = "artistName"];
+ string ArtistTel = 11 [json_name = "artistTel"];
+ string BuyerName = 12 [json_name = "buyerName"];
+ string BuyerTel = 13 [json_name = "buyerTel"];
+ string SaleSite = 14 [json_name = "saleSite"];
+ string SallerName = 15 [json_name = "sallerName"];
+ string SallerNum = 16 [json_name = "sallerNum"];
+ string SallerImg = 17 [json_name = "sallerImg"];
+ string Price = 18 [json_name = "price"];
+ string SellTime = 19 [json_name = "sellTime"];
+ uint64 LogID = 20 [json_name = "logID"];
+}
+
+message OrderLogDetail {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+
+}
+
+message OrderLogResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+
+}
+
+message OrderLogRemove {
+ bool Success = 1 [json_name = "success"];
+
+}
+
+message OrderLogList {
+ uint64 Page = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+
+}
+
+message OrderLogListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated OrderLogRequest Data = 2 [json_name = "data"];
+
+}
+
+message ReportRemove {
+ bool Success = 1 [json_name = "success"];
+}
+
+message ReportList {
+ uint64 Page = 1 [json_name = "page"];
+ uint64 PageSize = 2 [json_name = "pageSize"];
+ string Domain = 3 [json_name = "domain"];
+ string SaleSite = 4 [json_name = "saleSite"];
+ string StartDate = 5 [json_name = "startDate"];
+ string EndDate = 6 [json_name = "endDate"];
+ uint64 Type = 7 [json_name = "type"];
+ string Key = 8 [json_name = "key"];
+ repeated uint64 Status = 9 [json_name = "status"];
+ uint64 leaderId = 10;
+ repeated string saleSites  = 11  ;
+ repeated uint64 siteIds  = 14  ;
+ uint64 sellerId = 12 ;
+ string syncId = 13;
+ uint64 siteId = 15;
+ string color = 16;
+ string staffName = 17;
+ string staffColor = 18;
+}
+
+message ReportListResponse {
+ uint64 Count = 1 [json_name = "count"];
+ repeated ReportRequest Data = 2 [json_name = "data"];
+}
+
+message ReportRequest {
+ uint64 ID = 1 [json_name = "ID"];
+ string CreatedAt = 2 [json_name = "createdAt"];
+ string UpdatedAt = 3 [json_name = "updatedAt"];
+ uint64 DeletedAt = 4 [json_name = "deletedAt"];
+ string WeekTime = 5 [json_name = "weekTime"];
+ uint64 Status = 6 [json_name = "status"];
+ string Site = 7 [json_name = "site"];
+ uint64 LeaderID = 8 [json_name = "leaderID"];
+ string LeaderName = 9 [json_name = "leaderName"];
+ string SalesVolume = 10 [json_name = "salesVolume"];
+ string StartDate = 11 [json_name = "StartDate"];
+ string EndDate = 12 [json_name = "EndDate"];
+ string StartDateDue = 13;
+ string EndDateDue = 14;
+ repeated ReportUserRequest ReportUsers = 15  [json_name = "reportUsers"];
+ repeated ReportReadResponse ReportReads = 16  [json_name = "reportReads"];
+ uint64 siteId = 17 [json_name = "siteId"];
+ string amount = 18 [json_name = "amount"];
+ string dueAmount = 19 [json_name = "dueAmount"];
+ string increaseAmount = 20 [json_name = "increaseAmount"];
+ string increaseRate = 21 [json_name = "increaseRate"];
+ string momRate = 22 [json_name = "momRate"];
+ string color = 23 [json_name = "color"];
+ repeated Leader leaders = 24  [json_name = "leaders"];
+ string momAmount = 25 [json_name = "momAmount"];
+}
+message ReportReadResponse {
+  uint64 userId = 1 ;
+  int32 status = 2 ;
+  string userName = 3 ;
+}
+message ReportReadRequest{
+  uint64 userId = 1 ;
+  uint64 reportId = 2 ;
+  string userName = 3 ;
+}
+message ReportDetail {
+ uint64 ID = 1 [json_name = "ID"];
+ string Domain = 2 [json_name = "domain"];
+}
+
+message ReportResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+}
+message ReportCheckSales {
+ string salesmanName = 1 ;
+ string startDate = 2;
+ string endDate = 3;
+ string departmentName = 4;
+}
+message ResCheckSales {
+ uint64 money = 1;
+}
+message WeeklyRequest {
+ uint64 id = 1;
+ string domain =2;
+ string createdAt = 3;
+ string updatedAt = 4;
+ uint64 deletedAt = 5;
+ uint64 status = 6 ;
+ string directorName = 7;
+ string reportName = 8;
+ uint64 reportUid = 9;
+ string jobNumber = 10;
+ string siteName = 11;
+ string fillingDate = 12;
+ uint64 departmentId = 13;
+ string teamSize = 14;
+ string numberOfNewHires = 15;
+ string entryBackground = 16;
+ string numberOfTurnover = 17;
+ string turnoverBackground = 18;
+ string teamArrival = 19;
+ string netIncrease = 20;
+ string increaseByDegrees = 21;
+ string completeTheTaskNum = 22;
+ string numberOfLaunchesThisWeek = 23;
+ string teamInvitees = 24;
+ string actualAttendance = 25;
+ string suggestion = 26;
+ string teamWorkReport = 27;
+ string problemFeedback = 28;
+ string nextWeeksWorkPlan = 29;
+ string openingWeek = 30;
+ string endingWeek = 31;
+ uint64 siteId = 32;
+}
+message StaffWeeklyReq {
+ uint64 id = 1;
+ uint64 status = 2;
+ string staffName = 3;
+ uint64 staffId = 4;
+ string jobNumber = 5;
+ string siteName = 6;
+ uint64 siteID = 7;
+ string fillingDate = 8;
+ uint64 businessAmount = 9;
+ float businessIncrease = 10;
+ uint64 newCustomers = 11;
+ uint64 numOfActivities = 12;
+ uint64 enterOnTheStage =13;
+ uint64 goOffTheStage =14;
+ string businessReport =15;
+}
+message WeeklyEveryday {
+ string personnel = 1;
+ string business = 2;
+ string eventsThis = 3;
+ string studyThis = 4;
+ string monday = 5;
+ string mondayContent = 6;
+ string tuesday = 7;
+ string tuesdayContent = 8;
+ string wednesday = 9;
+ string wednesdayContent = 10;
+ string thursday = 11;
+ string thursdayContent = 12;
+ string friday = 13;
+ string fridayContent = 14;
+ string saturday = 15;
+ string saturdayContent = 16;
+ string sunday = 17;
+ string sundayContent = 18;
+}
+message WeeklyResponse {
+ uint64 ID = 1 [json_name = "ID"];
+ bool Success = 2 [json_name = "success"];
+ WeeklyRequest weekly = 3;
+}
+message CanWeeklyRequest {
+ uint64 departmentId = 1;
+ uint64 staffId = 2;
+ uint64 siteId = 3;
+}
+message WeeklyListRequest {
+ string startDate = 1;
+ string endDate = 2;
+ string siteName = 3;
+ uint64 siteId = 4;
+ string jobNumber=5;
+ string userId = 6;
+ string reportName = 7;
+ string directorName = 8;
+ repeated uint64 status = 9;
+ uint64 page = 10;
+ uint64 pageSize = 11 ;
+ string openingWeek =12;
+ string endingWeek = 13;
+}
+message StaffWeeklyListRequest {
+ string startDate = 1;
+ string endDate = 2;
+ uint64 siteId = 3;
+ uint64 userId = 4;
+ uint64 status = 5;
+ repeated uint64  userIds = 6 ;
+ string userName = 7;
+ string siteName = 8;
+ string jobNumber = 9;
+ uint64 page = 10;
+ uint64 pageSize = 11 ;
+}
+message WeeklyList{
+ uint64 id = 1;
+ string siteName = 2;
+ uint64 siteId = 3;
+ uint64 status = 4;
+ string fillingDate = 5;
+ string directorName = 6;
+ string openingWeek = 7;
+ string endingWeek = 8;
+ string reportName = 9;
+ bool readOrNot = 10;
+}
+message WeeklyResponseList{
+ string total = 1;
+ string submitted = 2;
+ bool readOrNot = 3;
+ repeated WeeklyList weeklyList = 4;
+}
+
+message StaffWeeklyResponseList{
+ int64 total = 1;
+ repeated StaffWeeklyReq weeklyList = 2;
+}
+
+message RevokeWeeklyRequest{
+ uint64 id = 1;
+}
+message WeeklyInfoRequest {
+ string id = 1;
+ string uid = 2;
+}
+
+message WeeklyReadRequest {
+ uint64 id = 1;
+ uint64 uid = 2;
+}
+message SmsConfigRequest {
+ string position = 1;
+}
+message SmsConfigResponse {
+ repeated SmsConfig SmsConfig= 1;
+}
+message SmsConfig{
+ uint64 id = 1;
+ string name = 2;
+ string telNum = 3;
+ string position = 4;
+ bool status = 5;
+}
+message ReportQueryRequest{
+ string endDate       =1;
+ string startDate     =2;
+ string endDateDue    =3;
+ string startDateDue  =4;
+ string departmentName=5;
+ uint64 departmentId  =6;
+ bool Success        =7;
+}
+message ReportQueryResponse{
+ bool Success        =7;
+ string endDate       =1;
+ string startDate     =2;
+ string endDateDue    =3;
+ string startDateDue  =4;
+ uint64 field =5;
+}
+message ReportQuerysRequest{
+ string endDate       =1;
+ string startDate     =2;
+ string endDateDue    =3;
+ string startDateDue  =4;
+ string departmentName=5;
+ repeated uint64 departmentIds  =6;
+ bool Success        =7;
+}
+message ReportQuerysResponse{
+repeated ReportQuery data =1;
+}
+message ReportQuery{
+ bool Success        =7;
+ string endDate       =1;
+ string startDate     =2;
+ string endDateDue    =3;
+ string startDateDue  =4;
+ uint64 departmentId =5;
+ string departmentName =6;
+}
+message ReportRevokeReq{
+uint64 id =1;
+}
+message ReportRevokeResponse{
+  string msg=1;
+}
+message UpdatePerformanceStandardReq{
+  uint64 staffId =1;
+  string staffName =2;
+  uint64 siteId =3;
+  string site =4;
+  string startDate     =5;
+  string endDate       =6;
+  uint32 ModifyType    =7;
+  string yellowTarget  =8;//黄码业绩目标
+  string greenTarget   =9;
+  string beforeYellowTarget =10; //修改前黄码业绩目标
+  string beforeGreenTarget =11;
+  string domain     =12;
+  uint64 operatorId =13;
+  string operatorName =14;
+  uint32 action =15;//1:修改 2:重置
+  uint64 field =16;//场期
+}
+
+message UpdatePerformanceStandardResponse{
+  string msg =1;
+}
+message PerformanceModifyRecordReq{
+  uint64 staffId =1;
+  uint64 siteId =2;
+  string startDate     =3;
+  string endDate       =4;
+  uint32 ModifyType    =5;
+  uint64 field =6;
+}
+message PerformanceModifyRecordResponse{
+  string msg =1;
+  int64 count =2;
+  repeated PerformanceModifyRecord data =3;
+}
+message PerformanceModifyRecord{
+  uint64 id =1;
+  uint64 staffId =2;
+  string staffName =3;
+  uint64 siteId =4;
+  string site =5;
+  string startDate     =6;
+  string endDate       =7;
+  uint64 performanceId =8;//对应业绩id
+  uint32 ModifyType    =9;//修改类型 1:业绩标准 2:业绩zengzhanglv
+  string beforeYellowTarget =10; //修改前黄码业绩目标
+  string afterYellowTarget  =11;//黄码业绩目标
+  string beforeGreenTarget =12;
+  string afterGreenTarget   =13;
+  uint64 operatorId =14;
+  string operatorName =15;
+  string operateTime =16;
+  uint32 action =17;//1:修改 2:重置
+}
+message GetStaffReportListReq {
+  uint64 siteId =1;
+  uint64 staffId =2;
+  string startDate     =3;
+  string endDate       =4;
+  string color =5;
+  uint64 page =6;
+  uint64 pageSize =7;
+}
+message GetStaffReportListResponse{
+  int64 count =1;
+  repeated ReportUserRequest data =2;
+  
+}
+message StaffReportList{
+  uint64 id =1;
+  uint64 staffId =2;
+  string staffName =3;
+  uint64 siteId =4;
+  string site =5;
+  string startDate     =6;
+  string endDate       =7;
+  string startDueDate     =8;
+  string endDueDate       =9;
+  string amount =10;
+  string dueAmount =11;
+  string increaseAmount =12;
+  string increaseRate =13;
+  string momRate =14;
+  string color =15;
+  uint64 reportId =16;
+}
+message PerformanceModifyStandardReq{
+  uint64 staffId =1;
+  uint64 siteId =2;
+  string startDate     =3;
+  string endDate       =4;
+  uint32 ModifyType    =5;
+  uint64 Field =6;
+}
+message PerformanceModifyStandardResponse{
+  uint64 staffId =1;
+  string staffName =2;
+  uint64 siteId =3;
+  string site =4;
+  string startDate     =5;
+  string endDate       =6;
+  string yellowTarget  =7;//黄码业绩目标
+  string greenTarget   =8;
+  bool isModify =9;
+  string color =10;
+  uint64 modifyType =11;
+}
+message StaffPerformanceDetailReq{
+   uint64 staffId =1;
+  string staffName =2;
+  uint64 siteId =3;
+  string site =4;
+  string startDate     =5;
+  string endDate       =6;
+  string siteUid =7;
+  string startDateDue =8;
+  string endDateDue =9;
+}
+message StaffPerformanceDetailResponse{
+  string amount =1;
+  string dueAmount =2;
+}
+
+message BestowRequest {
+ int64 id = 1 [json_name="id"];
+ string outTradeNo = 2 [json_name="out_trade_no"];
+}
+
+message BestowResponse {
+ string redeemCode = 1 [json_name="redeem_code"];
+ string collectionName = 2 [json_name="collection_name"];
+ string collectionPic = 3 [json_name="collection_pic"];
+ float collectionPrice = 4 [json_name="collection_price"];
+ string msg = 5 [json_name="msg"];
+}
+
+message ReceiveGiftRequest {
+ int64 userId = 1 [json_name="user_id"];
+ int64 receiveType = 2 [json_name="receive_type"];
+ string realName = 3 [json_name="real_name"];
+ string telNum = 4 [json_name="tel_num"];
+ string idNum = 5 [json_name="id_num"];
+ string redeemCode = 6 [json_name="redeem_code"];
+ string account = 7 [json_name="account"];
+}
+
+message ReceiveGiftResponse {
+ string collectionName = 1 [json_name="collection_name"];
+ string receiveUserName = 2 [json_name="receive_user_name"];
+ string redeemTel = 3 [json_name="redeem_tel"];
+ string pickupMethod = 4 [json_name="pickup_method"];
+ string redeemCode = 5 [json_name="redeem_code"];
+ string msg = 6 [json_name="msg"];
+}
+
+message ApplyBlockchainAddressRequest {
+ int64 userId = 1 [json_name="user_id"];
+ int64 type = 2 [json_name="type"];
+ string account = 3 [json_name="account"];
+}
+
+message ApplyBlockchainAddressResponse {
+ int64 appliedFor = 1 [json_name="applied_for"];
+ string msg = 2 [json_name="msg"];
+}
+
+message ApplyCertificateRequest {
+ int64 payId = 1 [json_name="pay_id"];
+ int64 userId = 2 [json_name="user_id"];
+ int64 type = 3 [json_name="type"];
+}
+
+message ApplyCertificateResponse {
+ int64 appliedFor = 1 [json_name="applied_for"];
+ string msg = 2 [json_name="msg"];
+}
+
+message CancelBestowRequest {
+ string redeemCode = 1 [json_name="redeem_code"];
+}
+
+message CancelBestowResponse {
+ string msg = 1 [json_name="msg"];
+}
+
+message GetBestowInfoRequest {
+ string redeemCode = 1 [json_name="redeem_code"];
+}
+
+message GetBestowInfoResponse {
+ string redeemCode = 1 [json_name="redeem_code"];
+ int32 payId = 2 [json_name = "pay_id"];
+ string bestowName = 3 [json_name="bestow_name"];
+ string bestowPlatform = 4 [json_name="bestow_platform"];
+ string bestowTel = 5 [json_name="bestow_tel"];
+ string collectionName = 6 [json_name="collection_name"];
+ string seriesName = 7 [json_name="series_name"];
+ string collectionPic = 8 [json_name="collection_pic"];
+ float collectionPrice = 9 [json_name="collection_price"];
+ string msg = 10 [json_name="msg"];
+}
+
+message InputPersonalBlockchainRequest {
+ repeated  PersonalBlockchainInfo personalBlockchainInfo = 1 [json_name="personal_blockchain_info"];
+}
+
+message PersonalBlockchainInfo {
+ int32 userId = 1 [json_name="user_id"];
+ string blockchain = 2 [json_name="blockchain"];
+}
+
+message InputPersonalBlockchainResponse {
+ string msg = 1 [json_name="msg"];
+}
+
+message TransactionStageRequest {
+ string uid = 1 ;
+}
+message TransactionStageResponse {
+ repeated TransactionStage TransactionStage = 1 ;
+}
+message BlankOrder{
+ string outOrderID =1;
+ string uid       =2;
+}
+message BlankOrders{
+ repeated BlankOrder data = 1;
+}
+
+message ShipAddressCreateRequest {
+ int32 userId = 1 [json_name="user_id"];
+ string userName = 2 [json_name="user_name"];
+ string userTel = 3 [json_name="user_tel"];
+ string regionalAddress = 4 [json_name="regional_address"];
+ string detailAddress = 5 [json_name="detail_address"];
+}
+
+message ShipAddressCreateResponse {
+ string msg = 1 [json_name="msg"];
+}
+
+message ShipAddressDeleteRequest {
+ int32 shipAddressId = 1 [json_name="ship_address_id"];
+}
+
+message ShipAddressDeleteResponse {
+ string msg = 1 [json_name="msg"];
+}
+
+message ShipAddressListRequest {
+ int32 userId = 1 [json_name="user_id"];
+}
+
+message ShipAddressList {
+ int32 shipAddressId = 1 [json_name="ship_address_id"];
+ string userName = 2 [json_name="user_name"];
+ string userTel = 3 [json_name="user_tel"];
+ string address = 4 [json_name="address"];
+ int32 status = 5 [json_name="status"];
+}
+
+message ShipAddressListResponse {
+ repeated ShipAddressList shipAddressList = 1 [json_name="ship_address_list"];
+ string msg = 2 [json_name="msg"];
+}
+
+message ShipAddressDefaultRequest {
+ int32 shipAddressId = 1 [json_name="ship_address_id"];
+}
+
+message ShipAddressDefaultResponse {
+ string msg = 1 [json_name="msg"];
+}
+
+message GetAddressInfoByIdRequest {
+ int32 shipAddressId = 1 [json_name="ship_address_id"];
+}
+
+message GetAddressInfoByIdResponse {
+ ShipAddressList shipAddress = 1 [json_name="ship_address"];
+ string msg = 2 [json_name="msg"];
+}
+
+message LogisticsTrackingRequest {
+ int32  payId = 1 [json_name="pay_id"];
+}
+
+message LogisticsTracking {
+ string time = 1 [json_name="time"];
+ string logisticsStatus = 2 [json_name="logistics_status"];
+ string areaName = 3 [json_name="area_name"];
+ string desc = 4 [json_name="desc"];
+
+}
+
+message LogisticsTrackingResponse {
+ string mailNo = 1 [json_name="mail_no"];
+ string userName = 2 [json_name="user_name"];
+ string userTel = 3 [json_name="user_tel"];
+ string address = 4 [json_name="address"];
+ string logisticsCompanyName = 5 [json_name="logistics_company_name"];
+ string logisticsStatusDesc = 6 [json_name="logistics_status_desc"];
+ string logisticsStatus = 7 [json_name="logistics_status"];
+ repeated LogisticsTracking  logisticsTracking = 8 [json_name="logistics_tracking"];
+}
+
+message AddTrackingNumberRequest {
+ int32  payId = 1 [json_name="pay_id"];
+ string trackingNumber = 2 [json_name="tracking_number"];
+}
+
+message AddTrackingNumberResponse {
+ string msg = 1 [json_name = "msg"];
+}
+
+message BlankOrderReq {
+ string Argument = 1;
+}
+
+message CreateStripeCheckoutSessionRequest {
+  string productUUID = 1 [json_name = "productUUID"];
+	string productName = 2 [json_name = "productName"];
+  int64 productQuantity = 3 [json_name = "productQuantity"];
+  int64 productAllPrice = 4 [json_name = "productAllPrice"];
+  string productDescription = 5 [json_name = "productDescription"];
+  string productImageUrl = 6 [json_name = "productImageUrl"];
+  string productPriceCurrency = 7 [json_name = "productPriceCurrency"];
+  string createrID = 8 [json_name = "createrID"];
+  string createrName = 9 [json_name = "createrName"];
+  string domain = 10 [json_name = "domain"];
+  string successUrl = 11 [json_name = "successUrl"];
+  string cancelUrl = 12 [json_name = "cancelUrl"];
+  string outTradeNo = 13 [json_name = "outTradeNo"];
+  string locale = 14 [json_name = "locale"];
+  map<string, string> metaData = 15 [json_name = "metaData"];
+}
+
+message CreateStripeCheckoutSessionResponse {
+  string checkoutSessionId = 1 [json_name = "checkoutSessionId"];
+  string checkoutSessionUrl = 2 [json_name = "checkoutSessionUrl"];
+}
+
+message CreateStripeRefundRequest {
+  string createrID = 1 [json_name = "createrID"];
+  string paymentIntentId = 2 [json_name = "paymentIntentId"];
+  string refundReason = 3 [json_name = "refundReason"];
+}
+
+message CreateStripeRefundResponse {
+  string  status = 1 [json_name = "status"];
+  string  message = 2 [json_name = "message"];
+}
+
+message GetStripePaymentIntentInfoRequest {
+  string checkoutSessionId = 1 [json_name = "checkoutSessionId"];
+  string createrID = 2 [json_name = "createrID"];
+}
+
+message GetStripePaymentIntentInfoResponse {
+  string checkoutSessionId = 1 [json_name = "checkoutSessionId"];
+  string checkoutSessionStatus = 2 [json_name = "checkoutSessionStatus"];
+  string paymentIntentId = 3 [json_name = "paymentIntentId"];
+  string paymentIntentCreated = 4 [json_name = "paymentIntentCreated"];
+  string paymentIntentStatus = 5 [json_name = "paymentIntentStatus"];
+  string chargeId = 6 [json_name = "chargeId"];
+  int64 payPrice = 7 [json_name = "payPrice"];
+  string payExchangeRate = 8 [json_name = "payExchangeRate"];
+  string payCurrency = 9 [json_name = "payCurrency"];
+  string accountCurrency = 10 [json_name = "accountCurrency"];
+  int64 afterRatePayPrice = 11 [json_name = "afterRatePayPrice"];
+  int64 payHandingFee = 12 [json_name = "payHandingFee"];
+  int64 afterRatePayNetAmount = 13 [json_name = "afterRatePayNetAmount"];
+  string customerId = 14 [json_name = "customerId"];
+  int64 refundPrice = 15 [json_name = "refundPrice"];
+  string outTradeNo = 16 [json_name = "outTradeNo"];
+}
+
+message GetRefundInfoRequest {
+  string refundId = 1 [json_name = "refundId"];
+  string createrID = 2 [json_name = "createrID"];
+}
+
+message GetRefundInfoResponse {
+  string refundStatus = 1 [json_name = "refundStatus"];
+}
+
+message GetCheckoutWebhookRequest {
+  string type = 1; // 事件类型，例如"payment_intent.succeeded"
+  string payload = 2; // 事件的原始JSON payload
+  string signature = 3; // Stripe-Signature头的值，用于验证事件
+  string webhookKey = 4;  // Webhook密钥
+}
+
+message GetCheckoutWebhookResponse {
+  bool success = 1; // 处理是否成功
+  string message = 2; // 可选的处理消息
+  string outTradeNo = 3 [json_name = "outTradeNo"];
+  string paymentIntentStatus = 4 [json_name = "paymentIntentStatus"];
+  map<string, string> metaData=5 [json_name = "metaData"];
+}
+
+message QueryStripeInfoRequest {
+ repeated string checkoutSessionIds = 1; //checkoutSessionId数组
+}
+
+message QueryStripeInfoResponse {
+  repeated StripeInfo stripeInfos = 1;
+}
+
+message StripeInfo {
+ string checkoutSessionId = 1 [json_name = "checkoutSessionId"];
+ string checkoutSessionStatus = 2 [json_name = "checkoutSessionStatus"];
+ string createrID = 3 [json_name = "createrID"];
+ string createrName = 4 [json_name = "createrName"];
+ string createdAt = 5 [json_name = "createdAt"];
+ string updatedAt = 6 [json_name = "updatedAt"];
+ string paymentIntentCreated = 7 [json_name = "paymentIntentCreated"];
+ string paymentIntentStatus = 8 [json_name = "paymentIntentStatus"];
+ string productUUID = 9 [json_name = "productUUID"];
+ string productName = 10 [json_name = "productName"];
+ string productAllPrice = 11 [json_name = "productAllPrice"];
+ string payMethodType = 12 [json_name = "payMethodType"];
+ string cardLastNum = 13 [json_name = "cardLastNum"];
+ string productPriceCurrency = 14 [json_name = "productPriceCurrency"];
+ string payExchangeRate = 15 [json_name = "payExchangeRate"];
+ string hasRefund = 16 [json_name = "hasRefund"];
+ string outTradeNo = 17 [json_name = "outTradeNo"];
+ string domain = 18 [json_name = "domain"];
+}
+
+message CreateStripePaymentIntentRequest {
+  string productUUID = 1 [json_name = "productUUID"];
+  string productName = 2 [json_name = "productName"];
+  int64 productAllPrice = 3 [json_name = "productAllPrice"];
+  string productDescription = 4 [json_name = "productDescription"];
+  string productPriceCurrency = 5 [json_name = "productPriceCurrency"];
+  string createrID = 6 [json_name = "createrID"];
+  string createrName = 7 [json_name = "createrName"];
+  string domain = 8 [json_name = "domain"];
+  string successUrl = 9 [json_name = "successUrl"];
+  string cancelUrl = 10 [json_name = "cancelUrl"];
+  string outTradeNo = 11 [json_name = "outTradeNo"];
+  string locale = 12 [json_name = "locale"];
+  string orderNo = 13 [json_name = "orderNo"];
+  string price = 14 [json_name = "price"];
+  string buyUid = 15 [json_name = "buyUid"];
+  string qrUid = 16 [json_name = "qrUid"];
+  map<string, string> metaData = 17 [json_name = "metaData"];
+}
+
+message CreateStripePaymentIntentResponse {
+ string paymentIntentId = 1 [json_name = "paymentIntentId"];
+ string paymentIntentClientSecret = 2 [json_name = "paymentIntentClientSecret"];
+}
+message QueryStaffOrdersTotalReq{
+  repeated uint64 staffIds = 1;
+  uint64 departmentId = 2;
+  string startDate = 3;
+  string endDate = 4;
+}
+message QueryStaffOrdersTotalInfo{
+  uint64 sellerId = 1;
+  string amountTotal = 2;
+  uint64 orderNum = 3;
+}
+message QueryStaffOrdersTotalRes{
+  repeated QueryStaffOrdersTotalInfo info = 1;
+}
+message GetStaffOrderListRequest{
+  uint32 sellerId=1;//销售员id
+  uint32 saleSiteId=2;//销售站点id
+  int64 page=3;
+  int64 pageSize=4;
+  string where=5;
+  string order=6;
+  string startDate=7;  //自定义日期筛选
+  string endDate=8;  //自定义日期筛选
+  uint64 customerId=9;//客户id
+}
+message GetStaffOrderListResp{
+  repeated OrderRequest list=1;
+  int64 Total=2;
+}
