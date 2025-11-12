@@ -27,7 +27,7 @@ func sTest05() {
 	}
 	fmt.Println(path.Ext(file.Name()))
 	fmt.Println(buff.Bytes(), string(buff.Bytes()[0]))
-	fmt.Println(string(buff.Bytes()))
+	fmt.Println(buff.String())
 }
 
 // todo
