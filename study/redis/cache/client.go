@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	"fmt"
+	"raye/demo/pkg/cache"
 
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/redis/go-redis/v9"
@@ -11,7 +13,7 @@ var ClientRedis *redis.Client
 
 func init() {
 	clientRedis := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: "localhost:6380",
 		DB:   0,
 	})
 	_, err := clientRedis.Ping(context.Background()).Result()

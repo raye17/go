@@ -8,15 +8,13 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"runtime"
 )
 
 func main() {
-	paths, _ := filepath.Abs("file.go")
-	fmt.Println(paths)
-	num := runtime.NumCPU()
-	fmt.Println(num)
-	fmt.Println(filepath.Dir(filepath.Dir(paths)))
+	//	if err := joinPath(); err != nil {
+	//		log.Fatal(err)
+	//	}
+	Path01()
 }
 func sTest05() {
 	file, _ := os.Open("./ss.txt")
@@ -35,7 +33,17 @@ func Path01() {
 	fmt.Println(os.Getwd())
 	s, err := os.Stat("./context/context.go")
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal(err)
 	}
-	fmt.Printf("%#v\n", s)
+	fmt.Printf("s:%#v\n", s)
+}
+func joinPath() error {
+	dir, _ := os.Getwd()
+	p := dir + "/app/test"
+	if err := os.MkdirAll(p, 0755); err != nil {
+		return err
+	}
+	filePath := filepath.Join(p, "test.txt")
+	return os.WriteFile(filePath, []byte("hello world"), 0644)
 }

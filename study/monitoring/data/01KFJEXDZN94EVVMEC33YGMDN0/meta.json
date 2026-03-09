@@ -1,0 +1,18 @@
+{
+	"ulid": "01KFJEXDZN94EVVMEC33YGMDN0",
+	"minTime": 1769061600541,
+	"maxTime": 1769068800000,
+	"stats": {
+		"numSamples": 543249,
+		"numFloatSamples": 543249,
+		"numSeries": 1037,
+		"numChunks": 4110
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01KFJEXDZN94EVVMEC33YGMDN0"
+		]
+	},
+	"version": 1
+}
